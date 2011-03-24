@@ -117,6 +117,35 @@ Phi.view.panel.Location = Ext.extend(Ext.Panel, {
 			tbar: tbar,
 			bbar: bbar
 		});
+		
+		//tootltip
+		this.grid.on('render', function() {
+			_this.grid.tip = new Ext.ToolTip({
+				view: _this.grid.getView(),
+				target: _this.grid.getView().mainBody,
+				delegate: '.x-grid3-row',
+				width:250,
+				trackMouse: true,
+				renderTo: document.body,
+				listeners: {
+					beforeshow: function updateTipBody(tip) {
+						var rowIndex = tip.triggerElement.rowIndex;
+						var date = _this.grid.store.getAt(rowIndex).get('date');
+						var name = _this.grid.store.getAt(rowIndex).get('name');
+						var fav = _this.grid.store.getAt(rowIndex).get('favorite');
+						
+						var sdate = new Date(date).format('dddd, mmmm d, yyyy  HH:MM:ss');
+						
+						var url = "content/images/markers/";
+						var img = fav ? '<img src="'+ url +'pushpinyellow_mini.png" />' : '<img src="'+ url +'pushpin_mini.png" />';
+						
+						var html = '<div style="float:left;width:20px;height:20px; margin-top:3px;">' + img +'</div>'
+						html += '<div><b>' + name + '</b><br/>' + sdate + '</div><span style="clear:both;" />';
+						tip.body.update(html);
+					}
+				}
+			});
+		});
 
 		this.grid.on('rowdblclick', this.apply, this);
 		this.grid.on('rowcontextmenu', onGridContextMenu);

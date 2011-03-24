@@ -130,6 +130,34 @@ Phi.view.panel.WorkSpace = Ext.extend(Ext.Panel, {
 			tbar: tbar,
 			bbar: bbar
 		});
+		
+		//tootltip
+		this.grid.on('render', function() {
+			_this.grid.tip = new Ext.ToolTip({
+				view: _this.grid.getView(),
+				target: _this.grid.getView().mainBody,
+				width:250,
+				delegate: '.x-grid3-row',
+				trackMouse: true,
+				renderTo: document.body,
+				listeners: {
+					beforeshow: function updateTipBody(tip) {
+						var rowIndex = tip.triggerElement.rowIndex;
+						var date = _this.grid.store.getAt(rowIndex).get('date');
+						var name = _this.grid.store.getAt(rowIndex).get('name');
+						
+						var sdate = new Date(date).format('dddd, mmmm d, yyyy  HH:MM:ss');
+						
+						var url = "content/images/icons/";
+						var img = '<img src="'+ url + 'cup.png" />';
+						
+						var html = '<div style="float:left;width:20px;height:20px; margin-top:3px;margin-right:2px;">' + img +'</div>'
+						html += '<div><b>' + name + '</b><br/>' + sdate + '</div><span style="clear:both;" />';
+						tip.body.update(html);
+					}
+				}
+			});
+		});
 
 		this.grid.on('rowdblclick', this.apply, this);
 		this.grid.on('rowcontextmenu', onGridContextMenu, this);
