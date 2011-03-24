@@ -23,7 +23,7 @@ Phi.view.panel.Location = Ext.extend(Ext.Panel, {
 		var reader = new Ext.data.JsonReader({
 			root: 'entities',
 			totalProperty: 'total',
-			fields: ['id', 'name', 'description', 'favorite', 'point']
+			fields: ['id', 'name', 'description', 'favorite', 'point', 'date']
 		});
 
 		var proxy = new Ext.data.HttpProxy({
@@ -33,8 +33,7 @@ Phi.view.panel.Location = Ext.extend(Ext.Panel, {
 
 		var ds = new Ext.data.Store({
 			reader: reader,
-			proxy: proxy,
-			sortInfo: { field: 'id', direction: "ASC" }
+			proxy: proxy
 		});
 
 		//url change by logged user
@@ -49,10 +48,22 @@ Phi.view.panel.Location = Ext.extend(Ext.Panel, {
 			var url = "content/images/markers/";
 			return f ? '<img src="'+ url +'pushpinyellow_mini.png" />' : '<img src="'+ url +'pushpin_mini.png" />';
 		};
-
+		
+		
+		var renderText = function (val, m, record) {
+			var strDate = record.get('date');
+			var date = new Date(strDate);
+			var relDate = Phi.Util.relativeTime(date);
+			
+			var name = record.get('name');
+			out = '<span style="float:left">' + name + '</span>';
+			out += '<sup class="main_font" style="float:right;font-size:9px;">' + relDate + '</sup>';
+			return out;
+		};
+		
 		var cm = new Ext.grid.ColumnModel([
 			{ header: '', width: 25, dataIndex: 'id', renderer: renderImage },
-			{ header: Phi.Global.For('name'), width: 250, sortable: true, dataIndex: 'name' }
+			{ header: Phi.Global.For('name'), width: 250, sortable: true, dataIndex: 'name', renderer:renderText }
 		]);
 		
 		var tbar = new Ext.Toolbar({
