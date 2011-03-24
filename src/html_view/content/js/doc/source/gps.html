@@ -1,0 +1,65 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.panel");
+<div id="cls-Philosophy.view.panel.GPS"></div>/**
+* @class Philosophy.view.panel.GPS
+* 
+* Philosophy GPS (demo) panel (Dashboard)
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+* 
+*/
+Phi.view.panel.GPS = Ext.extend(Ext.Panel, {
+    border: false,
+    layout: 'fit',
+    collapsible: true,
+    plugins: [Ext.ux.plugins.ToggleCollapsible],
+    title: Phi.Global.For('GPS'),
+
+    initComponent: function () {
+        //init values 
+        var to = new Date();
+        var from = to.add(Date.HOUR, -2);
+
+        var p = {
+            online: { followMobile: true },
+            lastPosition: { zoomMobiles: true },
+            trace: { from: from, to: to }
+        };
+
+        this.GPSMobile = new Phi.view.panel.GPSMobile({ preferences: p });
+        this.GPSPreference = new Phi.view.panel.GPSPreference({ preferences: p });
+
+        this.GPSPreference.on('apply', function (preferences) {
+            this.GPSMobile.preferences = preferences;
+            Phi.Msg(Phi.Global.For('Applied GPS Properties'));
+            this.tabPanel.setActiveTab(this.GPSMobile);
+        }, this);
+
+        this.tabPanel = new Ext.TabPanel({
+            activeTab: 0,
+            deferredRender: false,
+            width: 600,
+            height: 250,
+            plain: true,
+            defaults: { autoScroll: true },
+            items: [this.GPSMobile, this.GPSPreference]
+        });
+
+        this.items = [this.tabPanel];
+
+        Phi.view.panel.GPS.superclass.initComponent.call(this);
+    }
+});  // eo Phi.view.panel.GPS
+// eof</pre>    
+</body>
+</html>

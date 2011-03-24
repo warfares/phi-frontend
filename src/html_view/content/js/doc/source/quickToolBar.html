@@ -1,0 +1,302 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.window.Login-ns"></div>/**
+* Philosophy Quick Toolbar (for quick access to some maps tools)  
+*
+* @author    Ultragestion (rbarriga)
+* @copyright (c) 2009, by Ultragestion
+* @date      30 November 2009
+* @version   1.1
+*
+*/
+
+Ext.ns("Phi.view.window");
+
+// Helper class for organizing the buttons
+ButtonPanel = Ext.extend(Ext.Panel, {
+    defaultType: 'button',
+    baseCls: 'x-plain',
+    cls: 'btn-panel',
+    region: 'center',
+    constructor: function() {
+
+        this.zoomBoxIn = new Ext.Button({
+            iconCls: 'icon-zoom-box',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Zoom Box In'), text: Philosophy.Globalization.For('Zoom Box In Desc') },
+            handler: function(b) {
+                Philosophy.Map.deactivateAllControls();
+                if (b.pressed)
+                    Philosophy.Map.activateCustomControl('zoom_box');
+            }
+        });
+
+        this.zoomBoxOut = new Ext.Button({
+            iconCls: 'icon-zoom-box-out',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Zoom Box Out'), text: Philosophy.Globalization.For('Zoom Box Out Desc') },
+
+            handler: function(b) {
+                Philosophy.Map.deactivateAllControls();
+                if (b.pressed)
+                    Philosophy.Map.activateCustomControl('zoom_box_out');
+            }
+        });
+        this.zoomIn = new Ext.Button({
+            iconCls: 'icon-zoom-in',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Zoom In'), text: Philosophy.Globalization.For('Zoom In Desc') },
+            handler: function() {
+                Philosophy.Map.zoomIn();
+            }
+        });
+        this.zoomOut = new Ext.Button({
+            iconCls: 'icon-zoom-out',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Zoom Out'), text: Philosophy.Globalization.For('Zoom Out Desc') },
+            handler: function() {
+                Philosophy.Map.zoomOut();
+            }
+        });
+        this.zoomInit = new Ext.Button({
+            iconCls: 'icon-world',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Zoom Init'), text: Philosophy.Globalization.For('Zoom Init Desc') },
+            handler: function() {
+                Philosophy.Map.zoomInit();
+            }
+        });
+        this.pan = new Ext.Button({
+            iconCls: 'icon-hand',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Pan'), text: Philosophy.Globalization.For('Pan Desc') },
+
+            handler: function() {
+                Philosophy.Map.deactivateAllControls();
+            }
+        });
+        this.undo = new Ext.Button({
+            iconCls: 'icon-undo',
+            scale: 'medium',
+            disabled: true,
+            tooltip: { title: Philosophy.Globalization.For('Previous Position and Zoom'), text: Philosophy.Globalization.For('Previous Position and Zoom Desc') },
+            handler: function() {
+                Philosophy.Map.navHistory.previousTrigger();
+            }
+        });
+        this.redo = new Ext.Button({
+            iconCls: 'icon-redo',
+            scale: 'medium',
+            disabled: true,
+            tooltip: { title: Philosophy.Globalization.For('Later Position and Zoom'), text: Philosophy.Globalization.For('Later Position and Zoom Desc') },
+            handler: function() {
+                Philosophy.Map.navHistory.nextTrigger();
+            }
+        });
+
+        this.areaInfo = new Ext.Button({
+            iconCls: 'icon-area-info',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Layers in Selected Area'), text: Philosophy.Globalization.For('Layers in Selected Area Desc') },
+            handler: function(b) {
+                Philosophy.Map.deactivateAllControls();
+                if (b.pressed)
+                    Philosophy.Map.activateCustomControl('box_layer_info');
+            }
+        });
+
+        this.info = new Ext.Button({
+            iconCls: 'icon-info',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Element Info'), text: Philosophy.Globalization.For('Element Info Desc') },
+            handler: function(b) {
+                Philosophy.Map.deactivateAllControls();
+                if (b.pressed)
+                    Philosophy.Map.activateCustomControl('click_layer_info');
+            }
+        });
+
+        this.bbox = new Ext.Button({
+            iconCls: 'icon-bbox',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            disabled: false,
+            tooltip: { title: Philosophy.Globalization.For('Coordinates Box'), text: Philosophy.Globalization.For('Coordinates Box Desc') },
+            handler: function(b) {
+                Philosophy.Map.deactivateAllControls();
+                if (b.pressed)
+                    Philosophy.Map.activateCustomControl('box_bound_info');
+            }
+        });
+
+        this.clickPoint = new Ext.Button({
+            iconCls: 'icon-click-point',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Position Coordinate'), text: Philosophy.Globalization.For('Position Coordinate Desc') },
+            handler: function(b) {
+                Philosophy.Map.deactivateAllControls();
+                if (b.pressed)
+                    Philosophy.Map.activateCustomControl('click_point_info');
+            }
+        });
+
+        this.bbox.on('toggle', function(b, pressed) {
+            if (pressed) {
+                Philosophy.bboxOutput = new Phi.view.window.MeasureOutPut({ width: 300, height: 100 }) || Philosophy.bboxOutput;
+                Philosophy.bboxOutput.show();
+            }
+            else {
+                Philosophy.bboxOutput.close();
+                Philosophy.Map.clearAllVectors();
+            }
+        });
+
+        this.layerSearch = new Ext.Button({
+            iconCls: 'icon-binocu',
+            scale: 'medium',
+            disabled: false,
+            tooltip: { title: Philosophy.Globalization.For('Layer Search'), text: Philosophy.Globalization.For('Layer Search Desc') },
+            handler: function() {
+                Philosophy.panelLayer.treeWMSLayers.showSearch();
+            }
+        });
+
+        this.coordinate = new Ext.Button({
+            iconCls: 'icon-coo',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            disabled: false,
+            tooltip: { title: Philosophy.Globalization.For('Draw Coordinates'), text: Philosophy.Globalization.For('Draw Coordinate Desc') },
+            handler: function() {
+                Philosophy.Map.deactivateAllControls();
+            }
+        });
+
+        this.coordinate.on('toggle', function(b, pressed) {
+            if (pressed) {
+                Philosophy.drawXY = new Phi.view.window.drawXY() || Philosophy.draXY;
+                Philosophy.drawXY.show();
+            }
+            else {
+                Philosophy.drawXY.close();
+            }
+        });
+
+        this.measure = new Ext.Button({
+            iconCls: 'icon-measure-alt',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Measure'), text: Philosophy.Globalization.For('Measeure Desc') },
+            handler: function(b) {
+                Philosophy.Map.deactivateAllControls();
+                if (b.pressed) {
+                    Philosophy.Map.activateMeasureControl('line');
+                }
+            }
+        });
+
+        this.measure.on('toggle', function(b, pressed) {
+            if (pressed) {
+                Philosophy.val = null;
+                Philosophy.Map.setMeasureGlobals(0,'km',1);
+                Philosophy.measureOutput = new Phi.view.window.LineMeasureOutput({ order:1}) || Philosophy.measureOutput;
+                Philosophy.measureOutput.show();
+            }
+            else {
+                Philosophy.measureOutput.close();
+            }
+        });
+
+        this.area = new Ext.Button({
+            iconCls: 'icon-area-alt',
+            enableToggle: true,
+            toggleGroup: 'control',
+            scale: 'medium',
+            tooltip: { title: Philosophy.Globalization.For('Area'), text: Philosophy.Globalization.For('Area Desc') },
+            handler: function(b) {
+                Philosophy.Map.deactivateAllControls();
+                if (b.pressed) {
+                    Philosophy.Map.activateMeasureControl('polygon');
+                }
+            }
+        });
+
+        this.area.on('toggle', function(b, pressed) {
+            if (pressed) {
+                Philosophy.val = null;
+                Philosophy.Map.setMeasureGlobals(0,'km',2);
+                Philosophy.areaOutput = new Phi.view.window.LineMeasureOutput({ order: 2 }) || Philosophy.areaOutput;
+                Philosophy.areaOutput.show();
+            }
+            else {
+                Philosophy.areaOutput.close();
+            }
+        });
+
+        var items = [this.zoomBoxIn,
+			this.zoomBoxOut,
+			this.zoomIn,
+			this.zoomOut,
+			this.zoomInit,
+			this.pan,
+			this.undo,
+			this.redo,
+			this.info,
+			this.areaInfo,
+			this.bbox,
+			this.clickPoint,
+			this.layerSearch,
+			this.coordinate,
+			this.measure,
+			this.area];
+
+        ButtonPanel.superclass.constructor.call(this, { items: items });
+    }
+});
+
+Phi.view.window.QuickToolBar = Ext.extend(Ext.Window, {
+	title: '',
+	maximizable: false,
+	closable: false,
+	resizable: false,
+	draggable: false,
+	modal: false,
+	plain: true,
+	bodyStyle: 'padding:2px 2px 2px 2px',
+	initComponent: function () {
+
+		this.bp = new ButtonPanel();
+		this.items = this.bp;
+
+		Phi.view.window.QuickToolBar.superclass.initComponent.call(this);
+	}
+	,
+	align: function (c) {
+		c = c || Ext.get("map");
+		this.alignTo(c, 'tr-tr?', [-3, 3]);
+	}
+	});// eo Phi.view.window.QuickToolBar
+	// eof</pre>    
+</body>
+</html>

@@ -1,0 +1,104 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.window.Login-ns"></div>/**
+* Philosophy Marker Generic Data  
+*
+* @author    Ultragestion (rbarriga)
+* @copyright (c) 2009, by Ultragestion
+* @date      23. November 2009
+* @version   1.1
+*
+*/
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.MarkerData = Ext.extend(Ext.Window, {
+	title: Philosophy.Globalization.For('Marker Description'),
+	width: 250,
+	height: 250,
+	closeAction: 'close',
+	maximizable: false,
+	modal: false,
+	plain: true,
+	layout: 'border',
+	marker: null,
+    markerLayer: null,
+	coordinate: [], // point WSM projection 
+	data: [],   // array with generic string data
+
+	initComponent: function() {
+		var _this = this;
+		this.tbar = new Ext.Toolbar({
+			items: [
+			{
+				text: Philosophy.Globalization.For('Delete'),
+				iconCls: 'icon-delete',
+				tooltip: { title: Philosophy.Globalization.For('Delete'), text: Philosophy.Globalization.For('Delete marker') },
+				handler: function () { _this.deleteMarker() }
+			}
+			]
+		});
+
+		var store = new Ext.data.ArrayStore({ fields: [{ name: 'data'}] });
+		store.loadData(_this.buildData());
+		var grid = new Ext.grid.GridPanel({
+			store: store,
+			columns: [{ width: 200, sortable: true, dataIndex: 'data'}]
+		});
+
+		var p = new Ext.Panel({
+			title: '',
+			region: 'center',
+			margins: '5 5 5 5',
+			layout: 'fit',
+			items: [grid],
+			autoScroll: true
+		});
+
+		this.items = [p];
+
+		Phi.view.window.MarkerData.superclass.initComponent.call(this);
+
+		this.addButton(Philosophy.Globalization.For('Close'), function () { _this.close(); });
+	}
+	,
+	deleteMarker: function(){
+		var _this = this;
+		Ext.MessageBox.show({
+			title: Philosophy.Globalization.For('Delete'),
+			msg: Philosophy.Globalization.For('Delete marker from map ?'),
+			buttons: Ext.MessageBox.YESNO,
+			fn: function(btn, text) {
+				if (btn == 'yes') {
+					_this.markerLayer.removeMarker(_this.marker);
+					_this.marker.destroy();
+					_this.close();
+				}
+			}
+		});
+	}
+	,
+	buildData: function() {
+
+		var d = [];
+		if (this.data) {
+			for (var i = 0; i < this.data.length; i++) {
+				d.push([this.data[i]]);
+			}
+		}
+
+		d.unshift(['<b>' + this.coordinate[1] + '</b>']);
+		d.unshift(['<b>' + this.coordinate[0] + '</b>']);
+
+		return d;
+	}
+});// eo Phi.view.window.markerData
+// eof</pre>    
+</body>
+</html>

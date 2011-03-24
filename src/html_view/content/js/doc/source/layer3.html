@@ -1,0 +1,94 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿Ext.ns("Phi.view.menu");
+<div id="cls-Philosophy.view.menu.Layer"></div>/**
+* @class Philosophy.view.menu.Layer
+* 
+* Philosophy Layer actions menu (this could be used for example in context menu)
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+*/
+Phi.view.menu.Layer = Ext.extend(Ext.menu.Menu, {
+    layerName: null,
+    layerTitle: null,
+    enableCheckLayer: false,
+    enableRemoveLayer: false,
+    node: null,                           // tree case
+    rowIndex: null,                       // grid case
+    initComponent: function () {
+        var _this = this;
+
+        this.addEvents('checkLayer');
+        this.addEvents('removeLayer');
+
+        Phi.view.menu.Layer.superclass.initComponent.call(this);
+
+        this.add({ iconCls: 'icon-search-list', text: Phi.Global.For('Layer Details'), handler: _this.showDetails });
+        this.add({ iconCls: 'icon-database', text: Phi.Global.For('Query'), handler: _this.showQuery });
+        this.add({ iconCls: 'icon-zoom', text: Phi.Global.For('Zoom'), handler: _this.zoomToExtent });
+
+        if (this.enableCheckLayer)
+            this.add({ iconCls: 'icon-tick', text: Phi.Global.For('Check only this'), handler: _this.checkLayer });
+
+        this.add({ iconCls: 'icon-link', text: Phi.Global.For('Links'), handler: _this.showLinks });
+
+        if (this.enableRemoveLayer)
+            this.add({ iconCls: 'icon-delete', text: Phi.Global.For('Remove'), handler: _this.removeLayer });
+			
+		this.add({ iconCls: 'icon-metadata', text: Phi.Global.For('Metadata'), handler: _this.showHtmlMetadata });
+    }
+    ,
+    showDetails: function () {
+        Philosophy.Layer.layerDetail(this.parentMenu.layerName);
+    }
+    ,
+    showQuery: function () {
+        var win = new Phi.view.window.Metadata();
+        win.show();
+        win.setLayer(this.parentMenu.layerName, this.parentMenu.layerTitle);
+    }
+    ,
+    zoomToExtent: function () {
+        Philosophy.Layer.zoomToExtent(this.parentMenu.layerName);
+    }
+    ,
+    checkLayer: function () {
+        var layerName = this.parentMenu.layerName;
+        var node = this.parentMenu.node;
+        var rowIndex = this.parentMenu.rowIndex;
+
+        this.parentMenu.fireEvent('checkLayer', layerName, node, rowIndex);
+    }
+    ,
+    removeLayer: function () {
+        var layerName = this.parentMenu.layerName;
+        var node = this.parentMenu.node;
+        var rowIndex = this.parentMenu.rowIndex;
+
+        this.parentMenu.fireEvent('removeLayer', layerName, node, rowIndex);
+    }
+    ,
+    showLinks: function () {
+        var win = new Phi.view.window.Link({ layer: this.parentMenu.layerName });
+        win.show();
+    }
+	,
+	showHtmlMetadata: function() {
+		var layerName = this.parentMenu.layerName;
+        var node = this.parentMenu.node;
+        var rowIndex = this.parentMenu.rowIndex;
+        var load = window.open('./Content/layer_metadata/' + layerName + '.htm', '_blank', 'scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,location=no,status=no');
+	}
+});  // eo Phi.view.menu.Layer
+// eof</pre>    
+</body>
+</html>

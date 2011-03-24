@@ -1,0 +1,146 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="cls-Philosophy.Service"></div>/**
+* @class Philosophy.Service
+* @singleton
+* Philosophy backend WCF services 
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+*
+*/
+Philosophy.Service = {
+    userService: '/svc/UserService.svc/rest',
+    locationService: '/svc/LocationService.svc/rest',
+    workspaceService: '/svc/WorkSpaceService.svc/rest',
+    geoService: '/svc/GeoService.svc/rest',
+    utilService: '/svc/UtilService.svc/rest',
+    layerService: '/svc/LayerService.svc/rest',
+    groupService: '/svc/GroupService.svc/rest'
+
+};
+
+<div id="cls-Philosophy.UriTemplate"></div>/**
+* @class Philosophy.UriTemplate
+* @singleton
+*
+* Philosophy Simple hash table with backend WCF rest services uri templates
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+*
+*/
+Philosophy.UriTemplate = {
+    users: '/users/json',
+    usersSearch: '/Search',
+    user: '/user/',
+    userCreate: '/user/create',
+    userUpdate: '/user/update',
+    userEnabled: '/user/enabled',
+    userEnabledCollection: '/user/enabledcollection',
+    userLogin: '/user/login',
+    userChangePassword: '/user/changepassword',
+    userDeleteCollection: '/DeleteCollection',
+    
+    //user locations
+    locationsByUser: '/GetLocations',
+    locationsFavoritesByUser: '/GetLocationsFavorites',
+
+    //user workspace 
+    workspacesByUser: '/GetWorkSpaces', 
+
+    //user layers 
+    userLayers: '/GetLayers',
+    userLayersSearch : '/SearchLayers',
+
+    //user nodes
+    userGetNodesByUser: '/GetNodes',
+    userUpdateNodesCollection: '/UpdateNodes',
+
+    //user rasters
+    userGetRastersByUser: '/GetRasters',
+    userUpdateRastersCollection: '/UpdateRasters',
+
+    //user Roles
+    userUpdateRolesCollection: '/UpdateRoles',
+
+    //user groups 
+    userGetGroups: '/GetGroups',
+
+    // locations
+    locations: '/locations/json',
+    location: '/location/',
+    locationCreate: '/location/create',
+    locationUpdate: '/location/update',
+    locationFavorite: '/location/favorite',
+
+    // workspace
+    workspaces: '/ReadWorkSpacesAsJson',   
+    workspace: '/workspace/',
+    workspaceCreate: '/workspace/create',
+    workspaceUpdate: '/workspace/update',
+    workspacePublic: '/workspace/public',
+    workspaceAddUsers: '/workspace/addUser',
+    workspaceRemoveUsers: '/workspace/removeUser',
+    workspaceSearch: '/Search',
+    workspaceGetUsers: '/GetUsers',
+    workspaceSearchByUsers: '/SearchByUserCollection', // search on user collection !!    
+    workspaceSearchUsers: '/SearchUsers', // search all user !! 
+    workspaceGetByOwner: '/GetAllByOwner',          
+    //geo
+    geoGetBBox: '/GetBBox',
+    geoGetBBoxStatic : '/GetBBox', //'/GetBBoxStatic',
+    geoGetWithIn: '/GetWithIn',
+    
+    geoGetGroupWithIn: '/GetGroupWithIn',
+    geoGetGroupWithInBbox: '/GetGroupWithInBbox',
+    
+    geoGetMetadata: '/GetMetadata',
+    geoGetUniqueValues: '/GetUniqueColumnValues',
+    geoGetQueryData: '/GetQueryData',
+
+    //layer service
+    layers : '/GetAll',
+    linksByLayer: '/GetLinks',
+    layerSearch: '/Search',
+    layerRead: '/Read',
+
+    //util
+    utilParseFile: '/ParseFile/',
+    utilTransformFile: '/TransformFile/',
+    utilProxyTextFile: '/UploadFile/',
+    
+    nodeGetNodes: '/GetNodes',         //all nodes
+    
+    roles: '/ReadRoles',
+    rolesGetAllRolesCheckedByUser: '/GetAllRolesCheckedByUser',
+
+    //group service
+    groups: '/GetAll', 
+    groupGetNodes: '/GetNodes',
+    groupGetAllNodesCheckedByUser: '/GetAllNodesCheckedByUser', 
+    groupGetRasters: '/GetRasters',    
+    groupGetAllRastersCheckedByUser: '/GetAllRastersCheckedByUser',
+    
+
+    getUri: function(service, action, option) {
+        var strService = Philosophy.Service[service];
+        var strAction = Philosophy.UriTemplate[action];
+        var strOption = option || '';
+
+        return SERVER + strService + strAction + strOption;
+    }
+};  // eo Philosophy.Uritemplate
+// eof</pre>    
+</body>
+</html>

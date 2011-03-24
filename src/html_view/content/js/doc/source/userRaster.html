@@ -1,0 +1,120 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿/* mainWMS layers widget 
+*
+* @author    IKOM (rbarriga)
+* @copyright (c) 2010, by IKOM
+* @date      15. June 2010
+* @version   1.2
+*
+*/
+Ext.ns("Phi.view.tree");
+
+Phi.view.tree.UserRaster = Ext.extend(Phi.view.tree.Base, {
+    userNames: null,
+    initComponent: function () {
+
+        var combo = new Phi.view.comboBox.UserGroup({
+            userName: Phi.Session.getUser()
+        });
+
+        combo.on('ready', function () {
+            var userGroup = combo.getValue();
+            this.load(this.userNames, userGroup);
+        }, this)
+        
+        
+        this.tbar = new Ext.Toolbar({
+            items: [
+            {
+                text: Phi.Global.For('All'),
+                iconCls: 'icon-check-all',
+                scope: this,
+                handler: this.checkAll
+            }
+			,
+			{
+			    text: Phi.Global.For('None'),
+			    iconCls: 'icon-uncheck-all',
+			    scope: this,
+			    handler: this.uncheckAll
+			}
+            ,
+            { xtype: 'tbfill' }
+            ,
+            combo
+            ]
+        });
+
+        Phi.view.tree.UserRaster.superclass.initComponent.apply(this, arguments);
+        this.on('beforeappend', this.format, this);
+    }
+    ,
+    load: function (userNames, userGroup) {
+        var group = new Phi.model.Group();
+        if (userNames.length === 1) {
+            group.on('getallrasterscheckedbyuser', function (rasters) {
+                this.loadTree(rasters)
+            }, this);
+            group.getAllRastersCheckedByUser(userGroup, userNames[0]);
+        }
+        else {
+            group.on('getrasters', function (rasters) {
+                this.loadTree(rasters)
+            }, this);
+            group.getRasters(userGroup);
+        }
+    }
+    ,
+    loadTree: function (rasters) {
+        var nodes = this.buildNodes(rasters);
+        var n = new Ext.tree.TreeNode({ children: nodes });
+        this.setRootNode(n);
+        this.loader.doPreload(n);
+    }
+    ,
+    format: function (tree, parent, node) {
+        if (node.isLeaf())
+            node.attributes.iconCls = "icon-raster";
+        else {
+            node.attributes.checked = null;
+            node.attributes.text = '<b>' + node.attributes.text + '</b>';
+        }
+    }
+    ,
+    setLeafs: function (leafs) {
+        this.uncheckAll();
+        Ext.each(leafs, function (l) { this.checkNodeById(l.id); }, this);
+    }
+    ,
+    buildNodes: function (rasters) {
+
+        var nodes = [];
+        Ext.each(rasters, function (r) {
+            var n = {
+                id: r.Id,
+                text: r.Name,
+                leaf:true,
+                checked: r.Flag
+            }
+            nodes.push(n);
+        }, this);
+
+        var root = [{
+            id: 0,
+            text: 'Rasters',
+            leaf: false,
+            expanded: true,
+            children: nodes
+        }];
+        return root;
+    }
+});</pre>    
+</body>
+</html>

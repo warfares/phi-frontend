@@ -1,0 +1,47 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿Ext.ns("Phi.view.window");
+
+Phi.view.window.UserRoleMaintainer = Ext.extend(Ext.Window, {
+    width: 400,
+    height: 500,
+    closeAction: 'close',
+    maximizable: false,
+    modal: false,
+    plain: true,
+    layout: 'border',
+    userNames: null,
+
+    initComponent: function () {
+
+        this.tree = new Phi.view.tree.UserRole({
+            region: 'center',
+            userNames: this.userNames
+        });
+        this.items = [this.tree];
+
+        Phi.view.window.UserRoleMaintainer.superclass.initComponent.call(this);
+
+        this.addButton(Phi.Global.For('Save'), this.update, this);
+        this.addButton(Phi.Global.For('Cancel'), this.close, this);
+    }
+    ,
+    update: function () {
+        var ids = this.tree.getCheckedIds();
+        var requestUser = Phi.Session.getUser();
+
+        var user = new Phi.model.User();
+        user.on('updaterolescollection', function () {
+            Phi.Util.popupMessage('User roles Updated');
+        }, this);
+        user.updateRolesCollection(this.userNames, ids, requestUser);
+    }
+});</pre>    
+</body>
+</html>

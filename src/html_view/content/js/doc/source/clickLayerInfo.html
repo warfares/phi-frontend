@@ -1,0 +1,103 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">//Custom OpenLayers controls
+OpenLayers.Control.ClickLayerInfo = OpenLayers.Class(OpenLayers.Control, {
+    defaultHandlerOptions: {
+        'single': true,
+        'double': false,
+        'pixelTolerance': 0, //tolarance
+        'stopSingle': false,
+        'stopDouble': false
+    },
+
+    initialize: function (options) {
+        this.handlerOptions = OpenLayers.Util.extend(
+            {}, this.defaultHandlerOptions
+        );
+        OpenLayers.Control.prototype.initialize.apply(
+            this, arguments
+        );
+        this.handler = new OpenLayers.Handler.Click(
+            this, {
+                'click': this.trigger
+            }, this.handlerOptions
+        );
+    },
+
+    trigger: function (e) {
+        var lonLat = Phi.Map.map.getLonLatFromViewPortPx(e.xy);
+        lonLat.transform(Phi.Map.map.getProjectionObject(), new OpenLayers.Projection("EPSG:" + Phi.Config.SRID));
+
+        var r = Phi.Map.map.getResolution(); //unit per pixel 
+        var distance = r * 5; // 5 pixel buffer 
+        
+        var fields = 'gid';
+
+        var layersVO = [];
+        Ext.each(Phi.Layer.appliedLayers, function (l) {
+            var o = {
+                Name: l.name,
+                Title: l.title,
+                SRID: Phi.Config.SRID
+            }
+            layersVO.push(o);
+        }, this);
+
+        var pointVO = {
+            X: lonLat.lon,
+            Y: lonLat.lat
+        };
+
+        var vo = {
+            LayersVO: layersVO,
+            PointVO: pointVO,
+            Fields: fields,
+            Dist: distance
+        };
+
+        var proxy = new Ext.data.HttpProxy({
+            url: Phi.UriTemplate.getUri('geoService', 'geoGetGroupWithIn'),
+            method: 'POST',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: vo
+        });
+
+        var ds = new Ext.data.Store({
+            proxy: proxy,
+            reader: new Ext.data.JsonReader({ fields: ["Id", "LayerName", "LayerTitle"] })
+        });
+
+        var render = function (val, m, record) {
+            return '<img src="content/images/icons/vector.png" />';
+        }
+
+        var cm = new Ext.grid.ColumnModel([
+                { header: '', width: 25, renderer: render },
+                { header: 'Id', width: 50, dataIndex: 'Id' },
+                { header: Phi.Global.For('Layer'), dataIndex: 'LayerTitle', width: 140 },
+                { header: '', dataIndex: 'LayerName', hidden: true }
+            ]);
+
+        var win = new Phi.view.window.MetadataResult({
+            title: '',
+            ds: ds,
+            cm: cm,
+            width: 300,
+            height: 300,
+            showDetail: true,
+            geomData: false
+        });
+
+        win.show();
+        ds.load();
+    }
+    });          // eo OpenLayers.Control.Click
+</pre>    
+</body>
+</html>

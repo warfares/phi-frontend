@@ -1,0 +1,104 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy.model");
+<div id="cls-Philosophy.model.Trace"></div>/**
+* @class Philosophy.model.Trace
+* @extends Ext.util.Observable
+* 
+* Philosophy Trace its a cross domain (JSONP) (proxy) for 
+* phi.gps service ..(UltraGPS DATA) !!
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      12. August 2010
+*/
+Philosophy.model.Trace = Ext.extend(Ext.util.Observable, {
+    initComponent: function (config) {
+        this.server = config.server || GPSSERVER; // TODO fix this ; ?? 
+
+        this.addEvents(
+        <div id="event-Philosophy.model.Trace-async"></div>/**
+        * @event async cross domain lastposition OK 
+        */
+            'lastposition',
+        <div id="event-Philosophy.model.Trace-async"></div>/**
+        * @event async cross domain trace OK 
+        */
+            'trace',
+        <div id="event-Philosophy.model.Trace-not"></div>/**
+        * @event not found result event 
+        */
+            'notfound'
+
+		);
+        Philosophy.model.Trace.superclass.initComponent.call(config);
+    }
+    ,
+    <div id="method-Philosophy.model.Trace-getByRange"></div>/**
+    * Get traces in date range  
+    * @param {String} id carrier (key)
+    * @param {Date} from initial date 
+    * @param {Date} to ending date
+    * */
+    getByRange: function (id, from, to) {
+        var params = {
+            carrierId: id,
+            from: from,
+            to: to
+        };
+        var me = this;
+        Ext.ux.JSONP.request(GPSSERVER + '/svc/trace.svc/rest/GetByRange', {
+            callbackKey: 'callback',
+            params: params,
+            callback: function (r) {
+                if (r.Success) {
+                    var list = [];
+                    Ext.each(r.List, function (t) {
+                        var o = { x: t.X, y: t.Y, angle: t.Angle, speed: t.Speed };
+                        list.push(o);
+                    }, this);
+
+                    var bound = {
+                        minx: r.Bound.P1.X,
+                        miny: r.Bound.P1.Y,
+                        maxx: r.Bound.P2.X,
+                        maxy: r.Bound.P2.Y
+                    };
+                    me.fireEvent('trace', list, bound);
+                }
+                else
+                    me.fireEvent('notfound');
+            }
+        });
+    }
+    ,
+    <div id="method-Philosophy.model.Trace-getLastPosition"></div>/**
+    * Get the last position  
+    * @param {String} id carrier (key)
+    * */
+    getLastPosition: function (id) {
+        var me = this;
+        Ext.ux.JSONP.request(GPSSERVER + '/svc/trace.svc/rest/GetLastPosition', {
+            callbackKey: 'callback',
+            params: { carrierId: id },
+            callback: function (r) {
+                if (r.Success) {
+                    var t = r.Trace;
+                    var o = { x: t.X, y: t.Y, angle: t.Angle, speed: t.Speed };
+                    me.fireEvent('lastposition', o);
+                }
+                else
+                    me.fireEvent('notfound');
+            }
+        });
+    }
+});</pre>    
+</body>
+</html>

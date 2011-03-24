@@ -1,0 +1,82 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.tree.WMSLayers-ns"></div>/**
+ * Philosophy Generic Layer Result
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2009, by Ultragestion
+ * @date      18. December 2009
+ * @version   1.1
+ *
+ */
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.GenericLayersGrid = Ext.extend(Ext.Window, {
+    closeAction: 'close',
+    maximizable: false,
+    modal: true,
+    plain: true,
+    layout: 'border',
+    params: null,       // external def
+    ds: null,           // external def
+    cm: null,           // external def
+    initComponent: function () {
+
+        var _this = this;
+
+        var view = new Ext.grid.GridView({
+            forceFit: false,
+            enableRowBody: true,
+            ignoreAdd: true,
+            emptyText: Philosophy.Globalization.For('No record found')
+        });
+
+        this.grid = new Ext.grid.GridPanel({
+            region: 'center',
+            loadMask: true,
+            frame: true,
+            header: false,
+            view: view,
+            ds: this.ds,
+            cm: this.cm
+        });
+
+        // context Menu 
+        function onGridContextMenu(grid, rowIndex, e) {
+            e.stopEvent();
+            var coords = e.getXY();
+            _this.layerContextMenu.showAt([coords[0], coords[1]]);
+            _this.grid.getSelectionModel().clearSelections();
+            _this.grid.getSelectionModel().selectRow(rowIndex);
+            var layerName = _this.getlayerNameFromSelection();
+            _this.layerContextMenu.layerName = layerName;
+
+        }
+
+        this.grid.addListener('rowcontextmenu', onGridContextMenu);
+        this.layerContextMenu = new Phi.view.menu.Layer();
+
+        this.items = [this.grid];
+
+        Phi.view.window.GenericLayersGrid.superclass.initComponent.call(this);
+        
+        this.addButton(Philosophy.Globalization.For('Close'), function () { _this.close(); });
+       
+    }
+    ,
+    getlayerNameFromSelection: function () {
+        var selections = this.grid.getSelectionModel().getSelections();
+        return selections[0].data.Name;
+    }
+});//eo Phi.view.window.GenericLayersGrid
+// eof
+</pre>    
+</body>
+</html>

@@ -1,0 +1,265 @@
+﻿
+Ext.ns("Philosophy.Globalization.Dictionaries");
+
+Philosophy.Globalization.Dictionaries.Deutsch = {
+	//Generic
+	'Search': 'Suche',
+	'Search Not Found': 'Suche ohne Ergebnis',
+	'Search Found': 'Suche mit Ergebnis',
+	'Yes': 'Ja',
+	'No': 'Nein',
+	'Wait...': 'Bitte warten...',
+	'Warning': 'Warnung',
+	'Problem in call' : 'Fehler im Aufruf',
+	'Are you sure ?' : 'Sicher?',
+	'Add' : 'Hinzufügen',
+	'Edit': 'Ändern',
+	'Delete':'Löschen',
+	'Empty':'Leer',
+	'Clear':'Leeren',
+	'Create': 'Erstellen',
+	'Select One': 'Wähle aus',
+	'Click on map': 'Klick auf Karte',
+	'Close' : 'Schließen',
+	'Submit' : 'Ok',
+	'Execute' : 'Ausführen',
+	'Description' : 'Beschreibung',
+	'Enabled' : 'Aktivieren',
+	'Disable' : 'Deaktivieren',
+	'Field Required' : 'Feld obligatorisch',
+	'Check form': 'Formular überprüfen',
+	'Passwords are not equal': 'Passwörter sind nicht gleich',
+	'At least 4 characters': 'Mindestens 4 Zeichen erforderlich',
+	'Reload' : 'Erneut laden',
+	'Select All': 'Alles auswählen',
+	'No record found':'Kein Eintrag gefunden',
+	'Select at least one row':'Wähle mindestens eine Zeile aus',
+	'Select' : 'Wähle aus',
+	'Restart app now ?' : 'Applikation jetzt neu starten?',
+
+	//Export 
+	'Export': 'Exportieren',
+	'Error on Export': 'Fehler beim Export',
+	'Check Data': 'Daten überprüfen',
+	'Export my current map view': 'Aktuellen Kartenausschnit exportieren',
+	'DPI': 'DPI',
+	'Select a DPI Option': 'Wähle DPI-Option',
+	'Select a Zoom Level': 'Wähle Zoom-Level',
+	'Zoom': 'Zoom',
+	'Page Size (PDF)': 'Seitenformat',
+	'Select a page size': 'Wähle Seitenformat', 
+	'Filter by bounds': 'Auswahl über Ausschnitt',
+
+	//Login 
+	'Login':'Login',
+	'User':'Benutzername', 
+	'Password':'Passwort',
+	'User or password not valid':'Benutzername oder Passwort ungültig',
+
+	//Layout (app.js)
+	'DashBoard':'Werkzeuge',
+
+	//Main Toolbar
+	'Display Projections':'Koordinatensystem',
+	'Control Panel':'Kontrollpanel',
+	'LogOut': 'Ausloggen',
+
+	//Quick Toolbar
+	'Zoom Box In': 'Zoom Box In',
+	'Zoom Box Out': 'Zoom Box Out',
+	'Zoom In': 'Zoom In',
+	'Zoom Out': 'Zoom Out',
+	'Zoom Init': 'Zoom Init',
+	'Pan': 'Pan',
+	'Undo': 'Undo',
+	'Redo': 'Redo',
+	'Info': 'Click info',
+
+	'Zoom Box In Desc': 'Zoom In - Vergrösserung de Massstabs',
+	'Zoom Box Out Desc': 'Zoom Out - Verkleinerung de Massstabs',
+	'Zoom In Desc': 'Click Zoom In - Vergrösserung de Massstabs per Mausklick',
+	'Zoom Out Desc': 'Click Zoom Out - Verkleinerung de Massstabs per Mausklick',
+	'Zoom Init Desc': 'Ausgangszoom',
+	'Pan Desc': 'Pan - Verschieben des Kartenausschnitts',
+	'Undo Desc': 'Zum vorherigen Zoom gehen',
+	'Redo Desc': 'Zoomoption wiederholen',
+	'Info Desc': 'Objektinformation', 
+
+	//Top Banner 
+	'Banner Title' : 'CODELCO EL TENIENTE',
+	'Banner subA' : 'SERVIDOR DE MAPAS DIVISION EL TENIENTE',
+	'Banner subB' : 'GERENCIA DE SUSTENTABILIDAD',
+
+	//Panels 
+	//User
+	'My Profile' : 'Mein Profil',
+	'UserName' : 'Benutzername',
+	'Name': 'Name',
+	'Email': 'Email',
+
+	//Layers
+	'Layers':'Layer',
+	'Apply': 'Ausführen',
+	'Apply Desc': 'Draw the selected layer',
+	'Apply msg' : 'Layer anzeigen',
+	'Query' : 'Abfrage',
+	'Legend' : 'Legende',
+	'Check only this': 'Nur ausgewählten Layer aktivieren',
+	'Search Desc': 'Layer suchen',
+
+
+	//Map
+	'Map':'Karte',
+	'Navigation':'Navigation',
+	'Vector':'Vektor',
+	'Measure':'Messen',
+	'Alpha':'Alpha',
+
+	'Zoom In': 'Zoom In - Vergrösserung de Massstabs',
+	'Zoom Out': 'Zoom Out - - Verkleinerung de Massstabs',
+	'Color Selection': 'Farbauswahl',
+	'Point': 'Punkt',
+	'Line': 'Linie',
+	'Polyline':'Polyline',
+	'Polygon': 'Polygon',
+	'Regular Polygon': 'Gleichmässiges Polygon',
+	'Drag Polygon': 'Objekt verschieben',
+	'Modify Polygon': 'Objekt bearbeiten',
+	'Delete Polygon': 'Objekt löschen',
+	'Clear All': 'Alles löschen',
+	'Hand': 'Pan',
+	'Rule': 'Distanz',
+	'Area': 'Fläche',
+	'Layer Description': 'Layer-Beschreibung',
+	'Layer Information': 'Objekt-Information',
+	'Box Information' : 'Box-Information',
+	'Point coordinates' : 'Koordinaten',
+	'Box coordinates' : 'Koordinaten Box',
+
+	//Locations 
+	'Locations': 'Orte',
+	'Favorite': 'Favorit',
+
+	//Resume 
+	'Layer Resume': 'Layerinformation',       
+
+	//Control Panel 
+	'Personal' : 'Persönliche Einstellungen',
+	'Profile Information' : 'Profilinformation',
+	'Administration' : 'Administration',
+	'User Administration' : 'Benutzeradministration',
+	'Application Settings' : 'Programmkonfiguration',
+
+	'Profiledesc': 'Personenbezogene Daten, Name, Kontaktinformation, etc.',
+	'Passworddesc': 'Passwort ändern',
+	'UserAdmindesc': 'Benutzer suchen, erstellen, aktualisieren, löschen, aktivieren, deaktivieren, Passwort ändern',
+	'AppAdmindesc': 'Programm anpassen, Spracheinstellung, etc..  ',
+
+
+	//User Form 
+	'User Detail' : 'Benutzerdetails',
+	'LastName' : 'Nachname',
+
+	//Metadata
+	'Layer Query' : 'Abfrage',
+	'Select Layer' : 'Wähle Layer',
+	'Fields' : 'Felder',
+	'Operator' : 'Operator', 
+	'Select Operator' : 'Wähle Operator',
+	'Value' : 'Wert',
+	'Values' : 'Werte',
+	'Query Preview' : 'Vorschau',
+	'Must select layer and field' : 'Layer und Feld müssen ausgewählt sein',
+	'Select one field' : 'Wähle Feld',
+	'Needs a value field' : 'Wähle Feld-Wert',
+
+	//Metadata Result  
+	'Draw':'Zeichne',
+	'Clear already draw geometries ?' : 'Zeichenfläche löschen?',
+
+	//App settings 
+	'Application settings' : 'Programmkonfiguration',
+	'User Administration' : 'Benutzeradministration',
+
+	'Location Detail' : 'Ortsinformation',
+	'Only 200 characters' : 'Max. 200 Zeichen',
+
+	// translate (mmann)
+	'Grid': 'Kartengitter',
+	'Show/Hide grid coordinates <br/> over the map': 'Ein- und Ausblenden der Koordinaten des Kartengitters',
+	'Draw simple KML over the map': 'Einfaches KML darstellen',
+	'Coordinate File': 'Koordinatendatei',
+	'Draw (txt,xls,xlsx) coordinates  </br>  file in the map': 'Koordinatendatei laden und in Karte darstellen <br/>(Formate: txt, xls, xlsx)',	
+	'Transform': 'Transformieren',
+	'Transform (txt,xls,xlsx) coordinates</br> file in different proyections': 'Koordinatendatei transformieren <br/>(Formate: txt, xls, xlsx)',
+	'Export geometric layers <br/> in different formats (KML, PDF, SHAPE, ETC...)': 'Exportieren eines Vektorlayer <br /> (Formate: KML, PDF, SHAPE, JPEG, Etc..)' ,
+	'Manual' : 'Handbuch',
+	'User Manual, description details': 'Benutzerhandbuch',
+	'Frequent Questions': 'FAQ - Häufig gestellte Fragen',
+	'Configuration tool as <br/> personal data, administration, etc...': 'Konfiguration:, <br/> Pers&oumlnliche Daten, Administration, etc...',
+	'Close current session': 'Cerrar sesión actual',
+	'Favorites': 'Favoriten',
+	'Quick Access to <br/> Raster, Places and favorite locations': 'Schnellzugang zu. <br/> Raster, Definierte &Oumlrtlichkeiten und Favoriten ',
+	'Projections': 'Projektionen',
+	'List Of Available Proyections': 'Liste vergfügbarer Projektionen',
+
+	// working on drawXY.js 
+	'Coordinate Information': 'Koordinaten',
+	'Optional Data': 'Optionale Daten',
+	'Marker': 'Marker - Markierung',
+	'Description': 'Beschreibung',
+
+	// searchLayer.js
+	'Title': 'Titel',
+	'Type': 'Typ',
+	'Date': 'Datum',
+	'data': 'Information',
+
+
+	// search.js
+	'Address Search' : 'Adresssuche',
+	'Change the zoom level': 'Massstabs&aumlnderung',
+	'Ultramap Geocoding address seach service': 'Adresssuche mit den Geocodifizierungsservice von UltraMap',
+	'also the following commands are available': 'Zus&aumltzlich exisiteren folgende Kommandos: ',
+	'Address search in google maps': 'Adresssuche in Google Maps',
+	'Search with Ultramap': 'Adresssuche mit UltraMap',
+
+	// resumeLayer.js
+	'Updating...' : 'Aktualisierung...',
+
+	//baseLayer.js
+	'Base Layers':'Basislayer',
+	'List available base cartography, i.e: Google, OpenStreetMap, Ultramap, etc': ' Auflisten der Basislayer, z.B. Google Maps, OpenStreetMap, UltraMap.',
+
+	//searchLayer.js
+	'Search params': 'Parameter suchen',
+	'Others parameters' : 'Weitere Parameter',
+
+	//Slide baseLayer.js
+	'Transparency' : 'Durchsichtigkeit',
+	'Hide selected base layer together with the flights, allowing you to see only the geometries': 'Verbergen des Basislayer und der Orthofotos. ',
+
+	'visible': 'Sichtbar',
+
+	// convertCoordinate.js
+	'Convert Coordinates': 'Koordinatentransformation',
+	'Select an File': 'Wa&aumlhle eine Datei',
+	'File' : 'Datei',
+	'file': 'Datei',
+	'The file <b>': 'Die Datei <b>',
+	'</b>: must be <b>txt, xls, xslx</b>':  '</b>: muss vom Typ <b>txt, xls oder xslx</b> sein',
+	'Source' : 'Ausgangssystem',
+	'Target': 'Zielsystem',
+
+	//drawCoordinate.js
+	'Draw Coordinates': 'Koordinaten zeichnen',
+	'Uploading your file...': 'Datei ist am hochladen...',
+	'File successfully processed' : 'Datei erfolgreich hochgeladen',
+	'The projections must be different': 'Die Projektionen müssen unterschiedlich sein.',
+
+	//uploadKML.js
+	'</b> must be <b>kml</b>' : '</b> Datei muss vom Format <b>kml</b> sein.'
+
+
+
+};

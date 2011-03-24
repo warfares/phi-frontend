@@ -1,0 +1,55 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.panel");
+<div id="cls-Philosophy.view.panel.Search"></div>/**
+* @class Philosophy.view.panel.Search
+* 
+* Philosophy geocode results panel (Dashboard)
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+* 
+*/
+Phi.view.panel.Search = Ext.extend(Ext.Panel, {
+    title: Philosophy.Globalization.For('Search'),
+    layout: 'fit',
+    border: false,
+    collapsible: true,
+    autoscroll: true,
+    plugins: [Ext.ux.plugins.ToggleCollapsible],
+    searchEngine: Philosophy.SearchEngines,
+
+    initComponent: function() {
+        var _this = this;
+        var tbar = new Ext.Toolbar({
+            items: [{ xtype: 'tbfill' },
+                    {
+                        iconCls: 'icon-clear',
+                        text: Philosophy.Globalization.For('Clear'),
+                        tooltip: Philosophy.Globalization.For('Clear'),
+                        handler: function() { _this.clear(); }
+                    }]
+        });
+        this.tbar = tbar;
+        Phi.view.panel.Search.superclass.initComponent.call(this);
+    }
+    ,
+    clear: function() {
+        this.body.dom.innerHTML = "";
+        this.body.dom.className = "main_container";
+        this.doLayout();
+        this.body.highlight('#f6e8b0', { block: true });
+    }
+});  // eof Phi.view.panel.Search
+// eof
+</pre>    
+</body>
+</html>

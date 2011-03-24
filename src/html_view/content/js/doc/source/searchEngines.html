@@ -1,0 +1,188 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.comboBox.UserGroup-ns"></div>/**
+* Philosophy Search Engines
+*
+* @author    Ultragestion
+* @copyright (c) 2008, by Ultragestion
+* @date      7. October 2008
+* @version   1.0
+*
+*/
+
+Ext.ns("Philosophy.Search");
+
+Philosophy.Search.GoogleMap = Ext.extend(Object,{
+	getResult: function(v,parentModule){		
+		var v_split = v.split(':'); 
+		window.open('http://maps.google.es/maps?f=q&hl=es&geocode=&q='+v_split[1]+',+Chile&ie=UTF8&z=13&iwloc=addr');
+	}
+});
+
+Philosophy.Search.Google = Ext.extend(Object,{
+	getResult: function(v,parentModule){
+		var v_split = v.split(':'); 
+		window.open('http://www.google.cl/search?hl=es&q='+v_split[1]);
+	}
+});
+
+Philosophy.Search.Point = Ext.extend(Object,{
+	getResult: function(v,parentModule){
+		var c = v.split(';');
+		var latLon = Philosophy.Map.transformPoint(c[0], c[1], 'EPSG:4326', 'EPSG:900913');
+		Philosophy.Map.setCenter({ lon: latLon.lon, lat: latLon.lat });
+		Philosophy.Marker.drawMarker(latLon.lon, latLon.lat, 'red', null,'Input LatLon');
+	}
+});
+
+Philosophy.Search.Zoom = Ext.extend(Object, {
+        getResult: function(v, parentModule) {
+        var v_split = v.split(':'); 		
+        Philosophy.Map.setZoom(v_split[1]);
+    }
+});
+
+Philosophy.Search.ZoomIn = Ext.extend(Object,{
+	getResult: function(v,parentModule){
+	Philosophy.Map.zoomIn();
+	}
+});
+
+Philosophy.Search.ZoomOut = Ext.extend(Object,{
+	getResult: function(v,parentModule){
+	Philosophy.Map.zoomOut();
+	}
+});
+
+
+
+//Address Search Engine (Default)
+//Utility for Address Search Engine
+Philosophy.Search.DrawAddress = function(address) {
+    var lonLat = new OpenLayers.LonLat(address.Longitude, address.Latitude)
+    lonLat.transform(new OpenLayers.Projection("EPSG:32719"), Philosophy.Map.map.getProjectionObject());
+
+    var title = address.Region + '/' + address.City;
+    var desc = [];
+    desc.push(address.StreetType);
+    desc.push(address.StreetName);
+    desc.push(address.StreetNumber);
+    desc.push('<br/>');
+    desc.push(address.Municipality);
+    desc = desc.join(' ');
+
+    Philosophy.Marker.drawMarker(lonLat.lon, lonLat.lat, 'red', [], title, desc);
+
+    Philosophy.Map.map.setCenter(lonLat);
+};       //eof DrawAddress
+
+
+Philosophy.Search.Address = Ext.extend(Object, {
+    parentModule: null,
+    searchStore: null,
+    initComponent: function () {
+        var _this = this;
+
+        this.searchStore = new Ext.data.Store({
+            proxy: new Ext.data.ScriptTagProxy({ url: Philosophy.Config.geocodingUrlBase }),
+            baseParams: {
+                key: Philosophy.Config.geocodingApiKey,
+                street_number_tolerance: '50',
+                output: 'json',
+                include_neighbors: 'true'
+            },
+            reader: new Ext.data.JsonReader({
+                root: 'ResultSet.Result'
+            }, Ext.data.Record.create([
+                    { name: 'Latitude' },
+                    { name: 'Longitude' },
+                    { name: 'StreetType' },
+                    { name: 'StreetNumber' },
+                    { name: 'StreetName' },
+                    { name: 'StreetIntersection' },
+                    { name: 'Municipality' },
+                    { name: 'City' },
+                    { name: 'Region' },
+                    { name: 'RegionISO' },
+                    { name: 'Country' },
+                    { name: 'CountryISO' },
+                    { name: 'PostalCode' },
+                    { name: 'Exact' },
+                    { name: 'Accuracy' },
+                    { name: 'FieldsNotFound' }
+             ])),
+            listeners: {
+                'load': function (store, records, options) {
+
+                    if (records.length === 0) {
+                        _this.parentModule.body.dom.innerHTML = "<center style='padding-top:70px;'><font color=red><b>" + Philosophy.Globalization.For("Search Not Found") + "</b></font></center>";
+                    }
+                    else if (records.length > 0 && records[0].data.Exact == 'True') {
+                        Philosophy.Search.DrawAddress(records[0].data);
+                        _this.parentModule.body.dom.innerHTML = "<center style='padding-top:70px;'><font>" + Philosophy.Globalization.For("Search Found") + " : <b>" + records[0].data.StreetName + ' ' + records[0].data.StreetNumber + "</b> en <b>" + records[0].data.Municipality + "</b></font></center>";
+                    }
+                    else {
+                        var html = '<ul style="padding-left:20px; padding-top:10px;">';
+                        for (var i = 0; i < records.length; i++) {
+
+                            var address = records[i].data;
+                            var streetName = address.StreetName;
+                            var streetNumber = address.StreetNumber;
+                            var municipality = address.Municipality;
+
+                            streetName = streetName.replace(/'/, '');
+                            var action = 'Philosophy.Search.DrawAddress(' + Ext.util.JSON.encode(address) + ');';
+                            html += '<li><a  class="main_font_link" href=# onclick=\'' + action + '\'>' +
+                                    _this.buildText(address) + '</a></li>';
+
+                        }
+                        html += '</ul>';
+                        _this.parentModule.body.dom.innerHTML = html;
+                    }
+
+                    _this.parentModule.body.dom.className = "main_container"; //"x-panel-body x-panel-mc ";
+
+                    _this.parentModule.doLayout();
+                    _this.parentModule.show();
+                    _this.parentModule.expand();
+                    _this.parentModule.body.highlight('#f6e8b0', { block: true });
+                }
+            }
+        });
+    }
+    ,
+    getResult: function (searchString, parentModule) {
+        this.parentModule = parentModule;
+        this.searchStore.load({ params: { location: searchString} });
+    }
+    ,
+    buildText: function (v) {
+        var text = '<span style="padding-top:3px;">' + v.StreetType + '. ' + v.StreetName + ' ' + v.StreetNumber + ', ' + v.Municipality + '</span>';
+
+        if (v.StreetType == "" && v.StreetName == "" && v.StreetNumber == "" && v.Municipality != "")
+            text = '<b>' + v.Municipality + '</b>';
+
+        var regionDesc = "";
+        if (v.RegionISO != "RM") regionDesc = "Regi�n de ";
+
+        if (v.Accuracy == 'Municipality')
+            text = "<b>Comuna de " + v.Municipality + ', ' + regionDesc + v.Region + '</b>';
+
+        if (v.Accuracy == 'Town')
+            text = v.Town + " / " + v.Municipality + ', ' + regionDesc + v.Region;
+
+        return text;
+    }
+
+}); //eof Address Search Engine
+
+//eof
+</pre>    
+</body>
+</html>

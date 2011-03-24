@@ -1,0 +1,208 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.tree.WMSLayers-ns"></div>/**
+* Philosophy User Detail Form   
+*
+* @author    IKOM (rbarriga)
+* @copyright (c) 2010, by IKOM
+* @date      15. July 2010
+* @version   1.2
+*
+*/
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.FormUser = Ext.extend(Ext.Window, {
+    title: Phi.Global.For('User Detail'),
+    width: 400,
+    height: 400,
+    closeAction: 'close',
+    maximizable: false,
+    modal: true,
+    plain: true,
+    layout: 'border',
+    create: true, // used for create or update different submit action.
+    opener: null, // used for know the opener (load response)
+    readOnly: false, // used for see user details !! 
+
+    initComponent: function () {
+        var _this = this;
+
+        this.form = new Ext.FormPanel({
+            title: '',
+            region: 'center',
+            margins: '5 5 5 5',
+            layout: 'fit',
+            labelWidth: 150,
+            defaults: { width: 180 },
+            defaultType: 'textfield',
+            frame: true,
+            bodyStyle: 'padding:5px 15px 0',
+            items: [
+				{
+				    xtype: 'fieldset',
+				    title: Phi.Global.For('Description'),
+				    autoHeight: true,
+				    autoWidth: true,
+				    labelWidth: 150,
+				    defaults: { width: 150 },
+				    defaultType: 'textfield',
+				    items: [
+						{
+						    name: 'UserName',
+						    fieldLabel: Phi.Global.For('UserName'),
+						    allowBlank: false,
+						    emptyText: Phi.Global.For('Field Required'),
+						    readOnly: !this.create
+						}
+						,
+						{
+						    name: 'Enabled',
+						    fieldLabel: Phi.Global.For('Enabled'),
+						    xtype: 'checkbox',
+						    disabled:this.readOnly 
+						}
+						,
+						{
+						    name: 'Name',
+						    fieldLabel: Phi.Global.For('Name'),
+						    allowBlank: false,
+						    emptyText: Phi.Global.For('Field Required'),
+						    readOnly: this.readOnly
+						}
+						,
+						{
+						    name: 'LastName',
+						    fieldLabel: Phi.Global.For('LastName'),
+						    allowBlank: false,
+						    emptyText: Phi.Global.For('Field Required'),
+						    readOnly: this.readOnly
+						}
+						,
+						{
+						    name: 'Email',
+						    fieldLabel: Phi.Global.For('Email'),
+						    vtype: 'email',
+						    allowBlank: false,
+						    emptyText: Phi.Global.For('Field Required'),
+						    readOnly: this.readOnly
+						}
+					]
+				}
+				,
+				{
+				    xtype: 'fieldset',
+				    id: 'fieldset-password',
+				    title: Phi.Global.For('Password'),
+				    autoHeight: true,
+				    autoWidth: true,
+				    labelWidth: 150,
+				    defaults: { width: 150 },
+				    defaultType: 'textfield',
+				    items: [
+						{
+						    name: 'Password',
+						    fieldLabel: Phi.Global.For('Password'),
+						    inputType: 'password',
+						    allowBlank: false
+						}
+						,
+						{
+						    name: 'Re-Password',
+						    fieldLabel: 'Re-' + Phi.Global.For('Password'),
+						    inputType: 'password',
+						    allowBlank: false,
+						    validator: _this.validPassword
+						}
+					]
+				}
+			]
+        });
+
+        this.items = [this.form];
+        Phi.view.window.FormUser.superclass.initComponent.call(this);
+
+        if (!this.readOnly) {
+            this.addButton(Phi.Global.For('Submit'), this.createEntity, this);
+            this.addButton(Phi.Global.For('Cancel'), this.close, this);
+        }
+        else {
+            this.addButton(Phi.Global.For('Close'), this.close, this);
+        }
+    }
+	,
+    readEntity: function (userName) {
+        this.hidePassword();
+        var user = new Philosophy.model.User();
+        user.on('read', function (o) {
+            this.form.form.setValues(o);
+        }, this);
+        user.read(userName);
+    }
+    ,
+    createEntity: function () {
+
+        var userVO = this.form.form.getValues(false);
+        userVO.Enabled = true;
+        var user = new Philosophy.model.User();
+
+        if (this.form.form.isValid()) {
+            if (this.create) {
+                user.on('create', this.success, this);
+                user.create(userVO);
+            }
+            else {
+                user.on('update', this.success, this);
+                user.update(userVO);
+            }
+        }
+        else
+            Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Check form'));
+    }
+    ,
+    success: function () {
+        this.opener.load();
+        this.close();
+    }
+	,
+    validPassword: function () {
+        var formPanel = Ext.getCmp("form-user");
+
+        var password = formPanel.getForm().findField("Password").getValue();
+        var rePassword = formPanel.getForm().findField("Re-Password").getValue();
+
+        if (password != rePassword)
+            return Phi.Global.For('Passwords are not equal');
+
+        return true;
+    }
+	,
+    validLengthPassword: function () {
+        var formPanel = Ext.getCmp("form-user");
+        var password = formPanel.getForm().findField("Password").getValue();
+
+        if (password.length < 4)
+            return Phi.Global.For('At least 4 characters');
+        return true;
+    }
+	,
+    hidePassword: function () {
+        var fieldSetPassword = Ext.getCmp("fieldset-password");
+        fieldSetPassword.setVisible(false);
+
+        var password = this.form.getForm().findField("Password");
+        var rePassword = this.form.getForm().findField("Re-Password");
+
+        password.disabled = true;
+        rePassword.disabled = true;
+    }
+});       // eo Phi.view.window.FormUser
+// eof</pre>    
+</body>
+</html>

@@ -1,0 +1,49 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy.model");
+<div id="cls-Philosophy.model.Location"></div>/**
+ * @class Philosophy.model.Location 
+ * @extends Philosophy.model.Entity
+ * 
+ * Philosphy Location Proxy
+ * 
+ * @author rbarriga
+ * @version 1.2
+ * @copyright (c) 2010, by IKOM
+ * @date      15. July 2010
+ */
+Philosophy.model.Location = Ext.extend(Philosophy.model.Entity, {
+    createURL: Phi.UriTemplate.getUri('locationService', 'locationCreate'),
+    readURL: Phi.UriTemplate.getUri('locationService', 'location'),
+    updateURL: Phi.UriTemplate.getUri('locationService', 'locationUpdate'),
+    removeURL: Phi.UriTemplate.getUri('locationService', 'location'),
+
+    initComponent: function (config) {
+        this.addEvents(
+            'enabled',
+            'favorite'
+		);
+        Philosophy.model.Location.superclass.initComponent.call(config);
+    }
+    ,
+    favorite: function (o) {
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('locationService', 'locationFavorite'),
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope:this,
+            success: function (response, options) {
+                this.fireEvent('favorite', response);
+            }
+        });     
+    }
+});</pre>    
+</body>
+</html>

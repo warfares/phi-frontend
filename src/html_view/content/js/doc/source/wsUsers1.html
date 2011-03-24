@@ -1,0 +1,295 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.window.Login-ns"></div>/**
+* Philosophy Public WorkSpace Share widget
+*
+* @author    Ikom (rbarriga)
+* @copyright (c) 2010, by Ikom
+* @date      02. Agosto 2010
+* @version   1.2
+*
+*/
+
+Ext.ns("Phi.view.window");
+Phi.view.window.WSUsers = Ext.extend(Ext.Window, {
+    title: '',
+    width: 800,
+    height: 480,
+    pageSize: 25,
+    plain: true,
+    layout: 'border',
+    initComponent: function () {
+
+        var _this = this;
+
+        //tbar
+        this.removeButton = new Ext.Button({
+            text: Phi.Global.For('Remove'),
+            iconCls: 'icon-delete'
+        });
+
+        this.removeButton.on('click', function(){
+            var userNames = this.wsUsers.getChecked('entityId');
+        
+            if(userNames.length == 0){
+                Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select At least One'));
+                return false;
+            }
+            this.removeUsers(userNames);
+        
+        }, this);
+
+        var tbar = new Ext.Toolbar({ items: this.removeButton });
+        //eof tbar
+         
+        //tree cm
+        this.contextMenu =  new Ext.menu.Menu({ items:[
+			{
+			    text: Phi.Global.For('Details'),
+			    iconCls: 'icon-search-list',
+			    handler: function(){
+                    var userName = _this.node.attributes.entityId;   
+                    _this.showUserDetails(userName);
+                }
+			}
+            ,
+            {
+			    text: Phi.Global.For('Remove'),
+			    iconCls: 'icon-delete',
+			    handler: function(){
+                    var userName = _this.node.attributes.entityId;
+                    if(userName == _this.owner)
+                        return false;
+
+                    var o = [];
+                    o.push(userName);
+                    _this.removeUsers(o);
+                }
+			}
+		]});
+
+        this.wsUsers = new Phi.view.tree.WSUsers({
+            region: 'west',
+            width: 230,
+            enableDD: true,
+            tbar: tbar,
+            border: 0,
+            contextMenu:this.contextMenu,
+            owner:this.owner,
+            dropConfig: {
+                ddGroup: 'TreeDD',
+                dropAllowed: true,
+                notifyDrop: function (source, e, data) { _this.dropRows(data, this); }
+            }
+        });
+
+        this.wsUsers.on('contextmenu', function (node, e) {
+            if (node.isLeaf()) {
+               node.select();
+               var c = node.getOwnerTree().contextMenu;
+               c.showAt(e.getXY());
+               this.node = node;
+            }
+        },this);
+        //eo tree
+
+        /* search user grid */
+        var reader = new Ext.data.JsonReader({
+            root: 'List',
+            totalProperty: 'Total',
+            fields: ['UserName', 'Name', 'LastName', 'Email', 'Enabled']
+        });
+
+        //this.sm = new Ext.grid.CheckboxSelectionModel();
+
+        this.cm = new Ext.grid.ColumnModel([
+            {header: '', width: 30, sortable: false, renderer: _this.renderImage, dataIndex: 'UserName' },
+		    { header: Phi.Global.For('UserName'), width: 100, sortable: true, align: 'left', dataIndex: 'UserName', renderer: _this.renderUserName },
+		    { header: Phi.Global.For('Name'), width: 120, sortable: true, align: 'left', dataIndex: 'Name' },
+		    { header: Phi.Global.For('LastName'), width: 120, sortable: true, align: 'left', dataIndex: 'LastName' }
+		]);
+
+        var proxy = new Ext.data.HttpProxy({
+            url: Phi.UriTemplate.getUri('workspaceService', 'workspaceSearchUsers'),
+            method: 'GET'
+        });
+
+        var ds = new Ext.data.Store({
+            reader: reader,
+            proxy: proxy,
+            sortInfo: { field: 'UserName', direction: "ASC" }
+        });
+
+        var bbar = new Ext.PagingToolbar({
+            store: ds,
+            pageSize: 15,
+            displayInfo: true,
+            displayMsg: '{0} - {1} of {2}',
+            emptyMsg: 'No groups to display'
+        });
+
+        this.grid = new Ext.grid.GridPanel({
+            region: 'center',
+            title: Phi.Global.For('Users'),
+            loadMask: true,
+            ds: ds,
+            cm: this.cm,
+            bbar: bbar,
+            frame: true,
+            header: false,
+            enableDragDrop: true,
+            ddGroup: 'TreeDD',
+            border: '0'
+        });
+
+         this.grid.on('rowcontextmenu', onGridContextMenu, this);
+        //eo grid
+
+        //context menu 								
+        function onGridContextMenu(grid, rowIndex, e) {
+            e.stopEvent();
+            var coords = e.getXY();
+            grid.getSelectionModel().clearSelections();
+            grid.getSelectionModel().selectRow(rowIndex);
+            gridContextMenu.showAt([coords[0], coords[1]]);
+        }
+
+        var gridContextMenu = new Ext.menu.Menu({
+            items: [
+                {
+			        text: Phi.Global.For('Details'),
+			        iconCls: 'icon-search-list',
+			        handler: function(){
+                        var s = _this.getSelections();
+                        var userName = s[0].data.UserName;
+                        _this.showUserDetails(userName);
+                    }
+			    }
+                ,
+                {
+			        text: Phi.Global.For('Add'),
+			        iconCls: 'icon-user-color',
+			        handler: function(){
+                        var s = _this.getSelections();
+                        var userName = s[0].data.UserName;
+                        var o = [];
+                        o.push(userName);
+                        _this.addUsers(o);
+                    }
+			    }
+            ]
+        });
+        //eo context menu
+
+
+        // eof grid
+
+        this.search = new Phi.view.form.SearchUser({ region: 'east', collapsible: true, collapsed: true });
+        this.search.on('enter', this.loadGrid, this);
+        this.search.on('ready', this.loadGrid, this);
+        this.search.addButton(Phi.Global.For('Search'), function(){
+            var params = this.search.getParams();
+            this.loadGrid(params);
+        }, this);
+
+
+        this.items = [this.wsUsers, this.grid, this.search];
+        
+        Phi.view.window.WSUsers.superclass.initComponent.apply(this, arguments);
+        
+        this.addButton(Phi.Global.For('Close'),  this.close, this);
+        this.loadTree(this.id);
+
+    }
+    ,
+    renderImage: function (val, m, record) {
+        var enabled = record.get("Enabled");
+        var img = enabled ? '<img src="content/images/icons/user_color.png" />' : '<img src="content/images/icons/user_n.png" />';
+        return img;
+    }
+    ,
+    renderUserName: function (val, m, record) {
+        var userName = record.get("UserName");
+        var enabled = record.get("Enabled");
+        var text = enabled ? '<b class="main_font">' + userName + '</b>' : '<b>' + userName + '</b>';
+
+        return text;
+    }
+    ,
+    loadTree: function (id) {
+        this.wsUsers.load(id);
+    }
+    ,
+    loadGrid: function (params) {
+        params.id = this.id;
+        this.grid.store.baseParams = params;
+        this.grid.store.load({ params: { start: 0, limit: this.pageSize} });
+    }
+    ,
+    reloadGrid: function () {
+        this.grid.store.reload();
+    }
+    ,
+    dropRows:function(data, o)
+    {
+        var userNames = [];
+        Ext.each(data.selections, function (s) { userNames.push(s.data.UserName); });
+        this.addUsers(userNames);
+    }
+    ,
+    addUsers: function (userNames) {
+        var ws = new Phi.model.Workspace();
+        ws.on('addusers', function (total) {
+            this.loadTree(this.id);
+            this.reloadGrid();
+            Phi.Msg(Phi.Global.For('Added: ') + total);
+        }, this);
+        ws.addUsers(this.id, userNames);
+    }
+    ,
+    removeUsers: function (userNames) {
+        var ws = new Phi.model.Workspace();
+        ws.on('removeusers', function (total) {
+            this.loadTree(this.id);
+            this.reloadGrid();
+            Phi.Msg(Phi.Global.For('Removed: ') + total);
+        }, this);
+        ws.removeUsers(this.id, userNames);
+    }
+    ,
+    showUserDetails: function (userName) {     
+        var win = new Phi.view.window.FormUser({
+            height: 300,
+            create: false,
+            readOnly: true,
+            opener: this,
+        });
+        win.show(this);
+        win.readEntity(userName);
+        win.getEl().fadeIn({ duration: 1 });
+    }
+    ,
+    uncheckAll: function () {
+        var f = function () {
+            if (this.attributes.checked) {
+                this.attributes.checked = false;
+                this.ui.toggleCheck(false);
+            }
+        }
+        this.root.cascade(f);
+    }
+    ,
+    getSelections: function () {
+        var sm = this.grid.getSelectionModel();
+        return sm.getSelections();
+    }
+});      // eo Phi.view.window.WorkSpaceUsers
+// eof</pre>    
+</body>
+</html>

@@ -1,0 +1,301 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.window.Login-ns"></div>/**
+* Philosophy MetaData Generic Resultset  
+*
+* @author    Ultragestion (rbarriga)
+* @copyright (c) 2008, by Ultragestion
+* @date      08. November 2008
+* @version   1.0
+*
+*/
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.MetadataResult = Ext.extend(Ext.Window, {
+    width: 800,
+    height: 500,
+    closeAction: 'close',
+    maximizable: false,
+    modal: true,
+    plain: true,
+    layout:'border',
+    ds: null, // external def
+    cm: null, // external def
+    showDetail: false,  // double click action in grid (requiered table and id fields)
+    paging: false,      // allow grid paging (query service (ex metadata service) requiered paging capability)
+    extent: false,      // zoom to extent on draw vector geomtries, requiered layer  
+    query: null,        // query note: just in case
+    geomData: true,     // include the WKT geometries
+
+    initComponent: function() {
+
+        var _this = this;
+        var tbar = "";
+        if(this.geomData){
+            tbar = new Ext.Toolbar({
+                items: [{
+		                    iconCls: 'icon-database-refresh',
+		                    text: Philosophy.Globalization.For('Reload'),
+		                    tooltip: Philosophy.Globalization.For('Reload'),
+		                    handler: function() {
+		                        _this.reload();
+		                    }    
+		                }
+                        ,
+                        {
+                            iconCls: 'icon-select_all',
+		                    text: Philosophy.Globalization.For('Select All'),
+		                    tooltip: Philosophy.Globalization.For('Select All'),
+		                    handler: function() {
+		                        _this.selectAll();
+		                    }    
+                        }
+                        ,
+                        {
+		                    iconCls: 'icon-pencil',
+		                    text: Philosophy.Globalization.For('Draw'),
+		                    tooltip: Philosophy.Globalization.For('Draw'),
+		                    handler: function() {
+                                 _this.validateDraw();
+		                    }
+                        }
+                        ]
+            });
+        }
+
+        var view = new Ext.grid.GridView({
+            forceFit:false,
+            enableRowBody:true,
+            ignoreAdd: true,
+            emptyText: Philosophy.Globalization.For('No record found')
+        });
+
+        //paging property 
+        var pagingToolbar = '';
+        if(this.paging){
+            pagingToolbar = new Ext.PagingToolbar({ 
+                store: this.ds,
+                pageSize: 100,
+                displayInfo: true,
+                displayMsg: '{0} - {1} of {2}',
+                emptyMsg: "No groups to display"
+            });
+        }
+        //eo paging property
+
+        this.grid = new Ext.grid.GridPanel({
+            region:'center',
+            loadMask: true,
+            frame: true,
+            header: false,
+            tbar: tbar,
+            bbar: pagingToolbar, 
+            view: view,         
+            ds: this.ds,
+            cm: this.cm
+        });
+
+        //Adding context menu 								
+        function onGridContextMenu(grid, rowIndex, e) {
+            e.stopEvent();
+            var coords = e.getXY();
+            _this.rowIndex = rowIndex;
+
+            grid.getSelectionModel().clearSelections();
+            grid.getSelectionModel().selectRow(rowIndex);
+            gridContextMenu.showAt([coords[0], coords[1]]);
+        }
+
+        if (this.showDetail){
+            this.grid.addListener('rowdblclick', this.showClickDetail);
+        }
+
+        if(this.geomData){
+            this.grid.addListener('rowcontextmenu', onGridContextMenu);
+        }  
+
+        var gridContextMenu = new Ext.menu.Menu({
+            items: [
+                    {
+                        iconCls: 'icon-pencil',
+                        text: Philosophy.Globalization.For('Draw'),
+                        handler: function() { _this.validateDraw(); }
+                    }
+                    ,
+                    {
+                        iconCls: 'icon-pencil',
+                        text: Philosophy.Globalization.For('WKT'),
+                        handler: function() { _this.showWKT(); }
+                    }                    
+				    ]
+        });
+        //eo context menu 
+        
+        this.items = [this.grid];
+        Phi.view.window.MetadataResult.superclass.initComponent.call(this);
+        this.addButton(Philosophy.Globalization.For('Close'), function () { _this.close(); });
+    }
+    ,            
+    load:function(params){
+        this.ds.load({params:params});
+    }
+    ,
+    reload:function(){
+        this.ds.reload();
+    }
+    ,
+    validateDraw: function(){
+        
+        var _this = this;
+        var s = this.getSelections();        
+     
+        if (s.length < 1) {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), Philosophy.Globalization.For('Select at least one row'));
+            return null;
+        }
+
+        Ext.MessageBox.show({
+            title: '',
+            msg: Philosophy.Globalization.For('Clear already draw geometries ?'),
+            buttons: Ext.MessageBox.YESNO,
+            fn: function(btn, text) {
+                if (btn == 'yes') {
+                    Philosophy.Map.vectorLayer.destroyFeatures();
+                    _this.drawGeometries();
+                        
+                }
+                if (btn == 'no') {
+                    _this.drawGeometries();
+                }
+            }
+        });
+    }
+    ,
+    drawGeometries:function(){
+        var s = this.getSelections();
+
+        for (i=0;i<s.length;i++){
+            var wkt = s[i].data.wkt_geometry; // wkt - geometry 
+            Philosophy.Map.parseWKT(wkt);	      
+        }                 
+        //Zoom to extent
+        //if (this.extent)                                   
+          //  this.zoomToExtent(this.query.table);                
+    }
+    ,                     
+    showWKT:function(){
+        var s = this.getSelections();
+        var wkt = s[0].data.wkt_geometry;
+                
+        Ext.MessageBox.show({
+           title: 'WKT',
+           value : wkt,
+           width : 600,
+           minHeight:400,
+           height: 400,
+           buttons: Ext.MessageBox.OK,
+           multiline: true                    
+        });                                
+    }        
+    ,
+    showClickDetail:function(grid, row){
+        
+        var sm = grid.getSelectionModel();
+        var s = sm.getSelections();
+        
+        var id = s[0].data.Id;                  // Warning requiered - gid
+        var layerName = s[0].data.LayerName;    // Warning requiered - layer   
+        var layerTitle = s[0].data.LayerTitle;  
+      
+        var proxy_metadata = new Ext.data.HttpProxy({ 
+            method: 'GET',
+            url: Philosophy.UriTemplate.getUri('geoService', 'geoGetMetadata')
+        });
+
+        var ds = new Ext.data.Store({
+            reader: new Ext.data.JsonReader({fields: ["Name", "Type"] }),
+            proxy: proxy_metadata
+        });
+
+        ds.load({
+            params: {layerName: layerName}
+        });
+       
+        ds.on('load', function() {
+            var md = [];
+            for (i = 0; i < this.getCount(); i++) {
+                md[i] = this.getAt(i).get('Name');
+            }
+
+            var gmd = Philosophy.Util.clone(md);
+            gmd.push('wkt_geometry'); //wkt return def  
+            
+            var cm = Philosophy.Util.buildColumnModel(gmd);
+            var ds = Philosophy.Util.buildDataStore(gmd);
+
+            var query = {
+                table: layerName,
+                field: 'gid',
+                operator: 'eq',
+                value: id
+            };
+
+            var title = layerTitle + ' [' + query.table + ']'; 
+            var win = new Phi.view.window.MetadataResult({
+                title: title,
+                ds: ds,
+                cm: cm,
+                height: 190
+            });
+            win.show();
+
+            //baseParams 
+            var paramsQuery = {
+                layerName: query.table,
+                SRID: '96',
+                fields: md.join(','), 
+                field: query.field,
+                op: query.operator,
+                value: query.value,
+                wkt: '1',           
+                paging: '1', 
+                limit:50,
+                start:0         
+            };
+
+            win.load(paramsQuery);        
+        });
+    }
+    ,
+    selectAll: function (){
+        this.grid.getSelectionModel().selectAll();
+    }
+    ,
+    getSelections: function() {
+        var grid = this.grid;
+        var sm = grid.getSelectionModel();
+        return sm.getSelections();
+    }
+    ,
+    zoomToExtent: function(layer) {
+        // TODO : centralize()       
+    }
+}); // eo Phi.view.window.MetadataResult
+// eof
+
+
+
+
+
+
+
+    </pre>    
+</body>
+</html>

@@ -1,0 +1,42 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy");
+<div id="cls-Philosophy.Session"></div>/**
+* @class Philosophy.Session
+* 
+* Philosophy current logged user 
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+* @singleton
+*/
+Philosophy.Session = {
+    user: null,
+    setUser: function (user) {
+        this.user = user;
+    }
+    ,
+    getUser: function () {
+        return this.user.UserName;
+    }
+    ,
+    isRole: function (role) {
+        var result = false;
+        Ext.each(this.user.RolesVO, function (r) {
+            if (r.Id === role)
+                result = true;
+        }, this);
+        return result;
+    }
+}; // eo Philosophy.Session
+// eof   </pre>    
+</body>
+</html>

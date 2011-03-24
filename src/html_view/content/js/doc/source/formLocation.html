@@ -1,0 +1,143 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.tree.WMSLayers-ns"></div>/**
+ * Philosophy User Location Detail Form   
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2008, by Ultragestion
+ * @date      26. October 2008
+ * @version   1.0
+ * 
+ */
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.FormLocation = Ext.extend(Ext.Window, {
+    title: Phi.Global.For('Location Detail'),
+    width: 400,
+    height: 400,
+    closeAction: 'close',
+    maximizable: false,
+    modal: true,
+    plain: true,
+    layout: 'border',
+    create: true, // used for create or update instance.
+    opener: null, //used for know the opener
+    point: null,
+    marker: null,
+
+    initComponent: function () {
+     
+        this.form = new Ext.FormPanel({
+            labelWidth: 150,
+            defaults: { width: 180 },
+            defaultType: 'textfield',
+            frame: true,
+            bodyStyle: 'padding:5px 15px 0',
+            items: [
+				{
+				    xtype: 'fieldset',
+				    title: Phi.Global.For('Description'),
+				    autoHeight: true,
+				    autoWidth: true,
+				    labelWidth: 150,
+				    defaults: { width: 150 },
+				    defaultType: 'textfield',
+				    items: [
+				        {
+				            name: 'Id',
+				            hidden: true,
+				            hideLabel: true,
+				            value: 0
+				        }
+				        ,
+						{
+						    name: 'Name',
+						    fieldLabel: Phi.Global.For('Name'),
+						    allowBlank: false,
+						    emptyText: Phi.Global.For('Field Required')
+						}
+						,
+						{
+						    name: 'Description',
+						    fieldLabel: Phi.Global.For('Description'),
+						    xtype: 'textarea',
+						    maxLength: 200,
+						    maxLengthText: Phi.Global.For('Only 200 characters'),
+						    emptyText: Phi.Global.For('Field Required')
+						}
+					]
+				}
+			]
+        });
+
+        this.form.addButton(Phi.Global.For('Submit'), this.createOrUpdate, this);
+        this.form.addButton(Phi.Global.For('Cancel'), function () {
+            this.close();
+            if (this.create) {
+                Phi.Map.markerLayer.removeMarker(this.marker);
+            }
+        }, this);
+
+        var panel = new Ext.Panel({
+            region: 'center',
+            margins: '5 5 5 0',
+            layout: 'fit',
+            items: this.form
+        });
+
+        this.items = [panel];
+        Phi.view.window.FormLocation.superclass.initComponent.call(this);
+    }
+	,
+    read: function (id) {
+        var option = id + '/json';
+        var location = new Phi.model.Location();
+        location.on('read', function (o) {
+            this.form.form.setValues(o);
+        }, this);
+        location.read(id);
+    }
+    ,
+    createOrUpdate: function () {
+        var vo = this.form.form.getValues(false);
+        vo.Favorite = false;
+        vo.UserName = Phi.Session.getUser();
+
+        var location = new Philosophy.model.Location();
+
+        if (this.form.form.isValid()) {
+            if (this.create) {
+                vo.pointVO = this.point;
+                location.on('create', function () {
+                    Phi.Map.markerLayer.removeMarker(this.marker);
+                    Phi.Marker.drawMarker(this.point.Lon, this.point.Lat, null, null, vo.Name, vo.Description);
+                    this.success()                
+                }, this);
+                location.create(vo);
+            }
+            else {
+                location.on('update', this.success, this);
+                location.update(vo);
+            }
+        }
+        else
+            Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Check form'));
+
+    }
+    ,
+    success: function () {
+        var panelLocation = Philosophy.panelLocation;
+        panelLocation.reload();
+        this.close();
+    }
+}); // eo Phi.view.window.FormLocation
+// eof</pre>    
+</body>
+</html>

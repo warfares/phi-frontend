@@ -1,0 +1,151 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.tree.Base-ns"></div>/**
+ * Philosophy Raster
+ * raster layer widget 
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2009, by Ultragestion
+ * @date      29. December 2009
+ * @version   1.1
+ *
+ */
+Ext.ns("Phi.view.tree");
+
+Phi.view.tree.Raster = Ext.extend(Ext.tree.TreePanel, {
+    title: Phi.Global.For('Raster'),
+    animate: true,
+    enableDD: false,
+    border: true,
+    autoScroll: true,
+    rootVisible: false,
+    containerScroll: true,
+
+    initComponent: function () {
+
+        var _this = this;
+        this.root = new Ext.tree.TreeNode({ children: [] });
+
+        this.treeLoader = new Ext.tree.TreeLoader({ preloadChildren: true })
+        this.treeLoader.doPreload(this.root);
+
+        this.on('checkchange', function (n, checked) {
+            if (n.hasChildNodes()) {
+                n.expand();
+                n.eachChild(function (c) {
+                    c.ui.toggleCheck(checked);
+                    c.fireEvent('checkchange', c, checked);
+                });
+            }
+            else {
+                var layerName = n.attributes['layerName'];
+                _this.toggleVisibility(checked, layerName);
+            }
+        });
+
+        var contextMenu = new Ext.menu.Menu();
+        contextMenu.add({ iconCls: 'icon-zoom', text: Phi.Global.For('Zoom'), handler: _this.zoomRaster });
+
+        this.contextMenu = contextMenu;
+
+        this.on('contextmenu', function (node, e) {
+            if (node.isLeaf()) {
+                node.select();
+                var c = node.getOwnerTree().contextMenu;
+                c.node = node;
+                c.showAt(e.getXY());
+            }
+        });
+
+        this.tbar = new Ext.Toolbar({ items: ['-', { xtype: 'tbfill' }, '-'] });
+        Phi.view.tree.Raster.superclass.initComponent.apply(this, arguments);
+        this.on('beforeappend', this.format, this);
+    }
+    ,
+    format: function (tree, parent, node) {
+        if (node.isLeaf())
+            node.attributes.iconCls = 'icon-raster';
+    }
+	,
+    zoomRaster: function () {
+        var point = this.parentMenu.node.attributes['point'];
+        Philosophy.Map.setCenter(point);
+    }
+	,
+    toggleVisibility: function (v, layerName) {
+        var l = Philosophy.Map.map.getLayersByName(layerName);
+        l[0].setVisibility(v)
+    }
+    ,
+    getLayersString: function () {
+        var l = this.getChecked('layerName');
+        return l.join(',');
+    }
+	,
+    uncheckAll: function () {
+        var startNode = this.root;
+
+        var f = function () {
+            if (this.attributes.checked) {
+                this.attributes.checked = false;
+                this.ui.toggleCheck(false);
+            }
+        }
+        startNode.cascade(f);
+    }
+    ,
+    checkNodesByLayerName: function (layerName) {
+        var f = function () {
+            if (this.attributes.layerName === layerName) {
+                var n = this;
+                this.ensureVisible(
+                    function () {
+                        n.attributes.checked = true;
+                        n.ui.toggleCheck(true);
+                    }
+        		);
+            }
+        }
+        this.root.cascade(f);
+    }
+    ,
+    buildTree: function () {
+        var rasters = Philosophy.Map.map.getLayersBy('internalId', 'internal_raster');
+        var children = [];
+
+        Ext.each( rasters, function(r, i) {
+            var point = { lon: r.rasterObject.Max.Lon, lat: r.rasterObject.Max.Lat, zoom: r.rasterObject.MinZ };
+            var node = { Id: i +1, layerName: 'raster-layer-' + i, checked: r.rasterObject.Visible, text: r.rasterObject.Name, leaf: true, incoCls: "icon-raster", point: point };
+            children.push(node);
+
+        });
+
+        var rastertree = [
+        {
+            Id: 0,
+            checked: false,
+            text: "<b>Raster</b>",
+            leaf: false,
+            expanded: true,
+            children: children
+        }
+        ];
+        return rastertree;
+    }
+    ,
+    addRaster: function () {
+        var data = this.buildTree();
+        var r = new Ext.tree.TreeNode({ children: data });
+        this.setRootNode(r);
+        this.treeLoader.doPreload(r);
+    }
+});
+</pre>    
+</body>
+</html>

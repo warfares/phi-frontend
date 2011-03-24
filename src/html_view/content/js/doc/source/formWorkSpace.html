@@ -1,0 +1,140 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.tree.WMSLayers-ns"></div>/**
+* Philosophy User WorkSpace Description Form   
+*
+* @author    Ultragestion (rbarriga)
+* @copyright (c) 2008, by Ultragestion
+* @date      06. June 2009
+* @version   1.2
+* 
+*/
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.FormWorkSpace = Ext.extend(Ext.Window, {
+    title: Phi.Global.For('WorkSpace Detail'),
+    width: 400,
+    height: 270,
+    closeAction: 'close',
+    maximizable: false,
+    modal: true,
+    plain: true,
+    layout: 'border',
+    create: true, // used for create or update instance.
+
+    initComponent: function () {
+        var _this = this;
+
+        this.formPanel = new Ext.FormPanel({
+            defaultType: 'textfield',
+            frame: true,
+            bodyStyle: 'padding:5px 15px 0',
+            region: 'center',
+            margins: '5 5 5 0',
+            layout: 'fit',
+            labelWidth: 150,
+            defaults: { width: 180 },
+            items: [
+				{
+				    xtype: 'fieldset',
+				    title: Phi.Global.For('Description'),
+				    autoHeight: true,
+				    autoWidth: true,
+				    labelWidth: 150,
+				    defaults: { width: 150 },
+				    defaultType: 'textfield',
+				    items: [
+				        {
+				            name: 'Id',
+				            hidden: true,
+				            hideLabel: true,
+				            value: 0
+				        }
+				        ,
+						{
+						    name: 'Name',
+						    fieldLabel: Phi.Global.For('Name'),
+						    allowBlank: false,
+						    emptyText: Phi.Global.For('Field Required')
+						}
+						,
+						{
+						    name: 'Description',
+						    fieldLabel: Phi.Global.For('Description'),
+						    xtype: 'textarea',
+						    maxLength: 200,
+						    maxLengthText: Phi.Global.For('Only 200 characters'),
+						    emptyText: Phi.Global.For('Field Required')
+						}
+					]
+				}
+			]
+        });
+
+        this.items = [this.formPanel];
+        Phi.view.window.FormWorkSpace.superclass.initComponent.call(this);
+
+        this.addButton(Phi.Global.For('Submit'), this.createEntity, this);
+        this.addButton(Phi.Global.For('Cancel'), this.close, this);
+    }
+	,
+    readEntity: function (id) {
+        var ws = new Phi.model.Workspace();
+        ws.on('read', function (values) {
+            this.formPanel.form.setValues(values);
+        }, this)
+        ws.read(id);
+    }
+    ,
+    createEntity: function () {
+        var _this = this;
+
+        var center = Philosophy.Map.map.getCenter();
+        var pointVO = {
+            Lat: center.lat,
+            Lon: center.lon,
+            Zoom: Philosophy.Map.map.getZoom()
+        };
+
+        var vo = this.formPanel.form.getValues(false);
+        vo.pointVO = pointVO;
+        vo.Layers = Phi.Layer.getLayerIdString();
+        vo.Overlays = Phi.panelLayer.treeRaster.getLayersString();
+        vo.BaseLayer = Phi.mainToolbar.baseLayerCombo.getValue();
+
+        if (this.formPanel.form.isValid()) {
+            if (this.create) {
+                vo.Public = true;
+                var userVO = { UserName: Philosophy.Session.getUser() };
+                vo.userVO = userVO;
+
+                var ws = new Phi.model.Workspace();
+                ws.on('create', this.success, this);
+                ws.create(vo);
+            }
+            else {
+                var ws = new Phi.model.Workspace();
+                ws.on('update', this.success, this);
+                ws.update(vo);
+            }
+        }
+        else 
+            Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Check form'));
+    }
+    ,
+    success: function () {
+        var p = Phi.panelWorkSpace;
+        p.reload();
+        this.close();
+    }
+});   // eo Phi.view.window.FormWorkspace
+// eof</pre>    
+</body>
+</html>

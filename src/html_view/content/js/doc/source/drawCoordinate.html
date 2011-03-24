@@ -1,0 +1,207 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.tree.WMSLayers-ns"></div>/**
+ * Philosophy Window DrawCoordinate
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2009, by Ultragestion
+ * @date      11. November 2009
+ * @version   1.1
+ *
+ */
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.DrawCoordinate = Ext.extend(Ext.Window, {
+    title: Philosophy.Globalization.For('Draw Coordinates'),
+    width: 400,
+    height: 300,
+    closeAction: 'close',
+    maximizable: false,
+    modal: false,
+    plain: true,
+    layout: 'border',
+    initComponent: function() {
+        var _this = this;
+
+        this.fuField = new Ext.ux.form.FileUploadField({
+            xtype: 'fileuploadfield',
+            id: 'file',
+            emptyText: Philosophy.Globalization.For('Select an File'),
+            fieldLabel: Philosophy.Globalization.For('File') + ' <b>(csv,txt,xls,xlsx)</b>',
+            name: 'file',
+            buttonText: '',
+            buttonCfg: { iconCls: 'upload-icon' }
+        });
+
+        this.projCombo = new Phi.view.comboBox.Projection({ fieldLabel: Philosophy.Globalization.For('Projection Source') });
+        this.markCombo = new Phi.view.comboBox.Marker();
+
+        this.fp = new Ext.FormPanel({
+            fileUpload: true,
+            region: 'center',
+            labelAlign: 'top',
+            width: 500,
+            frame: true,
+            bodyStyle: 'padding: 10px 10px 0 10px;',
+            labelWidth: 50,
+            defaults: { anchor: '95%', allowBlank: false, msgTarget: 'side' },
+            items: [this.fuField, this.projCombo, this.markCombo]
+        });
+        this.items = [this.fp];
+
+
+
+        // just a trick for post only stream (WCF restriction)
+        this.fp.on('beforeaction', function(form, action) {
+            if (action.type == 'submit') {
+                Ext.Ajax.StreamResponse = false;
+                _this.projCombo.disable();
+                _this.markCombo.disable();
+            }
+        });
+
+        this.fp.on('actioncomplete', function(form, action) {
+            if (action.type == 'submit') {
+                _this.projCombo.enable();
+                _this.markCombo.enable();
+            }
+        });
+
+        this.fp.on('actionfailed', function(form, action) {
+            if (action.type == 'submit') {
+                _this.projCombo.enable();
+                _this.markCombo.enable();
+            }
+        });
+
+        Phi.view.window.DrawCoordinate.superclass.initComponent.call(this);
+
+        this.addButton(Philosophy.Globalization.For('Close'), this.close, this);
+        this.addButton(Philosophy.Globalization.For('Upload'), function() {
+            Philosophy.Map.clearAllMarkers();
+            this.upload();
+        }, this);
+
+    }
+    ,
+    upload: function() {
+        var _this = this;
+        if (this.fp.getForm().isValid() && this.validate()) {
+
+            var q = {
+                SRID: this.projCombo.getValue(),
+                type: this.getFileDetails().type
+            }
+            var queryString = Ext.urlEncode(q);
+
+            this.fp.getForm().submit({
+                url: Philosophy.UriTemplate.getUri('utilService', 'utilParseFile', '?' + queryString),
+                waitTitle: Philosophy.Globalization.For('Wait...'),
+                waitMsg: Philosophy.Globalization.For('Uploading your file...'),
+                success: function(fp, o) {
+                    Ext.MessageBox.show({
+                        maximizable: false,
+                        closable: false,
+                        resizable: false,
+                        title: '',
+                        msg: _this.buildSuccessMsg(o.result),
+                        width: 300,
+                        buttons: Ext.MessageBox.OK
+                    });
+                    _this.draw(o.result);
+                    _this.close();
+
+                },
+                failure: function(fp, o) {
+                    var errorMsg = o.result.errorMsg;
+                    Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), errorMsg);
+
+                }
+            });
+        }
+    }
+    ,
+    draw: function(response, marker) {
+        var markers = response.markers;
+        var bbox = response.bbox;
+        var markerId = this.markCombo.getValue();
+        var fileName = this.fuField.getValue();
+
+        if (Philosophy.Map.map.getLayersByName(fileName).length != 0) {
+            Ext.Msg.alert(Philosophy.Globalization.For('Error'), Philosophy.Globalization.For('A file with the same name is already uploaded'));
+        } else {
+            var markerLayer = new OpenLayers.Layer.Markers(this.getFileDetails().name, { projection: Philosophy.Map.map.displayProjection });
+            Philosophy.Map.map.addLayer(markerLayer);
+            for (i = 0; i < markers.length; i++) {
+                Philosophy.Marker.drawMarker(markers[i].Point.X, markers[i].Point.Y, markerId, markers[i].Data, fileName,null, markerLayer);   
+            }
+            Philosophy.panelLayer.treeOverlay.addLayer(markerLayer);
+
+            var bound = new OpenLayers.Bounds(bbox.minx, bbox.miny, bbox.maxx, bbox.maxy);
+            Philosophy.Map.zoomToExtent(bound, true);
+        }
+    }
+    ,
+    buildSuccessMsg: function(response) {
+
+        var file = this.getFileDetails().name;
+        var type = response.type;
+        var totalPoints = response.markers.length;
+
+        var html = '<div class="main_container">';
+        html += "<b>"
+        html += Philosophy.Globalization.For('File successfully processed');
+        html += "</b>&nbsp;<img src='content/images/icons/tick.png'/><br/><br/>";
+        html += "<table>";
+        html += "    <tr><td width='100'><b>" + Philosophy.Globalization.For('File') + "</b></td><td>" + file + "</td></tr>";
+        html += "    <tr><td><b>" + Philosophy.Globalization.For('Type') + "</b></td><td>" + type + "</td></tr>";
+        html += "    <tr><td><b>" + Philosophy.Globalization.For('Points') + "</b></td><td>" + totalPoints + "</td></tr>";
+        html += "</table>";
+        html += '</div>';
+        return html;
+    }
+    ,
+    validate: function() {
+
+        var file = this.getFileDetails();
+        var errorMsg = Philosophy.Globalization.For('The file <b>') + file.name + Philosophy.Globalization.For('</b>: must be <b>txt, xls, xslx</b>');
+
+        if (!file.ext) {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), errorMsg);
+            return false
+        }
+
+        if (file.type == "TXT" || file.type == "XLS" || file.type == "XLSX" || file.type == "CSV")
+            return true
+        else {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), errorMsg);
+            return false
+        }
+
+        return false
+    }
+    ,
+    getFileDetails: function() {
+        var fileName = this.fuField.getValue();
+        var f = fileName.split('.');
+        var len = f.length;
+        var ext = (len == 1) ? false : true;
+
+        var file = {
+            name: fileName,
+            type: f[len - 1].toUpperCase(),
+            ext: ext
+        }
+        return file;
+    }
+});                                     // eo Phi.view.window.Legend
+// eof</pre>    
+</body>
+</html>

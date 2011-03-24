@@ -1,0 +1,385 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.window.Login-ns"></div>/**
+ * Philosophy Query Build
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2008, by Ultragestion
+ * @date      10. November 2008
+ * @version   1.0
+ *
+ */
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.Metadata = Ext.extend(Ext.Window, {
+    title: Philosophy.Globalization.For('Layer Query'),
+    width: 450,
+    height: 340,
+    closeAction: 'close',
+    maximizable: false,
+    layout: 'border',
+    comboLayer: null,
+    storeMetadata: null,
+    multiMetadata: null,
+    comboOperator: null,
+    textValue: null,
+    textQueryDesc: null,
+    x: 100,
+    y: 100,
+    modal: true,
+
+    initComponent: function () {
+        var _this = this;
+
+        var paramsLayer = {};
+        var comboLayer = new Phi.view.comboBox.Layer({ anchor: '95%'});
+
+        comboLayer.on('select', function (combo, record, index) {
+            var layerName = record.data.Name;
+            _this.multiMetadata.clearValue()
+            _this.loadMetadata(layerName);
+            _this.textQueryDesc.setRawValue(_this.renderQueryDesc(_this.buildQuery()));
+            _this.textValue.setLabel("Value");
+        });
+
+        //metadata
+        var proxy_metadata = new Ext.data.HttpProxy({
+            method: 'GET',
+            url: Philosophy.UriTemplate.getUri('geoService', 'geoGetMetadata')
+        });
+
+        var storeMetadata = new Ext.data.Store({
+            reader: new Ext.data.JsonReader({ fields: ["Name", "Type"] }),
+            proxy: proxy_metadata
+        });
+ 
+        var multiMetadata = new Ext.form.ComboBox({
+            store: storeMetadata,
+            fieldLabel: Philosophy.Globalization.For('Fields'),
+            displayField: 'Name',
+            valueField: 'Name',
+            anchor: '95%',           
+            mode:'local',
+            triggerAction: 'all',
+            emptyText: Philosophy.Globalization.For('Select Field'),
+            selectOnFocus: true,
+            allowBlank: false, 
+            forceSelection: true,
+            editable: false
+        });
+
+        multiMetadata.on('select', function (combo, record, index) {
+            
+            var type = record.data.Type;
+            
+            _this.textQueryDesc.setRawValue(_this.renderQueryDesc(_this.buildQuery()));
+            _this.textValue.setLabel(Philosophy.Globalization.For('Value') + " [" + type + "]");
+        });
+
+        //operator....
+
+        var storeOperator = new Ext.data.SimpleStore({
+            fields: ['value', 'name'],
+            data: [['eq', '='],
+                ['ne', '!='],
+			    ['le', '<='],
+			    ['lt', '<'],
+			    ['gt', '>'],
+			    ['ge', '>='],
+                ['7', 'BEGIN WITH'],
+				['8', 'END WITH'],
+			    ['9', 'CONTAIN'],
+                ['10', 'ALL']
+                ]
+        });
+
+        var comboOperator = new Ext.form.ComboBox({
+            store: storeOperator,
+            fieldLabel: Philosophy.Globalization.For('Operator'),
+            displayField: 'name',
+            valueField: 'value',
+            mode: 'local',
+            anchor: '95%',
+            forceSelection: true,
+            triggerAction: 'all',
+            emptyText: Philosophy.Globalization.For('Select Operator'),
+            selectOnFocus: true,
+            allowBlank: false,
+            editable: false
+        });
+
+        comboOperator.on('select', function (combo, record, index) {
+            _this.textQueryDesc.setRawValue(_this.renderQueryDesc(_this.buildQuery()));
+        });
+
+        Ext.override(Ext.form.Field, {
+            setLabel: function (t) {
+                var r = this.getEl().up('div.x-form-item');
+                r.dom.firstChild.firstChild.nodeValue = String.format('{0}', t);
+            }
+        });
+
+        var textValue = new Ext.form.TriggerField({
+            fieldLabel: Philosophy.Globalization.For('Value'),
+            name: 'value',
+            anchor: '95%',
+            triggerClass: 'x-form-search-trigger',
+            enableKeyEvents: true,
+            onTriggerClick: function () { _this.showUniqueValues(); }
+        });
+
+        textValue.on('keyup', function () {
+            _this.textQueryDesc.setRawValue(_this.renderQueryDesc(_this.buildQuery()));
+        });
+
+        var textQueryDesc = new Ext.ux.form.StaticTextField({
+            anchor: '100%',
+            height: 100,
+            fieldLabel: Philosophy.Globalization.For('Query Preview'),
+            readOnly: true
+        });
+
+        var form = new Ext.FormPanel({
+            id: 'form_query',
+            labelAlign: 'top',
+            frame:true,
+            region: 'center',
+            bodyStyle: 'padding:5px',
+            width: 600,
+            items: [
+                {
+                    layout: 'column',
+                    border: false,
+                    items: [{
+                        columnWidth: 0.5,
+                        layout: 'form',
+                        width:'auto',
+                        border: false,
+                        items: [comboLayer, multiMetadata]
+                    }
+                        ,
+                        {
+                            columnWidth: 0.5,
+                            layout: 'form',
+                            border: false,
+                            items: [comboOperator, textValue]
+                        } ]
+                }
+                ,
+                {
+                    plain: true,
+                    border: false,
+                    height: 235,
+                    defaults: { bodyStyle: 'padding:10px' },
+                    items: [{
+                        layout: 'form',
+                        items: [textQueryDesc]
+                    } ]
+                } ]
+        });
+
+        this.comboLayer = comboLayer;
+        this.storeMetadata = storeMetadata;
+        this.multiMetadata = multiMetadata;
+        this.comboOperator = comboOperator;
+        this.textValue = textValue;
+        this.textQueryDesc = textQueryDesc;
+
+        this.items = [form];
+
+        Phi.view.window.Metadata.superclass.initComponent.call(this);
+
+        this.addButton(Philosophy.Globalization.For('Close'), function () { _this.close(); });
+        this.addButton(Philosophy.Globalization.For('Execute'), function () { _this.apply(); });
+    }
+    ,
+    setLayer: function (layerName, layerTitle) {
+        this.comboLayer.setValue(layerName);
+        this.loadMetadata(layerName);
+        this.textQueryDesc.setRawValue(this.renderQueryDesc(this.buildQuery()));
+    }
+    ,
+    showUniqueValues: function () {
+        var layerName = this.comboLayer.getValue();
+        var column = this.multiMetadata.getValue();
+
+        if (!layerName || !column) {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), Philosophy.Globalization.For('Must select layer and field'));
+            return;
+        }
+
+        var win = new Phi.view.window.UniqueResult({
+            layerName: layerName,
+            column: column,
+            textValue: this.textValue
+        });
+        win.show();
+
+        var _this = this;
+        win.on('close', function () {
+            _this.textQueryDesc.setRawValue(_this.renderQueryDesc(_this.buildQuery()));
+        });
+
+        //Google Analyticas tag
+        pageTracker._trackPageview("/Codelco/Metadata/ShowUniqueValue");
+        //eof Google Analytics tag
+    }
+    ,
+    loadMetadata: function (layerName) {
+        var paramsMetadata = {
+            layerName: layerName
+        };
+
+        this.storeMetadata.load({
+            params: paramsMetadata
+        });
+    }
+    ,
+    apply: function () {
+
+        //validations
+        var form = Ext.getCmp("form_query");
+        if (!form.form.isValid()) {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), Philosophy.Globalization.For('Check form'));
+            return;
+        }
+
+        var operator = this.comboOperator.getValue();
+        var field = this.multiMetadata.getValue();
+        var fields = field.split(',');
+        if (fields.length != 1 && operator != 10) {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), Philosophy.Globalization.For('Select one field'));
+            return;
+        }
+        //eo validations
+
+        var query = this.buildQuery();
+
+        if (query.operator != '10' && query.value == '') {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), Philosophy.Globalization.For('Needs a value field'));
+            return;
+        }
+
+        this.textQueryDesc.setRawValue(this.renderQueryDesc(query));
+
+        var md = this.buildMetadataArray();
+        var gmd = Philosophy.Util.clone(md);
+        gmd.push('wkt_geometry'); //wkt return def  
+        var cm = Philosophy.Util.buildColumnModel(gmd);
+        var ds = Philosophy.Util.buildDataStore(gmd);
+
+        var win = new Phi.view.window.MetadataResult({
+            title: query.table,
+            ds: ds,
+            cm: cm,
+            paging: true,
+            extent: true,
+            query: query
+        });
+        win.show();
+
+        //baseParams 
+        var paramsQuery = {
+            layerName: query.table,
+            SRID: '96',
+            fields: md.join(','),
+            field: query.field,
+            op: query.operator,
+            value: query.value,
+            wkt: '1',
+            paging: '1'
+        };
+
+        ds.baseParams = paramsQuery;
+
+        var params = { start: 0, limit: 100 };
+        win.load(params);
+    }
+    ,
+    buildMetadataArray: function () {
+        var v = [];
+        this.multiMetadata.store.each(function (rec) {
+            v.push(rec.data.Name);
+        });
+        return v;
+    }
+    ,
+    buildQuery: function () {
+
+        var query = {
+            table: this.comboLayer.getValue(),
+            field: this.multiMetadata.getValue(),
+            operator: this.comboOperator.getValue(),
+            value: this.textValue.getValue()
+        };
+
+        return query;
+    }
+    ,
+    renderQueryDesc: function (query) {
+
+        var setTextColor = function (t, c) {
+            return '<span style="color:' + c + ';">' + t + '</span>';
+        };
+
+        var setValueTemplate = function (v) {
+            return isNaN(v) ? setTextColor('"' + v + '"', 'green') : setTextColor(v, 'orange');
+        };
+
+        var displayOperator = {
+            'eq': ' = ',
+            'ne': ' != ',
+            'le': ' <= ',
+            'lt': ' < ',
+            'gt': ' > ',
+            'ge': ' >= ',
+            '7': ' LIKE ',
+            '8': ' LIKE ',
+            '9': ' LIKE ',
+            '10': ''
+        };
+
+        var where = setTextColor(' WHERE ', 'blue') +
+                    setTextColor(query.field, 'gray');
+
+
+        switch (query.operator) {
+            case '7':
+                where += setTextColor(displayOperator[query.operator], 'blue') +
+                           setTextColor('"%' + query.value + '"', 'green');
+                break
+            case '8':
+                where += setTextColor(displayOperator[query.operator], 'blue') +
+                           setTextColor('"' + query.value + '%"', 'green');
+                break
+            case '9':
+                where += setTextColor(displayOperator[query.operator], 'blue') +
+                           setTextColor('"%' + query.value + '%"', 'green');
+                break
+            case '10':
+                where = '';
+                break
+            default:
+                where += setTextColor(displayOperator[query.operator] || ' ', 'black') + setValueTemplate(query.value);
+        }
+
+        var queryDesc = setTextColor('SELECT ', 'blue')
+            + setTextColor('*', 'gray')
+            + setTextColor(' FROM ', 'blue')
+            + setTextColor(query.table, 'gray')
+            + where;
+
+        return queryDesc;
+    }
+});   // eo Phi.view.window.Metadata
+// eof
+</pre>    
+</body>
+</html>

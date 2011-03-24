@@ -1,0 +1,110 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy.model");
+<div id="cls-Philosophy.model.Entity"></div>/**
+ * @class Philosophy.model.Entity 
+ * @extends Ext.util.Observable
+ * 
+ * Philosophy abstract generic CRUD Entity 
+ * 
+ * @author rbarriga
+ * @version 1.2
+ * @copyright (c) 2010, by IKOM
+ * @date      15. July 2010
+ *
+ */
+Philosophy.model.Entity = Ext.extend(Ext.util.Observable, {
+    constructor: function (config) {
+        this.addEvents(
+			<div id="event-Philosophy.model.Entity-create"></div>/**
+             * @event create Event declaration
+             */
+			'create',
+			<div id="event-Philosophy.model.Entity-read"></div>/**
+             * @event read Event declaration
+             */
+			'read',
+			<div id="event-Philosophy.model.Entity-update"></div>/**
+             * @event update Event declaration
+             */
+			'update',
+			<div id="event-Philosophy.model.Entity-remove"></div>/**
+             * @event remove Event declaration
+             */
+			'remove'
+		);
+        Philosophy.model.Entity.superclass.constructor.call(config);
+    }
+	,
+	<div id="method-Philosophy.model.Entity-create"></div>/**
+	* Create entity
+	* @param {Object} object entity definition
+	*/
+    create: function (o) {
+        Ext.Ajax.request({
+            url: this.createURL,
+            method: 'POST',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope:this,
+            success: function (r, opt) {
+                this.fireEvent('create', o);
+            }
+        })
+    }
+	,
+	<div id="method-Philosophy.model.Entity-read"></div>/**
+	* Read entity
+	* @param {String} entity identification (key)
+	*/
+    read: function (id) {
+        Ext.Ajax.request({
+            url: this.readURL + id + '/json',
+            scope:this,
+            success: function (r, opt) {
+                var o = Ext.util.JSON.decode(r.responseText);
+                this.fireEvent('read', o);
+            }
+        });
+    }
+	,
+	<div id="method-Philosophy.model.Entity-update"></div>/**
+	* Update entity
+	* @param {Object} object entity definition
+	*/
+    update: function (o) {
+        Ext.Ajax.request({
+            url: this.updateURL,
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope:this,
+            success: function (r, opt) {
+                this.fireEvent('update', o);
+            }
+        });
+    }
+	,
+	<div id="method-Philosophy.model.Entity-remove"></div>/**
+	* Remove (delete)entity
+	* @param {String} entity identification (key)
+	*/
+    remove: function (id) {
+        Ext.Ajax.request({
+            url: this.removeURL + id,
+            method: 'DELETE',
+            scope:this,
+            success: function (r, opt) {
+                this.fireEvent('remove', r);
+            }
+        });
+    }
+});</pre>    
+</body>
+</html>

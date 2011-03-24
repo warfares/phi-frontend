@@ -1,0 +1,93 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">
+Phi.view.window.ConvertXY = Ext.extend(Ext.Window, {
+	
+	title: Philosophy.Globalization.For('Convert coordinate'),
+	width: 360,
+	autoHeight: true,
+	closable: true,
+	maximizable: false,
+	modal: false,
+	plain: true,
+	initComponent: function() {
+	
+		var _this = this;
+		
+		this.sourceProjCombo = new Phi.view.comboBox.Projection({ fieldLabel: Philosophy.Globalization.For('Source') + ' SRID' });
+		this.inputX = new Ext.form.NumberField({ fieldLabel: 'X', enableKeyEvents:true });
+		this.inputY = new Ext.form.NumberField({ fieldLabel: 'Y', enableKeyEvents:true });
+		
+		this.targetProjCombo = new Phi.view.comboBox.Projection({ fieldLabel: Philosophy.Globalization.For('Target') + ' SRID' });
+		this.outputX = new Ext.form.NumberField({ fieldLabel: 'X', readonly:true });
+		this.outputY = new Ext.form.NumberField({ fieldLabel: 'Y', readonly:true });
+		
+		this.fp = new Ext.FormPanel({
+			labelWidth: 75,
+			frame: true,
+			title: '',
+			bodyStyle: 'padding:5px 5px 5px 5px',
+			width: 340,
+			items: [{
+				xtype: 'fieldset',
+				title: Philosophy.Globalization.For('Input'),
+				autoHeight: true,
+				defaults: { anchor: '95%', allowBlank: false },
+				items: [this.sourceProjCombo, this.inputX, this.inputY]
+			}
+			,
+			{
+				xtype: 'fieldset',
+				title: Philosophy.Globalization.For('Output'),
+				autoHeight: true,
+				defaults: { anchor: '95%', allowBlank: true },
+				items: [this.targetProjCombo, this.outputX, this.outputY]
+			}]
+		});
+		
+		//transform events (proyection change, input key)
+		this.sourceProjCombo.on('select', function(combo, record, index) {_this.transform();});
+		this.targetProjCombo.on('select', function(combo, record, index) {_this.transform();});
+		this.inputX.on('keyup', function() {_this.transform();});
+		this.inputY.on('keyup', function() {_this.transform();});
+		//eo transform events.		
+		
+		this.items = [this.fp];
+		
+		Phi.view.window.ConvertXY.superclass.initComponent.apply(this);
+		this.addButton(Philosophy.Globalization.For('Close'), function () { _this.close(); });
+	}
+	,
+	transform: function() {
+		
+		var sourceProj = this.sourceProjCombo.getEPSG();
+		var x = this.inputX.getValue();
+		var y = this.inputY.getValue();
+		
+		var targetProj = this.targetProjCombo.getEPSG();
+		var x_out = 0.0;
+		var y_out = 0.0;
+		
+		if (sourceProj === targetProj){
+			x_out=x; 
+			y_out=y;
+		}
+		else {
+			var lonLat = Philosophy.Map.transformPoint(x,y,sourceProj, targetProj);
+			x_out = lonLat.lon;
+			y_out = lonLat.lat;
+		}
+		
+		this.outputX.setValue(x_out);
+		this.outputY.setValue(y_out);
+		
+	}
+});</pre>    
+</body>
+</html>

@@ -1,0 +1,47 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy.model");
+<div id="cls-Philosophy.model.Layer"></div>/**
+ * @class Philosophy.model.Layer 
+ * @extends Philosophy.model.Entity
+ * 
+ * Philosphy Location Proxy
+ * 
+ * @author rbarriga
+ * @version 1.2
+ * @copyright (c) 2010, by IKOM
+ * @date      15. July 2010
+ */
+Philosophy.model.Layer = Ext.extend(Philosophy.model.Entity, {
+    readURL: Philosophy.UriTemplate.getUri('layerService', 'layerRead'),
+
+    initComponent: function (config) {
+        Philosophy.model.Layer.superclass.initComponent.call(config);
+    }
+    ,
+    <div id="method-Philosophy.model.Layer-read"></div>/**
+    * Read entity
+    * @param {String} entity identification (key)
+    */
+    read: function (id) {
+        var p = {
+            name: id
+        };
+        Ext.Ajax.request({
+            url: this.readURL + '?' + Ext.urlEncode(p),
+            scope: this,
+            success: function (r, opt) {
+                var o = Ext.util.JSON.decode(r.responseText);
+                this.fireEvent('read', o);
+            }
+        });
+    }
+});</pre>    
+</body>
+</html>

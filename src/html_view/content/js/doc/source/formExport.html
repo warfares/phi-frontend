@@ -1,0 +1,200 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.tree.WMSLayers-ns"></div>/**
+ * Philosphy Export Window   
+ *
+ * @author     Ultragestion (rbarriga) 
+ * @copyright  (c) 2009, by Ultragestion
+ * @date       17. April 2009
+ * @version    1.0
+ *
+ */
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.FormExport = Ext.extend(Ext.Window, {
+    title: Philosophy.Globalization.For('Export'),
+    width: 400,
+    height: 300,
+    closeAction: 'close',
+    maximizable: false,
+    modal: true,
+    layout: 'border',
+    maximizable: false,
+    resizable: false,
+
+    initComponent: function () {
+        var _this = this;
+
+        // map format combo 
+        var data = [['application/pdf', 'PDF', 'icon-file-pdf'],
+            ['image/jpeg', 'JPEG', 'icon-file-image'],
+            ['image/gif', 'GIF', 'icon-file-image'],
+            ['image/png', 'PNG', 'icon-file-image'],
+            ['image/png', 'PNG (optimal 256 color palette)', 'icon-file-image'],
+            ['image/tiff', 'TIFF', 'icon-file-image'],
+            ['image/tiff8', 'TIFF (optimal 256 color palette)', 'icon-file-image'],
+            ['image/svg', 'SVG', 'icon-file-image'],
+            ['application/vnd.google-earth.kml', 'KML', 'icon-file-image']];
+
+        var storeFormat = new Ext.data.SimpleStore({
+            fields: ['value', 'name', 'class'],
+            data: data
+        })
+
+        this.comboFormat = new Ext.ux.IconCombo({
+            fieldLabel: Philosophy.Globalization.For('Format'),
+            store: storeFormat,
+            valueField: 'value',
+            displayField: 'name',
+            iconClsField: 'class',
+            editable: false,
+            mode: 'local',
+            triggerAction: 'all',
+            emptyText: Philosophy.Globalization.For('Select a export format'),
+            selectOnFocus: true,
+            allowBlank: false
+        });
+
+        // export layer format combo
+        var dataLayerFormat = [['OGR-SHP-ZIP', 'SHAPE'],
+            ['GML2', 'GML2'],
+            ['GML3', 'GML3'],
+            ['OGR-KML', 'KML'],
+            ['json', 'JSON'],
+            ['CSV', 'CSV'],
+            ['OGR-TAB', 'TAB'],
+            ['OGR-MIF', 'MIF'],
+            ['OGR-TAB', 'TAB']
+        ];
+
+        var storeLayerFormat = new Ext.data.SimpleStore({
+            fields: ['value', 'name'],
+            data: dataLayerFormat
+        })
+
+        this.comboLayerFormat = new Ext.form.ComboBox({
+            fieldLabel: Philosophy.Globalization.For('Format'),
+            store: storeLayerFormat,
+            valueField: 'value',
+            displayField: 'name',
+            editable: false,
+            mode: 'local',
+            triggerAction: 'all',
+            emptyText: Philosophy.Globalization.For('Select a export format'),
+            selectOnFocus: true,
+            allowBlank: false
+        });
+        //
+
+        this.comboLayer = new Phi.view.comboBox.Layer();
+
+        var formMapPanel = new Ext.FormPanel({
+            xid: 0,
+            title: Philosophy.Globalization.For('Map Export'),
+            labelWidth: 150,
+            defaults: { width: 240 },
+            labelAlign: 'top',
+            region: 'center',
+            bodyStyle: 'padding:5px',
+            frame: true,
+            items: [this.comboFormat]
+        });
+
+        var formLayerPanel = new Ext.FormPanel({
+            xid: 1,
+            title: Philosophy.Globalization.For('Layer Export'),
+            labelWidth: 150,
+            defaults: { width: 240 },
+            labelAlign: 'top',
+            region: 'center',
+            bodyStyle: 'padding:5px',
+            frame: true,
+            items: [this.comboLayerFormat, this.comboLayer]
+        });
+
+        this.tabPanel = new Ext.TabPanel({
+            title: '',
+            region: 'center',
+            margins: '5 5 5 5',
+            activeTab: 0,
+            plain: true,
+            defaults: { autoScroll: true },
+            items: [formMapPanel, formLayerPanel]
+        });
+
+       
+        this.items = [this.tabPanel];
+        Phi.view.window.FormExport.superclass.initComponent.call(this);
+
+        this.addButton(Philosophy.Globalization.For('Close'), function () { _this.close(); });
+        this.addButton(Philosophy.Globalization.For('Export'), function () { _this.exportAction(); });
+        
+        //default values 
+        this.comboFormat.setValue('application/pdf');
+        this.comboLayerFormat.setValue('OGR-SHP-ZIP');
+    }
+    ,
+    exportAction: function () {
+        var panel = this.tabPanel.getActiveTab();
+
+        if (!panel.form.isValid()) {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), Philosophy.Globalization.For('Check form'));
+            return;
+        }
+
+        if (panel.xid == 0)
+            this.exportMap();
+
+        if (panel.xid == 1)
+            this.exportLayer();
+    }
+    ,
+    exportMap: function () {
+
+        var format = this.comboFormat.getValue();
+        var bound = Philosophy.Map.map.getExtent();
+        var bbox = bound.left + ',' + bound.bottom + ',' + bound.right + ',' + bound.top;
+        var size = Philosophy.Map.map.getSize();
+
+        var query = {
+            request: 'GetMap',
+            version: '1.1.1',
+            format: format,
+            style: '',
+            layers: Philosophy.Layer.getWMSLayers(Philosophy.Config.wmsNameSpace),
+            srs: 'EPSG:900913',
+            bbox: bbox,
+            width: size.w,
+            height: size.h
+        }
+
+        var wmsUrl = Philosophy.Config.wmsUrl + Ext.urlEncode(query);
+        window.open(wmsUrl);
+    }
+    ,
+    exportLayer: function () {
+        var layer = Philosophy.Config.wmsNameSpace + ':' + this.comboLayer.getValue().split('.')[1]; // NOTE fix this 
+        var format = this.comboLayerFormat.getValue();
+
+        var query = {
+            request: 'getfeature',
+            service: 'wfs',
+            version: '1.1.0',
+            typename: layer,
+            outputFormat: format
+        }
+
+        var wfsUrl = Philosophy.Config.wfsUrl + Ext.urlEncode(query);
+        window.open(wfsUrl);
+    }
+});  // eo Phi.view.window.FormExport 
+// eof</pre>    
+</body>
+</html>

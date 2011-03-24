@@ -1,0 +1,99 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿/* mainWMS layers widget 
+*
+* @author    IKOM (rbarriga)
+* @copyright (c) 2010, by IKOM
+* @date      15. June 2010
+* @version   1.2
+*
+*/
+Ext.ns("Phi.view.tree");
+
+Phi.view.tree.UserNode = Ext.extend(Phi.view.tree.Base, {
+    userNames: null,
+    initComponent: function () {
+
+        this.combo = new Phi.view.comboBox.UserGroup({
+            userName: Phi.Session.getUser()
+        });
+        this.combo.on('ready', function () {
+            var userGroup = this.combo.getValue();
+            this.load(this.userNames, userGroup);
+        }, this);
+
+        this.combo.on('select', function (combo, record, index) {
+            var userGroup = this.combo.getValue();
+            this.load(this.userNames, userGroup);
+        }, this);
+
+        //Todo change event !!
+        this.tbar = new Ext.Toolbar({
+            items: [
+             {
+                 text: Phi.Global.For('All'),
+                 iconCls: 'icon-check-all',
+                 scope: this,
+                 handler: this.checkAll
+             }
+			,
+			{
+			    text: Phi.Global.For('None'),
+			    iconCls: 'icon-uncheck-all',
+			    scope: this,
+			    handler: this.uncheckAll
+			}
+            ,
+            { xtype: 'tbfill' }
+            ,
+            this.combo
+            ]
+        });
+
+        Phi.view.tree.UserNode.superclass.initComponent.apply(this, arguments);
+        this.on('beforeappend', this.format, this);
+    }
+    ,
+    load: function (userNames, userGroup) {
+        if (userNames.length === 1) {
+            var group = new Phi.model.Group();
+            group.on('getallnodescheckedbyuser', this.loadTree, this);
+            group.getAllNodesCheckedByUser(userGroup, userNames[0]);
+        }
+        else {
+            var group = new Phi.model.Group();
+            group.on('getnodes', this.loadTree, this);
+            group.getNodes(userGroup);
+        }
+    }
+    ,
+    loadTree: function (nodes) {
+        var n = new Ext.tree.TreeNode({ children: nodes });
+        this.setRootNode(n);
+        this.loader.doPreload(n);
+    }
+    ,
+    format: function (tree, parent, node) {
+        if (node.isLeaf())
+            node.attributes.iconCls = "icon-layer";
+        else {
+            node.attributes.checked = null;
+            node.attributes.text = '<b>' + node.attributes.text + '</b>';
+        }
+    }
+    ,
+    setLeafs: function (leafs) {
+        this.uncheckAll();
+        Ext.each(leafs, function (l) {
+            this.checkNodeById(l.id);
+        }, this);
+    }
+});</pre>    
+</body>
+</html>

@@ -1,0 +1,256 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.window.Login-ns"></div>/**
+ * Philosophy layer grid control (included search)
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2008, by Ultragestion
+ * @date      12. December 2009
+ * @version   1.1
+ *
+ */
+ 
+Ext.ns("Phi.view.window");
+
+Phi.view.window.SearchLayer = Ext.extend(Ext.Window, {
+    title: '',
+    width: 800,
+    height: 400,
+    pageSize: 500,
+    plain: true,
+    layout: 'border',
+    initComponent: function () {
+
+        var _this = this;
+
+        // results grid
+        var reader = new Ext.data.JsonReader({
+            root: 'List',
+            totalProperty: 'Total',
+            fields: ["Name", "Title", "Type", { name: 'Date', convert: Philosophy.Util.fixWCFJsonDate}]
+        });
+
+        var proxy = new Ext.data.HttpProxy({
+            method: 'GET',
+            url: Philosophy.UriTemplate.getUri('userService', 'userLayersSearch')
+        });
+
+        var paramSearch = {
+            pattern: '',
+            position: '0',
+            userName: Phi.Session.getUser()
+        };
+
+        var ds = new Ext.data.Store({
+            baseParams: paramSearch,
+            reader: reader,
+            proxy: proxy,
+            sortInfo: { field: 'Title', direction: "ASC" }
+        });
+
+        var sm = new Ext.grid.CheckboxSelectionModel();
+
+        var cm = new Ext.grid.ColumnModel([
+			sm,
+            { header: '', width: 25, dataIndex: 'Name', renderer: _this.renderLeaf },
+			{ header: Philosophy.Globalization.For('Title'), width: 150, sortable: true, dataIndex: 'Title' },
+            { header: Philosophy.Globalization.For('Type'), width: 100, sortable: true, dataIndex: 'Type', renderer: _this.renderType },
+            { header: Philosophy.Globalization.For('Date'), width: 100, sortable: true, dataIndex: 'Date', renderer: _this.renderDate }
+ 		]);
+
+        var bbar = new Ext.PagingToolbar({
+            store: ds,
+            pageSize: this.pageSize,
+            displayInfo: true,
+            displayMsg: '{0} - {1} of {2}',
+            emptyMsg: Philosophy.Globalization.For('Empty')
+        });
+
+        var view = new Ext.grid.GridView({
+            forceFit: false,
+            enableRowBody: true,
+            ignoreAdd: true,
+            emptyText: Philosophy.Globalization.For('Empty')
+        });
+
+        this.grid = new Ext.grid.GridPanel({
+            title: '',
+            width: 470,
+            frame: true,
+            ds: ds,
+            cm: cm,
+            sm: sm,
+            view: view,
+            bbar: bbar,
+            region: 'center'
+        });
+        //eof result grid
+
+        // layer contextMenu 
+        function onGridContextMenu(grid, rowIndex, e) {
+            e.stopEvent();
+            var coords = e.getXY();
+            _this.layerContextMenu.showAt([coords[0], coords[1]]);
+            var layerName = _this.grid.store.getAt(rowIndex).get('Name');
+            _this.layerContextMenu.layerName = layerName;
+            _this.layerContextMenu.rowIndex = rowIndex;
+        }
+
+        this.grid.addListener('rowcontextmenu', onGridContextMenu);
+
+        this.layerContextMenu = new Phi.view.menu.Layer({
+            enableCheckLayer: true
+        });
+
+        this.layerContextMenu.on('checkLayer', function (layerName, node, rowIndex) {
+            _this.grid.getSelectionModel().clearSelections();
+            _this.grid.getSelectionModel().selectRow(rowIndex);
+        });
+        //eof layer contextMenu
+
+        this.searchLayerForm = new Phi.view.form.SearchLayer({ region: 'west' });
+        this.searchLayerForm.addButton(Philosophy.Globalization.For('Search'), function () { _this.load(); });
+
+        this.searchLayerForm.patternField.on('specialkey', function (f, e) {
+            if (e.getKey() == e.ENTER) {
+                _this.load();
+            }
+        }, this);
+
+        this.items = [this.searchLayerForm, this.grid];
+
+        Phi.view.window.SearchLayer.superclass.initComponent.call(this);
+
+        this.addButton(Philosophy.Globalization.For('Close'), function () { _this.close(); });
+        this.addButton(Philosophy.Globalization.For('Apply'), function () { _this.apply(); });
+    }
+    ,
+    onRender: function () {
+        Phi.view.window.SearchLayer.superclass.onRender.apply(this, arguments);
+        this.load();
+    }
+    ,
+    show: function () {
+        Phi.view.window.SearchLayer.superclass.show.call(this);
+        this.getEl().fadeIn({ duration: 1 });
+    }
+    ,
+    getCMLayerName: function () {
+        var i = this.gridContextMenu.rowIndex;
+        var r = this.grid.store.getAt(i);
+        return r.get('Name');
+    }
+    ,
+    apply: function () {
+
+        var layers = this.getCheckedLayers();
+
+        if (layers.length < 1) {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), Philosophy.Globalization.For('Select at least one layer'));
+            return;
+        }
+
+        var container = Ext.get('map');
+        Philosophy.Util.popupMessage(Philosophy.Globalization.For('Apply msg'), '', container);
+
+        Philosophy.Layer.appliedLayers = layers;
+        Philosophy.Map.redrawMainLayer(Philosophy.Layer.getWMSLayers(Philosophy.Config.wmsNameSpace));
+
+        Philosophy.panelLayer.panelResume.update();
+        Philosophy.panelLayer.showResume();
+    }
+    ,
+    getCheckedLayers: function () {
+        var sm = this.grid.getSelectionModel();
+        var selections = sm.getSelections();
+
+        var layers = [];
+
+        for (i = 0; i < selections.length; i++) {
+            var name = selections[i].data.Name;
+            var title = selections[i].data.Title;
+            var layer = { 'name': name, 'title': title };
+            layers.push(layer);
+        }
+
+        return layers;
+    }
+    ,
+    renderTitle: function (val, m, record) {
+        return '<b>' + val + '</b>';
+    }
+	,
+    renderLeaf: function (val, m, record) {
+        return '<img src="content/images/icons/shape_move_forwards.png" />';
+    }
+    ,
+    renderType: function (val, m, record) {
+
+        var img = "point.png";
+        if (val === 'multilinestring')
+            img = 'line.png';
+
+        if (val === 'multipolygon')
+            img = 'poly.png';
+
+        return '<img src="content/images/icons/' + img + '" /> ' + val;
+    }
+    ,
+    renderDate: function (val, m, record) {
+
+        var d1 = val;
+        var d2 = new Date();
+
+        var m = d2 - d1;
+        var mPerYear = 1000 * 60 * 60 * 24 * 365.26;
+        var diff = m / mPerYear;
+
+        var color = diff > 3 ? '#ff8888' : '#000';
+        var date = Ext.util.Format.date(d1, 'd/m/Y');
+
+        return '<span style="color:' + color + ';">' + date + '</span>';
+    }
+    ,
+    load: function () {
+        var params = this.searchLayerForm.getParams();
+        params.userName = Phi.Session.getUser();
+        this.grid.store.baseParams = params;
+        this.grid.store.load({ params: { start: 0, limit: this.pageSize} });
+    }
+    ,
+    reload: function () {
+        this.grid.store.reload();
+    }
+    ,
+    getSelections: function () {
+        var sm = this.grid.getSelectionModel();
+        return sm.getSelections();
+    }
+});        // eo Phi.view.window.SearchLayer
+// eof
+
+// TODO try to extend... no override..
+Ext.override(Ext.grid.CheckboxSelectionModel, {
+    onMouseDown : function(e, t){
+        if(e.button === 0 ){
+            e.stopEvent();
+            var row = e.getTarget('.x-grid3-row');
+            if(row){
+                var index = row.rowIndex;
+                if(this.isSelected(index)){
+                    this.deselectRow(index);
+                }else{
+                    this.selectRow(index, true);
+                }
+            }
+        }
+    }
+});</pre>    
+</body>
+</html>

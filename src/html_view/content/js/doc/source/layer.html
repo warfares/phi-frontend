@@ -1,0 +1,149 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿Ext.ns("Philosophy");
+<div id="cls-Philosophy.Layer"></div>/**
+* @class Philosophy.Layer
+*
+* Philosophy all applied layers (store) 
+* <br/>
+* Note: one layer looks like this:
+*		layer=	{name: 'physical db name',title: 'display name'};
+*<br/>Example:
+*<pre><code>
+* var l = {'name':'public.region', 'title':'Regions'};
+* Phi.Layer.appliedLayers.push(l);
+*</code></pre>
+*
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+* @singleton
+*/
+Philosophy.Layer = {
+	<div id="prop-Philosophy.Layer-appliedLayers"></div>/**
+	* Property: apliedLayer
+	* {Array(Object)} array of "applied" conceptual object or entity layers	
+	*
+	*	The layer conceptual object or entity in the array its like this:
+	*
+	*		layer=	{name: physical db name,title: display name}
+	*
+	*		example: {'name':'public.region', 'title':'Regions'}
+	*
+	*/
+	appliedLayers: [],
+	<div id="method-Philosophy.Layer-getLayers"></div>/**
+	* Method: getLayers
+	* Retrieve applied layers name (key) array 
+	*
+	* Returns:
+	* {Array(String)} Array with layer name
+	*
+	*/
+	getLayers: function () {
+		var l = Philosophy.Util.clone(this.appliedLayers);
+		var layerName = [];
+		for (x = 0; x < l.length; x++)
+		layerName.push(l[x].name)
+
+		return layerName;
+	}	
+	,
+	<div id="method-Philosophy.Layer-getLayerTitles"></div>/**
+	* Method: getLayerTitles
+	* Retrieve applied layers title (description) array 
+	*
+	* Returns:
+	* {Array(String)} Array with layer title
+	*
+	*/
+	getLayerTitles: function () {
+		var l = Philosophy.Util.clone(this.appliedLayers);
+		var layerTitle = [];
+		for (x = 0; x < l.length; x++)
+		layerTitle.push(l[x].title)
+		return layerTitle;
+	}
+	,
+	<div id="method-Philosophy.Layer-getWMSLayers"></div>/**
+	* Method: getWMSLayers
+	* Retrieve WMS multilayer string from the applied layers
+	*
+	* Returns:
+	* {String} WMS multilayer string
+	*
+	*/
+	getWMSLayers: function (ns) {
+		var l = this.getLayers();
+		for (x = 0; x < l.length; x++) {
+			l[x] = l[x].split('.')[1];
+			l[x] = ns + ":" + l[x];   // TODO this OK but do more clear 
+		}
+		return l.join(',');
+	}
+	,
+	<div id="method-Philosophy.Layer-getLayerIdString"></div>/**
+	* Method: getLayerIdString
+	* Retrieve layer name (key) string from the applied layers
+	*
+	* Returns:
+	* {String} layer name (key) string
+	*
+	*/
+	getLayerIdString: function () {
+		var l = this.getLayers();
+		return l.join(',');
+	}
+	<div id="method-Philosophy.Layer-zoomToExtent"></div>/**
+	* Method: zoomToExtent
+	* Zoom the main map(<Philosophy.Map.map>) to one layer extent
+	*
+	* Parameters: 
+	* layerName    - {String} layer name (key)
+	*/
+	,
+	zoomToExtent: function (layerName) {
+		var l = {
+			Name: layerName,
+			SRID: '96'
+		};
+
+		Ext.Ajax.request({
+			waitMsg: Phi.Global.For('Wait...'),
+			url: Philosophy.UriTemplate.getUri('geoService', 'geoGetBBoxStatic'),
+			method: 'POST',
+			headers: { 'Content-Type': 'text/json' },
+			jsonData: l,
+			failure: function (response, options) {
+				Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Problem in call'));
+			},
+			success: function (response, options) {
+				var bbox = Ext.util.JSON.decode(response.responseText);
+				var bound = new OpenLayers.Bounds(bbox.minx, bbox.miny, bbox.maxx, bbox.maxy);
+				Philosophy.Map.zoomToExtent(bound, true);
+			}
+		});
+	}
+	,
+	<div id="method-Philosophy.Layer-layerDetail"></div>/**
+	* Method: layerDetail
+	* Call the ExtJS layer detail custom widget
+	*
+	* Parameters: 
+	* layerName    - {String} layer name (key)
+	*/
+	layerDetail: function (layerName) {
+		var win = new Phi.view.window.LayerDetail({ layer: layerName });
+		win.show();
+	}
+};
+// eo Philosophy Layer</pre>    
+</body>
+</html>

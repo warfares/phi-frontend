@@ -1,0 +1,70 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy.geo");
+<div id="cls-Philosophy.geo.Group"></div>/**
+* @class Philosophy.geo.Group 
+* @extends Ext.util.Observable
+* 
+* Phi geo Group Proxy
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      19. august 2010
+*/
+Philosophy.geo.Group = Ext.extend(Ext.util.Observable, {
+    initComponent: function (config) {
+        this.addEvents(
+            'getwithin',
+            'getwithinbbox'
+	    );
+        Philosophy.geo.Group.superclass.initComponent.call(config);
+    }
+    ,
+    getWithIn: function (layers, point, fields, dist) {
+
+        var o = {
+            LayersVO: layers,
+            PointVO: point,
+            Fields: fields,
+            Dist: dist
+        };
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('geoService', 'geoGetGroupWithIn'),
+            method: 'POST',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, options) {
+                var geoms = Ext.util.JSON.decode(response.responseText); 
+                this.fireEvent('getwithin', geoms);
+            }
+        });
+    }
+    ,
+    getWithInBbox: function (layers, bbox) {    
+        var o = {
+            LayersVO : layers,
+            BBoxVO: bbox
+        };
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('geoService', 'geoGetGroupWithInBbox'),
+            method: 'POST',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, options) { 
+                var layers = Ext.util.JSON.decode(response.responseText);
+                this.fireEvent('getwithinbbox', layers);
+            }
+        });
+    }
+});</pre>    
+</body>
+</html>

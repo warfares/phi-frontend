@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="Web GIS">
+	<meta name="author" content="Rbarriga">
+	
+	<link rel="shortcut icon" href="content/images/world.gif" />
+	
+	<!--
+		<meta http-equiv="X-UA-Compatible" content="IE=7" />
+	-->
+	<!-- ExtJS Style -->
+	<link rel="stylesheet" type="text/css" href="content/js/libs/ext-3.2.1/resources/css/ext-all.css"/>        
+	<link rel="stylesheet" type="text/css" href="content/js/libs/ext-3.2.1/resources/css/xtheme-gray-extend.css" id="theme" />            		
+
+	<!-- Ext Plugins Style -->
+    <link rel="stylesheet" type="text/css" href="content/js/libs/ext.ex/plugins/SuperBoxSelect/superboxselect.css"/>
+    <link rel="stylesheet" type="text/css" href="content/js/libs/ext.ex/plugins/SuperBoxSelect/superboxselect-gray-extend.css"/>
+	<link rel="stylesheet" type="text/css" href="content/js/libs/ext.ex/plugins/MultiselectItemSelector-3.0/Multiselect.css"/>
+	
+    <link rel="stylesheet" type="text/css" href="content/css/ext.ux/Ext.ux.IconCombo.css"  />
+	<link rel="stylesheet" type="text/css" href="content/css/ext.ux/Ext.ux.fileuploadfield.css" />
+	<link rel="stylesheet" type="text/css" href="content/css/ext.ux/famflag.css" />
+	<link rel="stylesheet" type="text/css" href="content/css/ext.ux/colorpicker.css" />
+
+
+	<!-- OpenLayers Style -->        
+	<link rel="stylesheet" type="text/css" href="content/js/libs/openlayers-2.10/theme/default/style.css"  />    
+	<link rel="stylesheet" type="text/css" href="content/js/libs/openlayers-2.10/theme/default/framedCloud.css"  />
+    <link rel="stylesheet" type="text/css" href="content/js/libs/openlayers-2.10/theme/default/google.css"  />
+
+	<!-- GeoExt -->
+	<link rel="stylesheet" type="text/css" href="content/js/libs/geoext-1.0.0/resources/css/geoext-all.css" />
+
+	<!-- Philosophy Style -->
+	<link rel="stylesheet" type="text/css" href="content/css/main.css" />	
+	<link rel="stylesheet" type="text/css" href="content/css/controlPanel.css" />
+	<link rel="stylesheet" type="text/css" href="content/css/mapPanel.css" />
+
+	<title id="page-title">Phi</title>
+</head>
+<body>
+	<div id="loading-mask" style=""></div>
+	<div id="loading">
+		<div class="loading-indicator">
+			<img src="content/images/loading.gif" width="32" height="32" style="margin-right:8px;" align="absmiddle"/>Loading...
+		</div>
+	</div>
+	<!-- include everything after the loading indicator -->
+	
+	<!-- ExtJS 3.2.1 -->
+	<script type="text/javascript" src="content/js/libs/ext-3.2.1/adapter/ext/ext-base.js" ></script>
+	<!-- ExtJS 3.2.1 (src)  
+		<script type="text/javascript" src="content/js/libs/ext-3.2.1/ext-all-debug.js"></script>
+	-->
+
+	<!-- ExtJS 3.2.1 (build) -->
+	<script type="text/javascript" src="content/js/libs/ext-3.2.1/ext-all.js" ></script> 
+
+	<!-- ExtJS 3.2.1 (lang) -->  
+	<script type="text/javascript" src="content/js/libs/ext-3.2.1/src/locale/ext-lang-es.js" ></script>
+
+	<!-- Ext Plugins (src) -->
+	<script type="text/javascript" src="content/js/libs/ext.ex/ext-ex-all-debug.js"></script>
+	
+
+	<!-- MAPs API -->  	
+	<!--Google API 
+	<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA2V_E1MMTj29bDvwBp9x-2RSQdmiuZsoQSlfeywFuCoVnLzvncRTDOKik414EdSQBTXPVCXHDlllVSA"></script>	
+	-->
+
+	<!--Virtual Earth
+	<script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2"></script>     
+	-->  
+    <!-- eo MAPs API-->
+
+	<!-- OpenLayers 2.10 Lib(source)-->
+	<script type="text/javascript" src="content/js/libs/openlayers-2.10/lib/OpenLayers.js" ></script>
+
+	<!-- Proj4js Lib(source) -->
+	<script type="text/javascript" src="content/js/libs/proj4js/lib/proj4js.js" ></script>
+	
+	<!-- Geo Ext 1.0.0 -->
+	<script src="content/js/libs/geoext-1.0.0/lib/GeoExt.js" type="text/javascript" charset="utf-8"></script>
+	
+	<!-- Geo Core 1.0.0  -->
+	<script type="text/javascript" src="content/js/libs/geo-1.0.0/geo-core.js"></script>
+	
+	<!-- Phi Model 1.0.0 -->
+	<script type="text/javascript" src="content/js/libs/phi-model-1.0.0/phi-model.js"></script>         
+	
+	<!-- Philosophy Theme -->
+	<script type="text/javascript" src="content/js/app/theme/ultragestion/theme.js" ></script>
+	
+	<!-- Philosophy ExtJS presentation.. 1.2.0 Lib (source)-->
+    <script type="text/javascript" src="content/js/phi-all-debug.js"></script>  
+	
+	<!-- Philosophy 1.2.0 Build 
+	<script type="text/javascript" src="content/js/build/philosophy.js"></script> 
+	-->
+</body>
+</html>

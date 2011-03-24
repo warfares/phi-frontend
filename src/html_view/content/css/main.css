@@ -1,0 +1,744 @@
+﻿#loading-mask{
+	position:absolute;
+	left:0;
+	top:0;
+    width:100%;
+    height:100%;
+    z-index:20000;
+    background-color:white;
+}
+#loading{
+	position:absolute;
+	left:45%;
+	top:40%;
+	padding:2px;
+	z-index:20001;
+    height:auto;
+}
+#loading img {
+    margin-bottom:5px;
+}
+#loading .loading-indicator{
+	background:white;
+	color:#888;
+	font:bold 13px tahoma,arial,helvetica;
+	padding:10px;
+	margin:0;
+    text-align:center;
+    height:auto;
+}
+
+.msg .x-box-mc {
+	font-size:14px;
+}
+#msg-div {
+	position:absolute;       
+	width:400px;    
+	z-index:10000;
+	text-align: center;        
+}
+
+.popupMessage
+{	
+	font-family:tahoma,arial,san-serif;
+	color:white;
+	background: #666; 
+	border:solid 1px #444; 
+	padding:20px;		
+	-moz-opacity:.70;
+	opacity: 0.70;
+	filter: alpha(opacity=70);
+    -moz-box-shadow: 3px 3px -7px #444;
+	-webkit-box-shadow: 3px 3px 7px #444;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px;	
+}
+
+.mask-div{
+	background: #000055 url(../images/mask.jpg) no-repeat fixed 0% 0%;
+}
+
+.loading_load
+{
+    position:absolute;       
+	width:100px;    
+	z-index:10000;
+	text-align: center;
+    font-family:tahoma,arial,san-serif;
+	color:#444;
+	background: #fff; 
+	border:solid 1px #333; 
+	padding:10px;		
+	-moz-opacity:.70;
+	opacity: 0.70;
+	filter: alpha(opacity=70);
+    -moz-box-shadow: 3px 3px -7px #444;
+	-webkit-box-shadow: 3px 3px 7px #444;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px;
+}
+
+.loading_ico
+{
+	position:relative;
+	float:left;
+	width:16px;
+	background-image:url(../content/images/loading_blue.gif) !important;
+}
+
+
+
+
+.icon-key {
+	background-image:url(../images/icons/key.png) !important;
+}
+.icon-key-go {
+	background-image:url(../images/icons/key_go.png) !important;
+}
+
+.icon-lock {
+	background-image:url(../images/icons/lock.png) !important;
+}
+
+.icon-accept {
+	background-image:url(../images/icons/accept.png) !important;
+}
+.icon-delete {
+	background-image:url(../images/icons/user_n_delete.png) !important;
+}
+
+.icon-add {
+	background-image:url(../images/icons/user_n_add.png) !important;
+}
+
+.icon-edit {
+	background-image:url(../images/icons/icon_edit_small.png) !important;
+}
+
+.icon-user {
+	background-image:url(../images/icons/user_n.png) !important;
+}
+
+.icon-user-color {
+	background-image:url(../images/icons/user_color.png) !important;
+}
+
+.icon-user-color-a {
+	background-image:url(../images/icons/user_color_a.png) !important;
+}
+
+.icon-user-add {
+	background-image:url(../images/icons/user_n_add.png) !important;
+}
+
+.icon-user-edit {
+	background-image:url(../images/icons/user_edit.png) !important;
+}
+
+.icon-user-delete {
+	background-image:url(../images/icons/user_n_delete.png) !important;
+}
+
+.icon-user-enabled{
+    background-image:url(../images/icons/user_n.png) !important;
+}
+
+.icon-user-disabled{
+    background-image:url(../images/icons/user_n_dis.png) !important;
+}
+
+.icon-control-panel {
+	background-image:url(../images/icons/application_view_tile.png) !important;
+}
+
+.icon-layer {
+	background-image:url(../images/icons/shape_move_forwards.png) !important;
+}
+
+.icon-overlay {
+	background-image:url(../images/icons/table.png) !important;
+}
+
+.icon-overlay-alt {
+	background-image:url(../images/icons/bullet_orange.png) !important;
+}
+
+
+.icon-raster {
+	background-image:url(../images/icons/bullet_green.png) !important;
+}
+
+.icon-workspace {
+	background-image:url(../images/icons/cup.png) !important;
+}
+
+.icon-workspace_private {
+	background-image:url(../images/icons/cup_key.png) !important;
+}
+
+.icon-workspace-add {
+	background-image:url(../images/icons/cup_add.png) !important;
+}
+
+.icon-workspace-edit {
+	background-image:url(../images/icons/cup_edit.png) !important;
+}
+
+.icon-group-locations{
+	background-image:url(../images/icons/folder_star.png) !important;
+}
+
+.icon-location {
+	background-image:url(../images/icons/map.png) !important;
+}
+
+.icon-location-add {
+	background-image:url(../images/icons/folder_add.png) !important;
+}
+
+.icon-location-edit {
+	background-image:url(../images/icons/folder_edit.png) !important;
+}
+
+.icon-measure {
+	background-image:url(../images/icons/wand.png) !important;
+}
+
+.icon-measure-alt {
+	background-image:url(../images/gis-icons/measure.png) !important;
+}
+
+.icon-area-alt {
+	background-image:url(../images/gis-icons/area-measure.png) !important;
+}
+
+.icon-draw-line {
+	background-image:url(../images/icons/draw_line.png) !important;
+}
+
+.icon-draw-polygon {
+	background-image:url(../images/icons/draw_polygon.png) !important;
+}
+
+.icon-google {
+	background-image:url(../images/google.png) !important;
+}
+
+.icon-ultramap {
+	background-image:url(../images/ultramap.png) !important; 
+}
+
+.icon-favorite {
+	background-image:url(../images/icons/star.png) !important; 
+}
+
+.icon-eye
+{
+	background-image:url(../images/icons/eye2.png) !important; 
+}
+
+.icon-clear{
+	background-image:url(../images/icons/page_white.png) !important; 
+}
+
+.icon-print{
+	background-image:url(../images/icons/application_put.png) !important; 
+}
+
+.icon-printer{
+	background-image:url(../images/icons/printer_icon.png) !important;
+}
+
+.icon-database{
+	background-image:url(../images/icons/database_gear.png) !important; 
+}
+
+.icon-database-refresh{
+	background-image:url(../images/icons/database_refresh.png) !important; 
+}
+
+.icon-database-sql{
+	background-image:url(../images/icons/page_white_database.png) !important; 
+}
+
+.icon-database-go{
+	background-image:url(../images/icons/database_go.png) !important; 
+}
+
+.icon-pencil{
+	background-image:url(../images/icons/pencil.png) !important; 
+}
+
+.icon-select_all{
+	background-image:url(../images/icons/basket_put.png) !important; 
+}
+
+.icon-zoom{
+	background-image:url(../images/icons/zoom_new.png) !important; 
+}
+
+.icon-zoom-in{
+	background-image:url(../images/gis-icons/zoom-in-alt.png) !important; 
+}
+
+.icon-zoom-out{
+	background-image:url(../images/gis-icons/zoom-out-alt.png) !important; 
+}
+
+.icon-zoom-box{
+	background-image:url(../images/gis-icons/zoom-in.png) !important; 
+}
+
+.icon-zoom-box-out{
+	background-image:url(../images/gis-icons/zoom-out.png) !important; 
+}
+
+.icon-info{
+	background-image:url(../images/gis-icons/info-click.png) !important; 
+}
+
+.icon-area-info{
+	background-image:url(../images/gis-icons/info.png) !important; 
+}
+
+.icon-pan-off{
+	background-image:url(../images/icons/hand.png) !important; 
+}
+
+.icon-projection{
+	background-image:url(../images/icons/shape_flip_horizontal.png) !important; 
+}
+
+.icon-layout{
+	background-image:url(../images/icons/layout_header.png) !important; 
+}
+
+.icon-tick{
+	background-image:url(../images/icons/tick.png) !important; 
+}
+
+.icon-book{
+	background-image:url(../images/icons/book_open.png) !important; 
+}
+
+.icon-help{
+	background-image:url(../images/icons/help.png) !important; 
+}
+
+.icon-search-list{
+	background-image:url(../images/icons/text_padding_bottom.png) !important;  
+}
+
+.icon-file-pdf{
+	background-image:url(../images/icons/icon-file-pdf.gif) !important;  
+}
+
+.icon-file-image{
+	background-image:url(../images/icons/icon-file-image.gif) !important;  
+}
+
+.icon-google {
+	background-image:url(../images/icons/alt-google-icon.png) ! important;
+}
+
+.icon-umap {
+	background-image:url(../images/icons/ultramap-icon.png) ! important;
+}
+
+.icon-osm {
+	background-image:url(../images/icons/osm-icon.png) ! important;
+}
+
+.icon-bing {
+	background-image:url(../images/icons/bing-icon.jpg) ! important;
+}
+
+.icon-import {
+	background-image:url(../images/icons/icon_upload.png) ! important;
+}
+
+.icon-transform {
+	background-image:url(../images/icons/page_white_stack.png) ! important;
+}
+
+
+.icon-marker-white {
+	background-image:url(../images/Markers/pushpin_mini.png) !important; 
+}
+
+.icon-marker-red {
+	background-image:url(../images/Markers/pushpinred_mini.png) !important; 
+}
+
+.icon-marker-green {
+	background-image:url(../images/Markers/pushpingreen_mini.png) !important; 
+}
+
+.icon-marker-blue {
+	background-image:url(../images/Markers/pushpinblue_mini.png) !important; 
+}
+
+.icon-marker-orange {
+	background-image:url(../images/Markers/pushpinorange_mini.png) !important; 
+}
+
+.icon-marker-purple {
+	background-image:url(../images/Markers/pushpinpurple_mini.png) !important; 
+}
+
+.icon-marker-yellow {
+	background-image:url(../images/Markers/pushpinyellow_mini.png) !important; 
+}
+
+.icon-point4-red {
+	background-image:url(../images/Markers/point4_red.png) !important;
+}
+
+.icon-point5-red {
+	background-image:url(../images/Markers/point5_red.png) !important; 
+}
+
+.icon-point6-red {
+	background-image:url(../images/Markers/point6_red.png) !important; 
+}
+
+.icon-point4-yellow {
+	background-image:url(../images/Markers/point4_yellow.png) !important; 
+}
+
+.icon-point5-yellow {
+	background-image:url(../images/Markers/point5_yellow.png) !important; 
+}
+
+.icon-point6-yellow {
+	background-image:url(../images/Markers/point6_yellow.png) !important; 
+}
+
+.icon-google-marker {
+	background-image:url(../images/icons/google_marker_red.png) !important; 
+}
+
+.icon-grid {
+	background-image:url(../images/icons/grid.png) !important; 
+}
+
+.icon-kml {
+	background-image:url(../images/icons/kml.png) !important; 
+}
+
+.icon-undo {
+	background-image:url(../images/gis-icons/undo.png) !important; 
+}
+
+.icon-redo {
+	background-image:url(../images/gis-icons/redo.png) !important; 
+}
+
+.icon-world {
+	background-image:url(../images/icons/world.png) !important; 
+}
+
+.icon-hand {
+	background-image:url(../images/icons/hand.png) !important; 
+}
+
+.icon-binocu {
+	background-image:url(../images/gis-icons/binoc.png) !important; 
+}
+
+.icon-coo {
+	background-image:url(../images/gis-icons/coo.png) !important; 
+}
+
+.icon-metadata {
+	background-image:url(../images/gis-icons/metadata_alt.png) !important; 
+}
+
+.icon-link{
+	background-image:url(../images/icons/attach.png) !important; 
+}
+
+.icon-g-line{
+	background-image:url(../images/icons/line.png) !important; 
+}
+
+.icon-g-poly{
+	background-image:url(../images/icons/poly.png) !important; 
+}
+
+.icon-g-point{
+	background-image:url(../images/icons/point.png) !important; 
+}
+
+.icon-all{
+	background-image:url(../images/icons/asterisk_yellow.png) !important; 
+}
+
+.icon-bbox{
+	background-image:url(../images/icons/bbox.png) !important; 
+}
+
+.icon-click-point{
+	background-image:url(../images/icons/cursor.png) !important; 
+}
+
+.icon-tree{
+	background-image:url(../images/icons/chart_organisation.png) !important; 
+}
+
+.icon-check-all{
+	background-image:url(../images/icons/all.gif) !important; 
+}
+
+.icon-uncheck-all{
+	background-image:url(../images/icons/none.gif) !important; 
+}
+
+.icon-map{
+	background-image:url(../images/icons/map_alt.png) !important; 
+}
+
+
+/* GPS DEMO */ 
+.icon-online {
+	background-image:url(../images/icons/bullet_green.png) !important;
+}
+
+.icon-offline {
+	background-image:url(../images/icons/bullet_black.png) !important;
+}
+
+.icon-reload{
+	background-image:url(../images/icons/database_refresh.png) !important;
+}
+
+.icon-gps-cfg{
+	background-image:url(../images/icons/cog.png) !important;
+}
+
+.icon-gps-last{
+	background-image:url(../images/gps-icons/waypoint.png) !important;
+}
+
+.icon-gps-trace{
+	background-image:url(../images/gps-icons/route.png) !important;
+}
+
+.icon-role{
+	background-image:url(../images/icons/role.png) !important;
+}
+
+
+/* layer detail */
+
+#layer-detail-container{
+	padding:5px;	
+}
+
+
+/* layout general¨use */
+
+.main_container
+{
+	font-family:Arial;	 	
+	font-size:11px; 	
+}
+
+.main_font
+{	 					
+	color: #999;	
+}
+
+.main_font_blue
+{
+	color: #6688CC;	
+}
+
+.main_font_black
+{	 					
+	color: #000;	
+}
+
+.main_font_green
+{
+	color: #009999;
+}
+
+.main_font_link
+{	 				
+	color: #999;
+	cursor:pointer;		
+}
+
+.main_font_link:hover
+{ 		
+	text-decoration:underline;	
+	color: #666;	
+}
+
+.main_font_color
+{
+	color:Teal;    
+}
+
+.main_font_color
+{
+	color:#ff4444;    
+}
+
+.title
+{
+	color:#eee; 
+	position: absolute; 
+	top:180px; 
+	right:200px; 
+	text-shadow: 1px 1px 6px #111;
+	font-family:@Arial Unicode MS; 
+	font-size:50px;    
+}
+
+.subtitle
+{
+	color:#000; 
+	position: absolute; 
+	top:230px; 
+	right:130px;
+	text-shadow: 1px 1px 10px #fff; 
+	font-family:@Arial Unicode MS; 
+	font-size:30px;    
+}
+
+
+.text_footer
+{
+	color:#ccc; 
+	position: absolute; 
+	bottom:10px; 
+	left:10px;
+	text-shadow: 1px 1px 6px #111;
+	font-family:@Arial Unicode MS; 
+	font-size:12px;    
+}
+
+/* banners */
+.bottom_pattern
+{
+	cursor: pointer;
+	background: #000055 url(../images/button_pattern.png); 
+	background-repeat:repeat-x;
+	height:20px;
+}
+
+
+.main_title
+{
+	color: #FFFFFF;
+	font-size: 17pt;
+	font-family: Arial;
+	position:relative; 
+	float:left;
+	width:330px;
+	text-align:left;
+	margin-left:13%; 
+	top: -77px; 
+	z-index:2;
+}
+
+.container_sub
+{
+	position:relative; 
+	float:right; 
+	text-align: right;
+	margin-right:30px;
+	top:-79px;
+	z-index:2;    
+}
+
+.subA
+{
+	color: #FFFFFF;
+	font-size: 14pt;
+	font-family:Arial;
+}
+
+.subB
+{
+	color: #FFFFFF;
+	font-size: 11pt;
+	font-family: Arial;
+} 
+
+#gps_online_msg
+{
+	position:relative; 
+	float:left; 
+	text-align: left;
+	top:47px;
+	left:390px;
+	z-index:1000;    
+}
+
+
+/* Openlayer custom style */
+
+.olHandlerBoxZoomBox {
+	border: 2px solid #6688cc;
+	position: absolute;
+	background-color: white;
+	opacity: 0.50;
+	font-size: 1px;
+	filter: alpha(opacity=50);
+}
+
+.olHandlerBoxZoomBoxBlue {
+	border: 2px solid #6688cc;
+	position: absolute;
+	background-color: white;
+	opacity: 0.50;
+	font-size: 1px;
+	filter: alpha(opacity=50);
+}
+
+
+div.olControlMousePosition 
+{
+	bottom:3px;
+	margin:3px;
+	padding:3px; 
+	background-color:#eee;
+	border: solid 1px #888;
+	font-family: arial;
+	font-size: 10px; 
+	font-weight:bold;
+	color:#234323;
+	-moz-opacity:.85;
+	opacity: 0.85;
+	filter: alpha(opacity=85);
+    -moz-box-shadow: 3px 3px -7px #444;
+	-webkit-box-shadow: 3px 3px 7px #444;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px;	
+}
+
+div.olControlScale {
+	left: 3px; 
+	bottom:3px; 
+	width:100px;
+	position: absolute;
+	margin:3px;
+	padding:3px; 
+	background-color:#eee;
+	border: solid 1px #888;
+	font-family: arial;
+	font-size: 10px; 
+	font-weight:bold;
+	color:#234323;
+	opacity: 0.85;
+	-moz-opacity:.85;
+	filter: alpha(opacity=85);
+    -moz-box-shadow: 3px 3px -7px #444;
+	-webkit-box-shadow: 3px 3px 7px #444;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px;	
+}
+

@@ -1,0 +1,313 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.panel");
+<div id="cls-Philosophy.view.panel.Map"></div>/**
+* @class Philosophy.view.panel.Map
+* 
+* Philosophy map tools Panel (Dashboard)
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+* 
+*/
+var MEASURE = Philosophy.Globalization.For('Measure');
+var VECTOR = Philosophy.Globalization.For('Vector');
+var ALPHA = Philosophy.Globalization.For('Alpha');
+
+Phi.view.panel.MenuPanel = Ext.extend(Ext.DataView, {
+    autoHeight: true,
+    frame: true,
+    multiSelect: false,
+    singleSelect: true,
+    overClass: 'over',
+    selectedClass: 'selected',
+    itemSelector: 'dd',
+    tpl: new Ext.XTemplate(
+        '<div id="menu_map-ct">',
+            '<tpl for=".">',
+            '<div class="collapsed">',
+				'<h2><div>{title}',
+	            '<tpl if="this.isType(title,MEASURE)">',
+	                '<span id="measure_output"></span>',
+	            '</tpl>',
+				'</div></h2>',
+	            '<dl>',
+	                '<tpl for="app">',
+	                    '<dd ext:control="{control}" ext:action="{action}" >',
+	                    '<img src="{icon}" title="{tooltip}" ></img>',
+	                    '</dd>',
+	                '</tpl>',
+
+	            '<div style="clear:left"></div>',
+	            '</dl>',
+            '</div>',
+            '</tpl>',
+        '</div>',
+        {
+            isType: function (title, type) {
+                if (title == type) {
+                    return true;
+                }
+            }
+        }
+	),
+    onClick: function (e) {
+
+        var _this = this;
+
+        var group = e.getTarget('h2', 3, true);
+        if (group) {
+            group.up('div').toggleClass('collapsed');
+        } else {
+            var t = e.getTarget('dd', 5, true);
+            if (t) {
+
+                var action = t.getAttributeNS('ext', 'action');
+                var control = t.getAttributeNS('ext', 'control');
+
+                Philosophy.Map.deactivateAllControls();
+
+                switch (action) {
+                    case "navigation":
+
+                        switch (control) {
+                            case "zoomIn":
+                                Philosophy.Map.zoomIn();
+                                break
+                            case "zoomOut":
+                                Philosophy.Map.zoomOut();
+                                break;
+                            case "zoomBoxIn":
+                                Philosophy.Map.activateCustomControl('zoom_box');
+                                break;
+                            case "zoomBoxOut":
+                                Philosophy.Map.activateCustomControl('zoom_box_out');
+                                break;
+                        }
+
+                        break;
+                    case "color":
+                        var win = new Phi.view.window.colorPicker({ x: 100, y: 100 });
+                        win.show(this);
+                        break;
+
+                    case "vector":
+                        Philosophy.Map.activateVectorControl(control);
+                        break;
+
+                    case "vectorClear":
+
+                        Ext.MessageBox.show({
+                            title: '',
+                            msg: Philosophy.Globalization.For('Clear already draw geometries ?'),
+                            buttons: Ext.MessageBox.YESNO,
+                            fn: function (btn, text) {
+                                if (btn == 'yes') {
+                                    Philosophy.Map.vectorLayer.destroyFeatures();
+                                }
+                            }
+                        });
+                        break;
+
+                    case "measure":
+                        Philosophy.Map.activateMeasureControl(control);
+                        break;
+
+                    case "custom":
+                        Philosophy.Map.activateCustomControl(control);
+                        break;
+
+                    case "legend":
+                        var zoom = Philosophy.Map.map.getZoom();
+                        win = new Phi.view.window.Legend({
+                            zoom: zoom
+                        });
+                        win.show(this);
+                        break;
+
+                    case "query":
+                        win = new Phi.view.window.Metadata();
+                        win.show(this);
+                        break;
+                }
+            }
+        }
+        return Phi.view.window.MenuPanel.superclass.onClick.apply(this, arguments);
+    }
+});   // Phi.view.panel.MenuPanel
+
+Phi.view.panel.Map = Ext.extend(Ext.Panel, {
+    border: false,
+    collapsible: true,
+    plugins: [Ext.ux.plugins.ToggleCollapsible],
+    title: Philosophy.Globalization.For('Tools'),
+    layout: 'fit',
+    winLegend: null,
+
+    initComponent: function() {
+        var _this = this;
+        var menuData = [
+             {
+                title: Philosophy.Globalization.For('Navigation'),
+                app: [
+                    {
+                        action: 'navigation',
+                        control: 'zoomIn',
+                        icon: 'content/images/MenuIcons/zoom_in_alt.png',
+                        tooltip: Philosophy.Globalization.For('Zoom In')
+                    }
+                    ,
+	                {
+	                    action: 'navigation',
+	                    control: 'zoomOut',
+	                    icon: 'content/images/MenuIcons/zoom_out_alt.png',
+	                    tooltip: Philosophy.Globalization.For('Zoom Out')
+	                }
+                    ,
+                    {
+                        action: 'navigation',
+                        control: 'zoomBoxIn',
+                        icon: 'content/images/MenuIcons/zoom_in.png',
+                        tooltip: Philosophy.Globalization.For('Zoom Box In')
+                    }
+                    ,
+	                {
+	                    action: 'navigation',
+	                    control: 'zoomBoxOut',
+	                    icon: 'content/images/MenuIcons/zoom_out.png',
+	                    tooltip: Philosophy.Globalization.For('Zoom Box Out')
+	                }
+                    ,                     
+	                {
+	                    icon: 'content/images/MenuIcons/pan_off.png',
+	                    tooltip: Philosophy.Globalization.For('Pan')
+	                }
+	            ]
+            }
+			,
+		    {
+		        title: Philosophy.Globalization.For('Vector'),
+	            app: [  {
+	                        action: 'color',
+	                        icon: 'content/images/MenuIcons/color_alt.png',
+	                        tooltip: Philosophy.Globalization.For('Color Selection')
+	                    }
+		                ,
+		                {
+		                    action: 'vector',
+		                    control: 'point',
+		                    icon: 'content/images/MenuIcons/draw_point_off.png',
+		                    tooltip: Philosophy.Globalization.For('Draw Point')
+		                }
+		                ,
+		                {
+		                    action: 'vector',
+		                    control: 'line',
+		                    icon: 'content/images/MenuIcons/draw_line_off.png',
+		                    tooltip: Philosophy.Globalization.For('Draw Polyline')
+		                }
+		                ,
+		                {
+		                    action: 'vector',
+		                    control: 'polygon',
+		                    icon: 'content/images/MenuIcons/draw_polygon_off.png',
+		                    tooltip: Philosophy.Globalization.For('Draw Polygon')
+		                }
+		                ,
+
+		                {
+		                    action: 'vector',
+		                    control: 'regular',
+		                    icon: 'content/images/MenuIcons/regular.png',
+		                    tooltip: Philosophy.Globalization.For('Draw Regular Polygon')
+
+		                }
+		                ,
+		                {
+		                    action: 'vector',
+		                    control: 'drag',
+		                    icon: 'content/images/MenuIcons/move_feature_off.png',
+		                    tooltip: Philosophy.Globalization.For('Drag Polygon')
+		                }
+		                ,
+		                {
+		                    action: 'vector',
+		                    control: 'modify',
+		                    icon: 'content/images/MenuIcons/modify.png',
+		                    tooltip: Philosophy.Globalization.For('Modify Polygon')
+
+		                }
+                        ,
+		                {
+		                    action: 'vector',
+		                    control: 'del',
+		                    icon: 'content/images/MenuIcons/delete.png',
+		                    tooltip: Philosophy.Globalization.For('Delete One By One Polygon')
+		                }
+		                ,
+                        {
+		                    action: 'vectorClear',
+                            icon: 'content/images/MenuIcons/delete_all.png',
+		                    tooltip: Philosophy.Globalization.For('Clear All')
+		                }
+                       
+		            ]
+		    }
+			,
+			{
+			    title: Philosophy.Globalization.For('Query'),
+			    app: [
+                    {
+                        action: 'query',
+                        icon: 'content/images/MenuIcons/sql.png',
+                        tooltip: Philosophy.Globalization.For('SQL Query')
+                    }
+                    ,
+                    {
+                        action: 'custom',
+                        control: 'click_layer_info',
+                        icon: 'content/images/MenuIcons/click.png',
+                        tooltip: Philosophy.Globalization.For('Element Info')
+                    }
+                    ,
+                    {
+                        action: 'custom',
+                        control: 'click_point_info',
+                        icon: 'content/images/MenuIcons/point_click.png',
+                        tooltip: Philosophy.Globalization.For('Position Coordinate')
+                    }
+                    ,
+                    {
+                        action: 'custom',
+                        control: 'box_bound_info',
+                        icon: 'content/images/MenuIcons/box.png',
+                        tooltip: Philosophy.Globalization.For('Coordinates Box')
+                    }
+                      
+	            ]
+			}
+		];
+
+        var store = new Ext.data.JsonStore({
+            fields: ['title', 'app'],
+            data: menuData
+        });
+
+        var menuPanel = new Phi.view.panel.MenuPanel({ store: store });
+        this.items = menuPanel; 
+        
+        Phi.view.panel.Map.superclass.initComponent.call(this);
+        
+    }
+});  // eo Phi.view.panel.Map
+// eof</pre>    
+</body>
+</html>

@@ -1,0 +1,187 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.tree.Base-ns"></div>/**
+ * Philosophy Raster
+ * overlay layers widget 
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2009, by Ultragestion
+ * @date      30. December 2009
+ * @version   1.1
+ *
+ */
+Ext.ns("Phi.view.tree");
+
+Phi.view.tree.Overlay = Ext.extend(Ext.tree.TreePanel, {
+    title: Philosophy.Globalization.For('Overlay'),
+    animate: true,
+    enableDD: false,
+    border: true,
+    autoScroll: true,
+    rootVisible: false,
+    containerScroll: true,
+
+    initComponent: function () {
+
+        var _this = this;
+        this.marker_layers = [];
+        this.vector_layers = [];
+        this.selected_layer = null;
+
+        // default layers left 
+        this.marker_layers.push({ Id: 4, layerName: 'marker-layer', text: 'Marcadores base', checked: true, leaf: true, iconCls: "icon-overlay-alt" });
+        this.vector_layers.push({ Id: 5, layerName: 'vector-layer', text: 'Vectores Base', checked: true, leaf: true, iconCls: "icon-overlay-alt" });
+
+        this.children = [];
+
+        //left 
+        this.children.push({ Id: 1, layerName: 'wms-layer', text: Philosophy.Globalization.For('Web Map Service'), checked: true, leaf: true, iconCls: "icon-overlay-alt" });
+        
+        //Node 
+        this.children.push({ Id: 2, text: Philosophy.Globalization.For('Markers'), checked: true, leaf: false, expanded: true, children: this.marker_layers });
+        this.children.push({ Id: 3, text: Philosophy.Globalization.For('Vectors'), checked: true, leaf: false, expanded: true, children: this.vector_layers });
+
+
+        this.data = [{ Id: 0, checked: true, text: "<b>" + Philosophy.Globalization.For('Overlay') + "</b>", leaf: false, expanded: true, children: this.children}];
+
+        this.root = new Ext.tree.TreeNode({ children: this.data, expanded: true });
+        this.treeLoader = new Ext.tree.TreeLoader({ preloadChildren: true })
+        this.treeLoader.doPreload(this.root);
+
+        this.on('checkchange', function (n, checked) {
+            if (n.hasChildNodes()) {
+                n.expand();
+                n.eachChild(function (c) {
+                    c.ui.toggleCheck(checked);
+                });
+            }
+            else {
+                var layerName = n.attributes['layerName'];
+                var l = Philosophy.Map.map.getLayersByName(layerName);
+                l[0].setVisibility(checked);
+            }
+        });
+
+        var markerMenu = new Ext.menu.Menu();
+
+        markerMenu.add({
+            iconCls: 'icon-zoom',
+            text: Philosophy.Globalization.For('Zoom'),
+            parent: _this,
+            handler: _this.zoomForExtent
+        });
+
+        markerMenu.add({
+            iconCls: 'icon-delete',
+            text: Philosophy.Globalization.For('Delete'),
+            parent: _this,
+            layers: _this.marker_layers,
+            handler: _this.removeMarkerLayer
+        });
+
+        this.markerMenu = markerMenu;
+
+        var vectorMenu = new Ext.menu.Menu();
+
+        vectorMenu.add({
+            iconCls: 'icon-zoom',
+            text: Philosophy.Globalization.For('Zoom'),
+            parent: _this,
+            handler: _this.zoomForExtent
+        });
+
+        vectorMenu.add({
+            iconCls: 'icon-delete',
+            text: Philosophy.Globalization.For('Delete'),
+            parent: _this,
+            layers: _this.vector_layers,
+            handler: _this.removeVectorLayer
+        });
+
+        this.vectorMenu = vectorMenu;
+
+        this.on('contextmenu', function (node, e) {
+            if (node.isLeaf()) {
+                node.select();
+                var layerName = node.attributes['layerName'];
+                var l = Philosophy.Map.map.getLayersByName(layerName);
+                this.selected_layer = l[0];
+                if (layerName === 'wms-layer') return
+                if (layerName === 'marker-layer') return
+                if (layerName === 'vector-layer') return 
+                
+                if (this.selected_layer.isVector) {
+                    var c = this.vectorMenu;
+                } else {
+                    var c = this.markerMenu;
+                }
+                c.contextNode = node;
+                c.showAt(e.getXY());
+            }
+        });
+
+        this.tbar = new Ext.Toolbar({ items: ['-', { xtype: 'tbfill' }, '-'] });
+        Phi.view.tree.Overlay.superclass.initComponent.apply(this, arguments);
+    },
+    toggleVisibility: function (v, layerName) {
+        var l = Philosophy.Map.map.getLayersByName(layerName);
+        l[0].setVisibility(v)
+    },
+    addLayer: function (layer) {
+        if (layer.isVector)
+            this.vector_layers.push({ Id: layer.id, layerName: layer.name, text: layer.name, checked: true, leaf: true, iconCls: "icon-overlay" });
+        else
+            this.marker_layers.push({ Id: layer.id, layerName: layer.name, text: layer.name, checked: true, leaf: true, iconCls: "icon-overlay" });
+
+        this.treeLoader.load(this.root);
+    },
+    getLayerId: function (layerArray, layer) {
+        var len = layerArray.length;
+
+    },
+    removeMarkerLayer: function () {
+        var _this = this.parent;
+        var pos = 0;
+        var len = _this.marker_layers.lenght;
+        for (var i = 0; i < len; i++) {
+            if (_this.marker_layers[i].name == _this.selected_layer.name) {
+                pos = i;
+                break;
+            }
+        }
+        _this.marker_layers.splice(pos - 1, 1);
+        Philosophy.Map.map.removeLayer(_this.selected_layer);
+        _this.treeLoader.load(_this.root);
+
+    },
+    removeVectorLayer: function () {
+        var _this = this.parent;
+        var pos = 0;
+        var len = _this.vector_layers.lenght;
+        for (var i = 0; i < len; i++) {
+            if (_this.vector_layers[i].name == _this.selected_layer.name) {
+                pos = i;
+                break;
+            }
+        }
+        _this.vector_layers.splice(pos - 1, 1);
+        Philosophy.Map.map.removeLayer(_this.selected_layer);
+        _this.treeLoader.load(_this.root);
+
+    },
+    zoomForExtent: function () {
+        var _this = this.parent;
+        var bounds = _this.selected_layer.getDataExtent();
+        Philosophy.Map.zoomToExtent(bounds, true);
+    }
+
+});
+</pre>    
+</body>
+</html>

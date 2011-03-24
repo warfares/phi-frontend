@@ -1,0 +1,157 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.panel");
+<div id="cls-Philosophy.view.panel.ResumeLayer"></div>/**
+* @class Philosophy.view.panel.ResumeLayer
+* 
+* Philosophy resume layers panel (Dashboard)
+* display current applied layers.
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+* 
+*/
+Phi.view.panel.ResumeLayer = Ext.extend(Ext.Panel, {
+    title: Philosophy.Globalization.For('Layer Resume'),
+    layout: 'fit',
+    forceLayout: true,
+    initComponent: function () {
+
+        var _this = this;
+
+        this.tbar = new Ext.Toolbar({
+            items: [{
+                text: Philosophy.Globalization.For('Search'),
+                iconCls: 'icon-search-list',
+                tooltip: { title: Philosophy.Globalization.For('Search'), text: Philosophy.Globalization.For('Search Desc') },
+                handler: function () { Philosophy.panelLayer.treeWMSLayers.showSearch(); }
+            } ]
+        });
+
+        var store = new Ext.data.JsonStore({
+            idProperty: 'name',
+            fields: ['name', 'title']
+        });
+
+        var dd = new Ext.ux.dd.GridDragDropRowOrder({
+            copy: false,
+            scrollable: true
+        });
+
+        dd.on('afterrowmove', function () {
+            _this.apply();
+        });
+
+        this.grid = new Ext.grid.GridPanel({
+            store: store,
+            enableDragDrop: true,
+            ddGroup: 'GridDD',
+            plugins: [dd],
+            columns: [{ header: '', width: 30, sortable: false, renderer: _this.renderLegend, dataIndex: 'name' },
+              { header: Philosophy.Globalization.For('Layers'), width: 240, sortable: true, dataIndex: 'title'}]
+        });
+
+        this.grid.on('sortchange', function () {
+            _this.apply();
+        });
+
+        // context Menu 
+        function onGridContextMenu(grid, rowIndex, e) {
+            e.stopEvent();
+            var coords = e.getXY();
+            _this.layerContextMenu.showAt([coords[0], coords[1]]);
+            _this.grid.getSelectionModel().clearSelections();
+            _this.grid.getSelectionModel().selectRow(rowIndex);
+
+            _this.layerContextMenu.layerName = _this.getlayerNameFromSelection();
+            _this.layerContextMenu.rowIndex = rowIndex;
+        }
+
+        this.grid.addListener('rowcontextmenu', onGridContextMenu);
+        this.layerContextMenu = new Phi.view.menu.Layer({ enableRemoveLayer: true });
+        this.layerContextMenu.on('removeLayer', function (layerName, node, rowIndex) {
+            _this.removeLayer(rowIndex);
+        });
+
+
+        this.items = [this.grid];
+
+        Phi.view.panel.ResumeLayer.superclass.initComponent.call(this);
+        this.update();
+    }
+    ,
+    update: function () {
+        this.grid.store.loadData(Philosophy.Layer.appliedLayers);
+    }
+    ,
+    renderLegend: function (val, m, record) {
+        var src = Philosophy.Config.wmsLegend + Philosophy.Config.wmsNameSpace + ':' + val.split('.')[1];
+        return '<img src="' + src + '" style="border:1px solid #ccc;" />';
+    }
+    ,
+    getlayerNameFromSelection: function () {
+        var selections = this.grid.getSelectionModel().getSelections();
+        return selections[0].data.name;
+    }
+    ,
+    getlayersFromStore: function () {
+        var _this = this;
+        var layers = [];
+
+        for (var i = 0, len = _this.grid.store.getTotalCount(); i < len; i++) {
+            var r = _this.grid.store.getAt(i);
+            var name = r.get('name');
+            var title = r.get('title');
+            var layer = { 'name': name, 'title': title };
+            layers.push(layer);
+        }
+
+        return layers;
+    }
+    ,
+    apply: function () {
+        var _this = this;        
+        var container = Ext.get('map');
+        Philosophy.Util.popupMessage(Philosophy.Globalization.For('Updating...'), '', container);
+        
+        var layers = _this.getlayersFromStore();
+        Philosophy.Layer.appliedLayers = layers;
+        Philosophy.Map.redrawMainLayer(Philosophy.Layer.getWMSLayers(Philosophy.Config.wmsNameSpace));
+    }
+    ,
+    removeLayer: function (rowIndex) {
+
+        // validation 
+        var layers = this.getlayersFromStore();
+
+        if (layers.length === 1) {
+            Ext.MessageBox.alert(Philosophy.Globalization.For('Warning'), Philosophy.Globalization.For('Cant remove one layer'));
+            return;
+        }
+
+        var r = this.grid.store.getAt(rowIndex);
+        var name = r.get('name');
+
+        for (i = 0; i < Philosophy.Layer.appliedLayers.length; i++) {
+            if (Philosophy.Layer.appliedLayers[i].name === name) {
+                Philosophy.Layer.appliedLayers.remove(Philosophy.Layer.appliedLayers[i]);
+                break;
+            }
+        }
+
+        this.update();
+        this.apply();
+    }
+}); // eo Phi.view.panel.ResumeLayer
+// eof
+</pre>    
+</body>
+</html>

@@ -1,0 +1,144 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.comboBox.UserGroup-ns"></div>/**
+* Philosophy Search
+*
+* @author    Ultragestion (rbarriga)
+* @copyright (c) 2009, by Ultragestion
+* @date      27. November 2009
+* @version   1.1
+*
+*/ 
+
+Ext.ns("Philosophy.Control");
+
+Philosophy.Control.Search = Ext.extend(Ext.form.TriggerField, {
+    validationEvent: false,
+    validateOnBlur: false,
+    triggerClass: 'x-form-search-trigger',
+    width: 260,
+    emptyText: Philosophy.Globalization.For('Search with Ultramap'),
+    paramName: 'query',
+    initComponent: function() {
+
+        var _this = this
+
+        Philosophy.Control.Search.superclass.initComponent.call(this);
+
+        this.onTriggerClick = function() { _this.search(); };
+        this.on('specialkey', function(f, e) { if (e.getKey() == e.ENTER) _this.search(); });
+    }
+    ,
+    onRender: function() {
+
+        Philosophy.Control.Search.superclass.onRender.apply(this, arguments);
+
+        var t = new Ext.ToolTip({
+            target: this.el,
+            title: Philosophy.Globalization.For('Address Search'),
+            width: 400,
+            html: this.createToolTipMsg(),
+            trackMouse: true
+        });
+    }
+    ,
+    createToolTipMsg: function() {
+
+        var html = [];
+        html.push(Philosophy.Globalization.For('Ultramap Geocoding address seach service'));
+        html.push('<br/><br/>');
+        html.push(Philosophy.Globalization.For('also the following commands are available'));
+        html.push('<br/><br/>');
+        html.push('<table width="400">');
+        html.push('<tr><td ><b class="main_font_blue">gm:</b>[dato]</td> <td>');
+		html.push(Philosophy.Globalization.For('Address search in google maps'));
+		html.push(',<i> i.e: gm:Alameda 132');
+		html.push('</i></td></tr>');
+        html.push('<tr><td ><b class="main_font_blue">gs:</b>[)');
+		html.push(Philosophy.Globalization.For('data'));
+		html.push(']</td>');
+		html.push('<td>Busqueda de dato en Google,<i> ej: gs:GIS</i></td></tr>');
+        html.push('<tr><td><span class="main_font_blue"><b>z-</b>,<b>z+</b>,<b>z:</b></span>[')
+		html.push(Philosophy.Globalization.For('number'));
+		html.push(']</td> <td>');
+		html.push(Philosophy.Globalization.For('Change the zoom level'));
+		html.push('</td></tr>');
+        html.push('<tr><td>[numero]<b class="main_font_blue">;</b>[');
+		html.push(Philosophy.Globalization.For('number'));
+		html.push(']</td> <td>');
+		html.push(Philosophy.Globalization.For('Coordinate'));
+		html.push('Lon, Lat,<i> i.e: -70.123;-33 </i></td></tr>');
+        html.push('</table>');
+        return html.join('');
+    }
+    ,
+    search: function() {
+
+        // first regular expression actions 
+        var v = this.getRawValue().trim();
+        var match = this.searchRegExp(v);
+
+        // ultramap not command match -> search
+        if (!match) {
+            //engine
+            var s = new Philosophy.Search.Address();
+            s.initComponent();
+            //container
+            var c = Philosophy.panelSearch;
+            s.getResult(v, c);
+        }
+    }
+    ,
+    searchRegExp: function(v) {
+
+        var regexp = [
+		    {
+		        engine: new Philosophy.Search.Point(),
+		        regex: /^(-{0,1}[0-9]*?.[0-9]*);(-{0,1}[0-9]*?.[0-9]*)$/
+		    },
+		    {
+		        engine: new Philosophy.Search.Zoom(),
+		        regex: /^z:\d$/i
+		    },
+		    {
+		        engine: new Philosophy.Search.ZoomIn(),
+		        regex: /^z\+$/i
+		    },
+		    {
+		        engine: new Philosophy.Search.ZoomOut(),
+		        regex: /^z\-$/i
+		    },
+		    {
+		        engine: new Philosophy.Search.GoogleMap(),
+		        regex: /^gm:.*$/i
+		    },
+		    {
+		        engine: new Philosophy.Search.Google(),
+		        regex: /^gs:.*$/i
+		    }
+        ];
+
+        for (var i = 0; i < regexp.length; i++) {
+            var regex = regexp[i].regex;
+            var engine = regexp[i].engine;
+
+            var match = regex.test(v);
+
+            if (match) {
+                engine.getResult(v);
+                return true;
+            };
+        };
+
+        return false;
+    }
+});           // eo Philosophy.Control.Search
+// eof</pre>    
+</body>
+</html>

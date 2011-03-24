@@ -1,0 +1,173 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns('Phi.view.toolbar');
+<div id="cls-Philosophy.view.toolbar.MainToolbar"></div>/**
+* @class Philosophy.view.toolbar.MainToolbar
+* 
+* Philosophy Main app toolbar (north) 
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+*/
+Phi.view.toolbar.MainToolbar = Ext.extend(Ext.Toolbar, {
+    initComponent: function () {
+        var _this = this;
+        this.searchField = new Philosophy.Control.Search();
+        this.markerMenu = this.markerMenu();
+        this.projMenu = new Phi.view.comboBox.Projection({ width: 150, initProjValue: '32719' });
+
+        this.projMenu.on('select', function (combo, record, index) {
+            var proj = record.data.epsg;
+            Philosophy.Map.setDisplayProjection(proj);
+        });
+
+        this.baseLayerCombo = new Phi.view.comboBox.BaseLayer();
+        this.alphaSlider = new Phi.view.slider.BaseLayer();
+
+        Phi.view.toolbar.MainToolbar.superclass.initComponent.call(this);
+
+        this.add(this.searchField);
+        this.add(this.markerMenu);
+        this.add('-');
+        this.add(this.projMenu);
+        this.add('-');
+        this.add(this.baseLayerCombo);
+        this.add('');
+        this.add(' ');
+        this.add(this.alphaSlider);
+        this.add(' ');
+        this.add({
+            iconCls: 'icon-grid',
+            enableToggle: true,
+            tooltip: { title: Phi.Global.For('Grid'), text: Phi.Global.For('Show/Hide grid coordinates <br/> over the map') },
+            handler: function () {
+                var v = !Philosophy.Map.graticule.gratLayer.getVisibility();
+                Philosophy.Map.graticule.gratLayer.setVisibility(v);
+            }
+        });
+        this.add({ xtype: 'tbfill' });
+        
+        this.add([{
+            tooltip: { title: 'Kml', text: Phi.Global.For('Draw simple KML over the map') },
+            iconCls: 'icon-kml',
+            handler: function () {
+                var win = new Phi.view.window.KMLUpload();
+                win.show(this);
+            }
+        }
+        ,
+        {
+            tooltip: { title: Phi.Global.For('Coordinate File'), text: Phi.Global.For('Draw (csv,txt,xls,xlsx) coordinates </br> file over the map') },
+            iconCls: 'icon-google-marker',
+            handler: function () {
+                var win = new Phi.view.window.DrawCoordinate();
+                win.show(this);
+            }
+        }
+        ,
+        {
+            tooltip: { title: Phi.Global.For('Transform'), text: Phi.Global.For('Transform (txt,xls,xlsx) coordinates</br> file to different proyections') },
+            iconCls: 'icon-transform',
+            handler: function () {
+                var win = new Phi.view.window.ConvertCoordinate();
+                win.show(this);
+            }
+        }
+        ,
+        {
+            tooltip: { title: Phi.Global.For('Export'), text: Phi.Global.For('Export geometric layers <br/> to different formats (KML, PDF, SHAPE, ETC...)') },
+            iconCls: 'icon-print',
+            handler: function () {
+                var win = new Phi.view.window.FormExport();
+                win.show(this);
+            }
+        }
+	    , '-',
+	    {
+	        tooltip: { title: Phi.Global.For('Manual'), text: Phi.Global.For('User Manual, description details') },
+	        iconCls: 'icon-book',
+	        handler: function () {
+	            window.open('manual.pdf', 'GIS - Manual', 'width=800,height=600,resizable=yes,scrollbars=yes ')
+	        }
+	    }
+	    ,
+	    {
+	        tooltip: { title: 'FAQ', text: Phi.Global.For('Frequent Questions') },
+	        iconCls: 'icon-help',
+	        handler: function () {
+	            window.open('faq.htm', 'GIS - FAQ', 'width=800,height=600,resizable=yes,scrollbars=yes ')
+
+	        }
+	    }
+        , '-',
+	        {
+	            text: Phi.Global.For('Control Panel'),
+	            tooltip: { title: Phi.Global.For('Control Panel'), text: Phi.Global.For('Configuration tool as <br/> personal data, administration, etc...') },
+	            iconCls: 'icon-control-panel',
+	            handler: function () {
+	                var win = new Phi.view.window.ControlPanel();
+	                win.show(this);
+	            }
+	        }
+	        ,
+        {
+            text: Phi.Global.For('LogOut'),
+            tooltip: { title: Phi.Global.For('LogOut'), text: Phi.Global.For('Close current session') },
+            iconCls: 'icon-key',
+            handler: function () {
+                Ext.MessageBox.show({
+                    title: Phi.Global.For('Logout'),
+                    msg: Phi.Global.For('Are you sure ?'),
+                    animEl: 'logOut',
+                    buttons: Ext.MessageBox.YESNO,
+                    scope: this,
+                    fn: function (btn, text) {
+                        if (btn == 'yes') { _this.logOut(); }
+                    }
+                });
+            }
+        }
+     ]);
+    }
+    ,
+    load: function () {
+        this.loadFavorites();
+        //this.menu.loadRaster();
+        this.baseLayerCombo.loadBaseLayers();
+    }
+    ,
+    markerMenu: function () {
+        this.menu = new Phi.view.menu.Marker();
+        var markerMenu = {
+            iconCls: 'icon-group-locations',
+            tooltip: { title: Phi.Global.For('Favorites'), text: Phi.Global.For('Quick Access to <br/> Raster, Places and favorite locations') },
+            text: '',
+            menu: this.menu
+        };
+        return markerMenu;
+    }
+    ,
+    loadFavorites: function () {
+        this.menu.locationLoad();
+    }
+    ,
+    logOut: function () {
+        Philosophy.Session.setUser(null);
+        Phi.Map.unload();
+
+        //show login
+        var login = new Phi.view.window.Login();
+        login.show(this);
+        login.getEl().fadeIn({ duration: 1 });
+    }
+});                    // eo Phi.view.toolbar</pre>    
+</body>
+</html>

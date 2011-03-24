@@ -1,0 +1,214 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.tree.WMSLayers-ns"></div>/**
+ * Philosophy ControlPanel  
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2008, by Ultragestion
+ * @date      14. September 2008
+ * @version   1.0
+ *
+ */
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.MenuPanel = Ext.extend(Ext.DataView, {
+    autoHeight: true,
+    frame: true,
+    overClass: 'over',
+    itemSelector: 'dd',
+    tpl: new Ext.XTemplate(
+        '<div id="menu-ct">',
+            '<tpl for=".">',
+             '<tpl if="this.isRole(id)">',
+                '<div class="collapsed">',
+                '<h2><div>{title}</div></h2>',
+                '<dl>',
+                    '<tpl for="app">',
+                        '<dd ext:action="{action}"><img src="{icon}"/>',
+                            '<div><h4>{text}</h4><p>{desc}</p></div>',
+                        '</dd>',
+                    '</tpl>',
+                '<div style="clear:left"></div>',
+                '</dl>',
+                '</div>',
+            '</tpl>',
+            '</tpl>',
+        '</div>',
+        {
+            isRole: function (id) {
+                if (id == 2) {
+                    if (Phi.Session.isRole(ROLEADMIN))
+                        return true;
+                    else
+                        return false;
+                }
+                else
+                    return true;
+            }
+        }
+    ),
+    onClick: function (e) {
+        var group = e.getTarget('h2', 3, true);
+        if (group) {
+            group.up('div').toggleClass('collapsed');
+        } else {
+            var t = e.getTarget('dd', 5, true);
+            if (t) {
+                var action = t.getAttributeNS('ext', 'action');
+
+                var win;
+                switch (action) {
+                    case "userProfile":
+                        win = new Phi.view.window.FormUser({
+                            height: 300,
+                            create: false,
+                            opener: Philosophy.panelUser,
+                            x: 100,
+                            y: 100
+                        });
+                        win.show(this);
+                        win.readEntity(Philosophy.Session.getUser());
+                        break;
+
+                    case "userPassword":
+                        var userName = Philosophy.Session.getUser();
+                        win = new Phi.view.window.FormPassword({
+                            userName: userName
+                        });
+                        win.show(this);
+                        break;
+
+                    case "userAdmin":
+                        win = new Phi.view.window.MantainerUser();
+                        win.show(this);
+                        break;
+
+                    case "application":
+                        win = new Phi.view.window.formAppSettings();
+                        win.show(this);
+                        var cfg = Philosophy.Util.getAppCfg();
+                        win.setValues(cfg);
+                        break;
+                    case "drawCoordinates":
+                        var win = new Phi.view.window.DrawCoordinate();
+                        win.show(this);
+                        break;
+                    case "KMLUploadFile":
+                        var win = new Phi.view.window.KMLUpload();
+                        win.show(this);
+                        break;
+                    case "convertCoordinate":
+                        var win = new Phi.view.window.ConvertCoordinate();
+                        win.show(this);
+                        break;
+                }
+            }
+        }
+        return Phi.view.window.MenuPanel.superclass.onClick.apply(this, arguments);
+    }
+});
+
+Phi.view.window.ControlPanel = Ext.extend(Ext.Window, {        
+    closeAction: 'close', 
+	title: Philosophy.Globalization.For('Control Panel'),
+	iconCls: 'icon-control-panel',
+    maximizable: false,
+    modal: true,    
+    width: 680,
+    height: 500,
+    autoScroll: true, 
+    html: '<div style="background:#ffffff; height:100%"></div>',       
+	
+    initComponent: function() {        
+		
+		var _this = this;
+
+		//TODO: hacer dinamico esto (BD) relacionado por usuario 					
+		var menuData = [
+		{
+        id:1,
+        title: Philosophy.Globalization.For('Personal'),
+        app: [{
+            text: Philosophy.Globalization.For('Profile Information'),
+            action: 'userProfile',
+            icon: 'content/images/temp_img.gif',
+            desc: Philosophy.Globalization.For('Profiledesc')
+            },{
+            text: Philosophy.Globalization.For('Password'),
+            action: 'userPassword',
+            icon: 'content/images/temp_img_b.gif',
+            desc: Philosophy.Globalization.For('Passworddesc')
+            }]
+	    },
+		{
+	  	id:2,
+        title: Philosophy.Globalization.For('Administration'),
+        app: [
+        {
+            text: Philosophy.Globalization.For('User Administration'),
+            action: 'userAdmin',
+            icon: 'content/images/admin.gif',
+            desc: Philosophy.Globalization.For('UserAdmindesc')
+        }
+        ,
+        {
+            text: Philosophy.Globalization.For('Application Settings'),
+            action: 'application',
+            icon: 'content/images/temp_img_b.gif',
+            desc: Philosophy.Globalization.For('AppAdmindesc')
+        }]
+        }
+        ,
+        {
+        id:3,
+        title: Philosophy.Globalization.For('Upload Manager') ,
+        app: [
+            {
+            text: Philosophy.Globalization.For('Draw Coordinates'),
+            action: 'drawCoordinates',
+            icon: 'content/images/draw_points.gif',
+            desc: Philosophy.Globalization.For('UploadFiledesc')
+            },  
+        
+            {
+            text: Philosophy.Globalization.For('KML Upload'),
+            action: 'KMLUploadFile',
+            icon: 'content/images/kml_img.png',
+            desc: Philosophy.Globalization.For('KMLFiledesc')
+            },        
+            {
+            text: Philosophy.Globalization.For('Convert Coordinates'),
+            action: 'convertCoordinate',
+            icon: 'content/images/convert_file.png',
+            desc: Philosophy.Globalization.For('TransformFiledesc')
+            }      
+        ]
+	    }
+        ];
+	
+		var store = new Ext.data.JsonStore({
+	        idProperty: 'id',
+	        fields: ['id', 'title', 'app'],
+	        data: menuData
+	    });
+
+	    this.items = new Phi.view.window.MenuPanel({ store: store });
+						
+		this.buttons = [{
+	        text: Philosophy.Globalization.For('Close'),
+	        handler: function() {_this.close();}
+		}];
+	
+    	Phi.view.window.ControlPanel.superclass.initComponent.call(this);          
+ 	}
+ }); // eo Phi.view.window.ControlPanel 
+// eof</pre>    
+</body>
+</html>

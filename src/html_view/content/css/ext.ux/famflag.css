@@ -1,0 +1,1302 @@
+/*
+ * This CSS file of Country Flags is an anominous donation to this ever changing world!
+ * of course the images are not included they can be found from:
+ *
+ * Copy of Readme file of
+ * 
+ * Flag icons - http://www.famfamfam.com
+ *
+ * These icons are public domain, and as such are free for any use (attribution appreciated but not required).
+ * Note that these flags are named using the ISO3166-1 alpha-2 country codes where appropriate. A list of codes can be found at
+ * http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+ *
+ * If you find these icons useful, please donate via paypal to mjames@gmail.com (or click the donate button available at
+ *  http://www.famfamfam.com/lab/icons/silk)
+ * Contact: mjames@gmail.com
+ * http://www.famfamfam.com
+ *
+ * 
+ */
+
+
+/* ADDED: Unknown Location */
+.ux-flag-world { 
+  background-image:url(../images/flags/world.png) ! important;
+}
+
+/* AD-Andorra */
+.ux-flag-ad {
+  background-image:url(../images/flags/ad.png) ! important;
+}
+
+/* AE-United Arab Emirates */
+.ux-flag-ae {
+  background-image:url(../images/flags/ae.png) ! important;
+}
+
+/* AF-Afghanistan */
+.ux-flag-af {
+  background-image:url(../images/flags/af.png) ! important;
+}
+
+/* AG-Antigua and Barbuda */
+.ux-flag-ag {
+  background-image:url(../images/flags/ag.png) ! important;
+}
+
+/* AI-Anguilla - Previously "French Afar and Issas" - AI */
+.ux-flag-ai {
+  background-image:url(../images/flags/ai.png) ! important;
+}
+
+/* AL-Albania */
+.ux-flag-al {
+  background-image:url(../images/flags/al.png) ! important;
+}
+
+/* AM-Armenia */
+.ux-flag-am {
+  background-image:url(../images/flags/am.png) ! important;
+}
+
+/* AN-Netherlands Antilles */
+.ux-flag-an {
+  background-image:url(../images/flags/an.png) ! important;
+}
+
+/* AO-Angola */
+.ux-flag-ao {
+  background-image:url(../images/flags/ao.png) ! important;
+}
+
+/* AQ-Antarctica - "Consisting of all territory south of lat 60 degress S" */
+/* .ux-flag-aq {
+ *   background-image:url(../images/flags/aq.png) ! important;
+ * }
+*/
+
+/* AR-Argentina */
+.ux-flag-ar {
+  background-image:url(../images/flags/ar.png) ! important;
+}
+
+/* AS-American Samoa */
+.ux-flag-as {
+  background-image:url(../images/flags/as.png) ! important;
+}
+
+/* AT-Austria */
+.ux-flag-at {
+  background-image:url(../images/flags/at.png) ! important;
+}
+
+/* AU-Australia */
+.ux-flag-au {
+  background-image:url(../images/flags/au.png) ! important;
+}
+
+/* AW-Aruba */
+.ux-flag-aw {
+  background-image:url(../images/flags/aw.png) ! important;
+}
+
+/* AX-Aland Islands */
+.ux-flag-ax {
+  background-image:url(../images/flags/ax.png) ! important;
+}
+
+/* AZ-Azerbaijan */
+.ux-flag-az {
+  background-image:url(../images/flags/az.png) ! important;
+}
+
+/* BA-Bosnia and Herzegovina */
+.ux-flag-ba {
+  background-image:url(../images/flags/ba.png) ! important;
+}
+
+/* BB-Barbados */
+.ux-flag-bb {
+  background-image:url(../images/flags/bb.png) ! important;
+}
+
+/* BD-Bangladesh */
+.ux-flag-bd {
+  background-image:url(../images/flags/bd.png) ! important;
+}
+
+/* BE-Belgium */
+.ux-flag-be {
+  background-image:url(../images/flags/be.png) ! important;
+}
+
+/* BF-Burkina Faso - Previously "Upper Volta" - HV */
+.ux-flag-bf {
+  background-image:url(../images/flags/bf.png) ! important;
+}
+
+/* BG-Bulgaria */
+.ux-flag-bg {
+  background-image:url(../images/flags/bg.png) ! important;
+}
+
+/* BH-Bahrain */
+.ux-flag-bh {
+  background-image:url(../images/flags/bh.png) ! important;
+}
+
+/* BI-Burundi */
+.ux-flag-bi {
+  background-image:url(../images/flags/bi.png) ! important;
+}
+
+/* BJ-Benin - Previously "Dahomey" - DY*/
+.ux-flag-bj {
+  background-image:url(../images/flags/bj.png) ! important;
+}
+
+/* BL-Saint Barthelemy */
+/* .ux-flag-bl {
+ *   background-image:url(../images/flags/bl.png) ! important;
+ * }
+*/
+
+
+/* BM-Bermuda */
+.ux-flag-bm {
+  background-image:url(../images/flags/bm.png) ! important;
+}
+
+/* BN-Brunei Darussalam */
+.ux-flag-bn {
+  background-image:url(../images/flags/bn.png) ! important;
+}
+
+/* BO-Boliva */
+.ux-flag-bo {
+  background-image:url(../images/flags/bo.png) ! important;
+}
+
+/* BR-Brazil */
+.ux-flag-br {
+  background-image:url(../images/flags/br.png) ! important;
+}
+
+/* BS-Bahamas */
+.ux-flag-bs {
+  background-image:url(../images/flags/bs.png) ! important;
+}
+
+/* BT-Bhutan */
+.ux-flag-bt {
+  background-image:url(../images/flags/bt.png) ! important;
+}
+
+/* BV-Bouvet Island */
+.ux-flag-bv {
+  background-image:url(../images/flags/bv.png) ! important;
+}
+
+/* BW-Botswana */
+.ux-flag-bw {
+  background-image:url(../images/flags/bw.png) ! important;
+}
+
+/* BY-Belarus - Previously "Byelorussian S.S.R." */
+.ux-flag-by {
+  background-image:url(../images/flags/by.png) ! important;
+}
+
+/* BZ-Belize */
+.ux-flag-bz {
+  background-image:url(../images/flags/bz.png) ! important;
+}
+
+/* CA-Canada */
+.ux-flag-ca {
+  background-image:url(../images/flags/ca.png) ! important;
+}
+
+/* ADDED: Catalonia? */
+.ux-flag-catalonia {
+  background-image:url(../images/flags/catalonia.png) ! important;
+}
+
+/* CC-Cocos (Keeling) Islands */
+.ux-flag-cc {
+  background-image:url(../images/flags/cc.png) ! important;
+}
+
+/* CD-Congo, the Democratic Republic of the - Previously "Zaire" - ZR */
+.ux-flag-cd {
+  background-image:url(../images/flags/cd.png) ! important;
+}
+
+/* CF-Central African Republic */
+.ux-flag-cf {
+  background-image:url(../images/flags/cf.png) ! important;
+}
+
+/* CG-Congo */
+.ux-flag-cg {
+  background-image:url(../images/flags/cg.png) ! important;
+}
+
+/* CH-Switzerland - from "Confoederatio Helvetica" */
+.ux-flag-ch {
+  background-image:url(../images/flags/ch.png) ! important;
+}
+
+/* CI-Cote d'lvoire */
+.ux-flag-ci {
+  background-image:url(../images/flags/ci.png) ! important;
+}
+
+/* CK-Cook Islands */
+.ux-flag-ck {
+  background-image:url(../images/flags/ck.png) ! important;
+}
+
+/* CL-Chile */
+.ux-flag-cl {
+  background-image:url(../images/flags/cl.png) ! important;
+}
+
+/* CM-Cameroon */
+.ux-flag-cm {
+  background-image:url(../images/flags/cm.png) ! important;
+}
+
+/* CN-China */
+.ux-flag-cn {
+  background-image:url(../images/flags/cn.png) ! important;
+}
+
+/* CO-Colombia */
+.ux-flag-co {
+  background-image:url(../images/flags/co.png) ! important;
+}
+
+/* CR-Costa Rica */
+.ux-flag-cr {
+  background-image:url(../images/flags/cr.png) ! important;
+}
+
+/* CS-? */
+.ux-flag-cs {
+  background-image:url(../images/flags/cs.png) ! important;
+}
+
+/* CU-Cuba */
+.ux-flag-cu {
+  background-image:url(../images/flags/cu.png) ! important;
+}
+
+/* CV-Cape Verde */
+.ux-flag-cv {
+  background-image:url(../images/flags/cv.png) ! important;
+}
+
+/* CX-Christmas Island */
+.ux-flag-cx {
+  background-image:url(../images/flags/cx.png) ! important;
+}
+
+/* CY-Cyprus */
+.ux-flag-cy {
+  background-image:url(../images/flags/cy.png) ! important;
+}
+
+/* CZ-Czech Republic */
+.ux-flag-cz {
+  background-image:url(../images/flags/cz.png) ! important;
+}
+
+/* DE-Germany - Previously "Germany, Federal Republic of" - from Deutschland */
+.ux-flag-de {
+  background-image:url(../images/flags/de.png) ! important;
+}
+
+/* DJ-Djibouti - Previously "French Afar and Issas" - AI */
+.ux-flag-dj {
+  background-image:url(../images/flags/dj.png) ! important;
+}
+
+/* DK-Denmark */
+.ux-flag-dk {
+  background-image:url(../images/flags/dk.png) ! important;
+}
+
+/* DM-Dominica */
+.ux-flag-dm {
+  background-image:url(../images/flags/dm.png) ! important;
+}
+
+/* DO-Dominican Republic */
+.ux-flag-do {
+  background-image:url(../images/flags/do.png) ! important;
+}
+
+/* DZ-Algeria - from "Ledzayer" its Berber name */
+.ux-flag-dz {
+  background-image:url(../images/flags/dz.png) ! important;
+}
+
+/* EC-Ecuador */
+.ux-flag-ec {
+  background-image:url(../images/flags/ec.png) ! important;
+}
+
+/* EE-Estonia - from "Eesti" its Estonian name */
+.ux-flag-ee {
+  background-image:url(../images/flags/ee.png) ! important;
+}
+
+/* EG-Egypt */
+.ux-flag-eg {
+  background-image:url(../images/flags/eg.png) ! important;
+}
+
+/* EH-Western Sahara - Previously "Spanish Sahara" - from "Sahara espanol" its Spanish name */
+.ux-flag-eh {
+  background-image:url(../images/flags/eh.png) ! important;
+}
+
+/* ADDED: England */
+.ux-flag-england {
+  background-image:url(../images/flags/england.png) ! important;
+}
+
+/* ER-Eritrea */
+.ux-flag-er {
+  background-image:url(../images/flags/er.png) ! important;
+}
+
+/* ES-Spain - Includes "Canary Islands, Ceuta and Melilla" - from "Espana" it Spanish name */
+.ux-flag-es {
+  background-image:url(../images/flags/es.png) ! important;
+}
+
+/* ET-Ethiopia */
+.ux-flag-et {
+  background-image:url(../images/flags/et.png) ! important;
+}
+
+/* ADDED: European Union */
+.ux-flag-europeanunion {
+  background-image:url(../images/flags/europeanunion.png) ! important;
+}
+
+/* FAM-? */
+.ux-flag-fam {
+  background-image:url(../images/flags/fam.png) ! important;
+}
+
+/* FI-Finland */
+.ux-flag-fi {
+  background-image:url(../images/flags/fi.png) ! important;
+}
+
+/* FJ-Fiji */
+.ux-flag-fj {
+  background-image:url(../images/flags/fj.png) ! important;
+}
+
+/* FK-Falkland Islands (Malvinas) */
+.ux-flag-fk {
+  background-image:url(../images/flags/fk.png) ! important;
+}
+
+/* FM-Micronesia, Federated States of - Previously "Micronesia" */
+.ux-flag-fm {
+  background-image:url(../images/flags/fm.png) ! important;
+}
+
+/* FO-Faroe Islands */
+.ux-flag-fo {
+  background-image:url(../images/flags/fo.png) ! important;
+}
+
+/* FR-France - Includes "Clipperton Island" */
+.ux-flag-fr {
+  background-image:url(../images/flags/fr.png) ! important;
+}
+
+/* GA-Gabon */
+.ux-flag-ga {
+  background-image:url(../images/flags/ga.png) ! important;
+}
+
+/* GB-United Kingdom - From "Great Britain" - UK */
+/* part of its official name: "United Kingdom of Great Britain and Northern Ireland" */
+.ux-flag-gb {
+  background-image:url(../images/flags/gb.png) ! important;
+}
+
+/* GD-Grenada */
+.ux-flag-gd {
+  background-image:url(../images/flags/gd.png) ! important;
+}
+
+/* GE-Georgia - GE previously represented "Gilbert and Ellice Islands" */
+.ux-flag-ge {
+  background-image:url(../images/flags/ge.png) ! important;
+}
+
+/* GF-French Guiana - from "Guyane francaise" its French name */
+.ux-flag-gf {
+  background-image:url(../images/flags/gf.png) ! important;
+}
+
+/* GG-Guernsey */
+/* .ux-flag-gg {
+ *   background-image:url(../images/flags/gg.png) ! important;
+ * }
+*/
+
+/* GH-Ghana */
+.ux-flag-gh {
+  background-image:url(../images/flags/gh.png) ! important;
+}
+
+/* GI-Gibraltar */
+.ux-flag-gi {
+  background-image:url(../images/flags/gi.png) ! important;
+}
+
+/* GL-Greenland */
+.ux-flag-gl {
+  background-image:url(../images/flags/gl.png) ! important;
+}
+
+/* GM-Gambia */
+.ux-flag-gm {
+  background-image:url(../images/flags/gm.png) ! important;
+}
+
+/* GN-Guinea */
+.ux-flag-gn {
+  background-image:url(../images/flags/gn.png) ! important;
+}
+
+/* GP-Guadeloupe */
+.ux-flag-gp {
+  background-image:url(../images/flags/gp.png) ! important;
+}
+
+/* GQ-Equatorial Guinea - from "Guinee equatoriale" its French name */
+.ux-flag-gq {
+  background-image:url(../images/flags/gq.png) ! important;
+}
+
+/* GR-Greece */
+.ux-flag-gr {
+  background-image:url(../images/flags/gr.png) ! important;
+}
+
+/* GS-South Georgia and the South Sandwich Islands */
+.ux-flag-gs {
+  background-image:url(../images/flags/gs.png) ! important;
+}
+
+/* GT-Guatemala */
+.ux-flag-gt {
+  background-image:url(../images/flags/gt.png) ! important;
+}
+
+/* GU-Guam */
+.ux-flag-gu {
+  background-image:url(../images/flags/gu.png) ! important;
+}
+
+/* GW-Guinea-Bissau */
+.ux-flag-gw {
+  background-image:url(../images/flags/gw.png) ! important;
+}
+
+/* GY-Guyana */
+.ux-flag-gy {
+  background-image:url(../images/flags/gy.png) ! important;
+}
+
+/* HK-Hong Kong */
+.ux-flag-hk {
+  background-image:url(../images/flags/hk.png) ! important;
+}
+
+/* HM-Heard Island and McDonald Islands */
+.ux-flag-hm {
+  background-image:url(../images/flags/hm.png) ! important;
+}
+
+/* HN-Honduras */
+.ux-flag-hn {
+  background-image:url(../images/flags/hn.png) ! important;
+}
+
+/* HR-Croatia - from "Hrvatska" its Croatian name */
+.ux-flag-hr {
+  background-image:url(../images/flags/hr.png) ! important;
+}
+
+/* HT-Haiti */
+.ux-flag-ht {
+  background-image:url(../images/flags/ht.png) ! important;
+}
+
+/* HU-Hungary */
+.ux-flag-hu {
+  background-image:url(../images/flags/hu.png) ! important;
+}
+
+/* ID-Indonesia */
+.ux-flag-id {
+  background-image:url(../images/flags/id.png) ! important;
+}
+
+/* IE-Ireland */
+.ux-flag-ie {
+  background-image:url(../images/flags/ie.png) ! important;
+}
+
+/* IL-Israel */
+.ux-flag-il {
+  background-image:url(../images/flags/il.png) ! important;
+}
+
+/* IM-Isle of Man */
+/* .ux-flag-im {
+ *   background-image:url(../images/flags/im.png) ! important;
+ * }
+*/
+
+/* IN-India */
+.ux-flag-in {
+  background-image:url(../images/flags/in.png) ! important;
+}
+
+/* IO-British Indian Ocean Territory - Includes "Diego Garcia" */
+.ux-flag-io {
+  background-image:url(../images/flags/io.png) ! important;
+}
+
+/* IQ-Iraq */
+.ux-flag-iq {
+  background-image:url(../images/flags/iq.png) ! important;
+}
+
+/* IR-Iran, Islamic Republic of */
+.ux-flag-ir {
+  background-image:url(../images/flags/ir.png) ! important;
+}
+
+/* IS-Iceland */
+.ux-flag-is {
+  background-image:url(../images/flags/is.png) ! important;
+}
+
+/* IT-Italy */
+.ux-flag-it {
+  background-image:url(../images/flags/it.png) ! important;
+}
+
+/* JE-Jersey */
+/* .ux-flag-je {
+ *   background-image:url(../images/flags/je.png) ! important;
+ * }
+*/
+
+/* JM-Jamaica */
+.ux-flag-jm {
+  background-image:url(../images/flags/jm.png) ! important;
+}
+
+/* JO-Jordan */
+.ux-flag-jo {
+  background-image:url(../images/flags/jo.png) ! important;
+}
+
+/* JP-Japan */
+.ux-flag-jp {
+  background-image:url(../images/flags/jp.png) ! important;
+}
+
+/* KE-Kenya */
+.ux-flag-ke {
+  background-image:url(../images/flags/ke.png) ! important;
+}
+
+/* KG-Kyrgyzstan */
+.ux-flag-kg {
+  background-image:url(../images/flags/kg.png) ! important;
+}
+
+/* KH-Cambodia - Previously "Kampuchea" its former name */
+.ux-flag-kh {
+  background-image:url(../images/flags/kh.png) ! important;
+}
+
+/* KI-Kiribati */
+.ux-flag-ki {
+  background-image:url(../images/flags/ki.png) ! important;
+}
+
+/* KM-Comoros - from "Komori" its Comorian name */
+.ux-flag-km {
+  background-image:url(../images/flags/km.png) ! important;
+}
+
+/* KN-Saint Kitts and Nevis - Previously named "Saint Kitts-Nevis-Anguilla" */
+.ux-flag-kn {
+  background-image:url(../images/flags/kn.png) ! important;
+}
+
+/* KP-Korea, Democratic People's Republic of - i.e. North Korea */
+.ux-flag-kp {
+  background-image:url(../images/flags/kp.png) ! important;
+}
+
+/* KR-Korea, Republic of - i.e. South Korea */
+.ux-flag-kr {
+  background-image:url(../images/flags/kr.png) ! important;
+}
+
+/* KW-Kuwait */
+.ux-flag-kw {
+  background-image:url(../images/flags/kw.png) ! important;
+}
+
+/* KY-Cayman Islands */
+.ux-flag-ky {
+  background-image:url(../images/flags/ky.png) ! important;
+}
+
+/* KZ-Kazakhstan - previously named "Kazakstan" */
+.ux-flag-kz {
+  background-image:url(../images/flags/kz.png) ! important;
+}
+
+/* LA-Lao People's Democratic Republic */
+.ux-flag-la {
+  background-image:url(../images/flags/la.png) ! important;
+}
+
+/* LB-Lebanon */
+.ux-flag-lb {
+  background-image:url(../images/flags/lb.png) ! important;
+}
+
+/* LC-Saint Lucia */
+.ux-flag-lc {
+  background-image:url(../images/flags/lc.png) ! important;
+}
+
+/* LI-Liechtenstein */
+.ux-flag-li {
+  background-image:url(../images/flags/li.png) ! important;
+}
+
+/* LK-Sri Lanka */
+.ux-flag-lk {
+  background-image:url(../images/flags/lk.png) ! important;
+}
+
+/* LR-Liberia */
+.ux-flag-lr {
+  background-image:url(../images/flags/lr.png) ! important;
+}
+
+/* LS-Lesotho */
+.ux-flag-ls {
+  background-image:url(../images/flags/ls.png) ! important;
+}
+
+/* LT-Lithuania */
+.ux-flag-lt {
+  background-image:url(../images/flags/lt.png) ! important;
+}
+
+/* LU-Luxembourg */
+.ux-flag-lu {
+  background-image:url(../images/flags/lu.png) ! important;
+}
+
+/* LV-Latvia */
+.ux-flag-lv {
+  background-image:url(../images/flags/lv.png) ! important;
+}
+
+/* LY-Libyan Arab Jamahiriya */
+.ux-flag-ly {
+  background-image:url(../images/flags/ly.png) ! important;
+}
+
+/* MA-Morocco - from "Maroc" its French name */
+.ux-flag-ma {
+  background-image:url(../images/flags/ma.png) ! important;
+}
+
+/* MC-Monaco */
+.ux-flag-mc {
+  background-image:url(../images/flags/mc.png) ! important;
+}
+
+/* MD-Moldova, Republic of */
+.ux-flag-md {
+  background-image:url(../images/flags/md.png) ! important;
+}
+
+/* ME-Montenegro */
+.ux-flag-me {
+  background-image:url(../images/flags/me.png) ! important;
+}
+
+/* MF-Saint Martin (French part) */
+/* .ux-flag-mf {
+ *   background-image:url(../images/flags/mf.png) ! important;
+ * }
+*/
+
+/* MG-Madagascar */
+.ux-flag-mg {
+  background-image:url(../images/flags/mg.png) ! important;
+}
+
+/* MH-Marshall Islands */
+.ux-flag-mh {
+  background-image:url(../images/flags/mh.png) ! important;
+}
+
+/* MK-Macedonia, the former Yugoslav Republic of - from "Makedonija" its Macedonian name */
+.ux-flag-mk {
+  background-image:url(../images/flags/mk.png) ! important;
+}
+
+/* ML-Mali */
+.ux-flag-ml {
+  background-image:url(../images/flags/ml.png) ! important;
+}
+
+/* MM-Myanmar - previously "Burma" - BU */
+.ux-flag-mm {
+  background-image:url(../images/flags/mm.png) ! important;
+}
+
+/* MN-Mongolia */
+.ux-flag-mn {
+  background-image:url(../images/flags/mn.png) ! important;
+}
+
+/* MO-Macao - previously "Macau" */
+.ux-flag-mo {
+  background-image:url(../images/flags/mo.png) ! important;
+}
+
+/* MP-Northern Mariana Islands */
+.ux-flag-mp {
+  background-image:url(../images/flags/mp.png) ! important;
+}
+
+/* MQ-Martinique */
+.ux-flag-mq {
+  background-image:url(../images/flags/mq.png) ! important;
+}
+
+/* MR-Mauritania */
+.ux-flag-mr {
+  background-image:url(../images/flags/mr.png) ! important;
+}
+
+/* MS-Montserrat */
+.ux-flag-ms {
+  background-image:url(../images/flags/ms.png) ! important;
+}
+
+/* MT-Malta */
+.ux-flag-mt {
+  background-image:url(../images/flags/mt.png) ! important;
+}
+
+/* MU-Mauritius */
+.ux-flag-mu {
+  background-image:url(../images/flags/mu.png) ! important;
+}
+
+/* MV-Maldives */
+.ux-flag-mv {
+  background-image:url(../images/flags/mv.png) ! important;
+}
+
+/* MW-Malawi */
+.ux-flag-mw {
+  background-image:url(../images/flags/mw.png) ! important;
+}
+
+/* MX-Mexico */
+.ux-flag-mx {
+  background-image:url(../images/flags/mx.png) ! important;
+}
+
+/* MY-Malaysia */
+.ux-flag-my {
+  background-image:url(../images/flags/my.png) ! important;
+}
+
+/* MZ-Mozambique */
+.ux-flag-mz {
+  background-image:url(../images/flags/mz.png) ! important;
+}
+
+/* NA-Namibia */
+.ux-flag-na {
+  background-image:url(../images/flags/na.png) ! important;
+}
+
+/* NC-New Caledonia */
+.ux-flag-nc {
+  background-image:url(../images/flags/nc.png) ! important;
+}
+
+/* NE-Niger */
+.ux-flag-ne {
+  background-image:url(../images/flags/ne.png) ! important;
+}
+
+/* NF-Norfolk Island */
+.ux-flag-nf {
+  background-image:url(../images/flags/nf.png) ! important;
+}
+
+/* NG-Nigeria */
+.ux-flag-ng {
+  background-image:url(../images/flags/ng.png) ! important;
+}
+
+/* NI-Nicaragua */
+.ux-flag-ni {
+  background-image:url(../images/flags/ni.png) ! important;
+}
+
+/* NL-Netherlands */
+.ux-flag-nl {
+  background-image:url(../images/flags/nl.png) ! important;
+}
+
+/* NO-Norway */
+.ux-flag-no {
+  background-image:url(../images/flags/no.png) ! important;
+}
+
+/* NP-Nepal */
+.ux-flag-np {
+  background-image:url(../images/flags/np.png) ! important;
+}
+
+/* NR-Nauru */
+.ux-flag-nr {
+  background-image:url(../images/flags/nr.png) ! important;
+}
+
+/* NU-Niue */
+.ux-flag-nu {
+  background-image:url(../images/flags/nu.png) ! important;
+}
+
+/* NZ-New Zealand */
+.ux-flag-nz {
+  background-image:url(../images/flags/nz.png) ! important;
+}
+
+/* OM-Oman */
+.ux-flag-om {
+  background-image:url(../images/flags/om.png) ! important;
+}
+
+/* PA-Panama */
+.ux-flag-pa {
+  background-image:url(../images/flags/pa.png) ! important;
+}
+
+/* PE-Peru */
+.ux-flag-pe {
+  background-image:url(../images/flags/pe.png) ! important;
+}
+
+/* PF-French Polynesia - from "Polynesie francaise" its French name */
+.ux-flag-pf {
+  background-image:url(../images/flags/pf.png) ! important;
+}
+
+/* PG-Papua New Guinea */
+.ux-flag-pg {
+  background-image:url(../images/flags/pg.png) ! important;
+}
+
+/* PH-Philippines */
+.ux-flag-ph {
+  background-image:url(../images/flags/ph.png) ! important;
+}
+
+/* PK-Pakistan */
+.ux-flag-pk {
+  background-image:url(../images/flags/pk.png) ! important;
+}
+
+/* PL-Poland */
+.ux-flag-pl {
+  background-image:url(../images/flags/pl.png) ! important;
+}
+
+/* PM-Saint Pierre and Miquelon */
+.ux-flag-pm {
+  background-image:url(../images/flags/pm.png) ! important;
+}
+
+/* PN-Pitcairn */
+.ux-flag-pn {
+  background-image:url(../images/flags/pn.png) ! important;
+}
+
+/* PR-Puerto Rico */
+.ux-flag-pr {
+  background-image:url(../images/flags/pr.png) ! important;
+}
+
+/* PS-Palestinian Territory, Occupied - consisting of the West Bank and the Gaza Strip */
+.ux-flag-ps {
+  background-image:url(../images/flags/ps.png) ! important;
+}
+
+/* PT-Portugal */
+.ux-flag-pt {
+  background-image:url(../images/flags/pt.png) ! important;
+}
+
+/* PW-Palau */
+.ux-flag-pw {
+  background-image:url(../images/flags/pw.png) ! important;
+}
+
+/* PY-Paraguay */
+.ux-flag-py {
+  background-image:url(../images/flags/py.png) ! important;
+}
+
+/* QA-Qatar */
+.ux-flag-qa {
+  background-image:url(../images/flags/qa.png) ! important;
+}
+
+/* RE-Reunion */
+.ux-flag-re {
+  background-image:url(../images/flags/re.png) ! important;
+}
+
+/* RO-Romania */
+.ux-flag-ro {
+  background-image:url(../images/flags/ro.png) ! important;
+}
+
+/* RS-Serbia - from "Republic of Serbia" its offical name */
+.ux-flag-rs {
+  background-image:url(../images/flags/rs.png) ! important;
+}
+
+/* RU-Russian Federation */
+.ux-flag-ru {
+  background-image:url(../images/flags/ru.png) ! important;
+}
+
+/* RW-Rwanda */
+.ux-flag-rw {
+  background-image:url(../images/flags/rw.png) ! important;
+}
+
+/* SA-Saudi Arabia */
+.ux-flag-sa {
+  background-image:url(../images/flags/sa.png) ! important;
+}
+
+/* SB-Solomon Islands - from "British Solomon Islands" its former name */
+.ux-flag-sb {
+  background-image:url(../images/flags/sb.png) ! important;
+}
+
+/* SC-Seychelles */
+.ux-flag-sc {
+  background-image:url(../images/flags/sc.png) ! important;
+}
+
+/* ADDED: Scotland */
+.ux-flag-scotland {
+  background-image:url(../images/flags/scotland.png) ! important;
+}
+
+/* SD-Sudan */
+.ux-flag-sd {
+  background-image:url(../images/flags/sd.png) ! important;
+}
+
+/* SE-Sweden */
+.ux-flag-se {
+  background-image:url(../images/flags/se.png) ! important;
+}
+
+/* SG-Singapore */
+.ux-flag-sg {
+  background-image:url(../images/flags/sg.png) ! important;
+}
+
+/* SH-Saint Helena - includes "Ascension Island and Tristan da Cunha" */
+.ux-flag-sh {
+  background-image:url(../images/flags/sh.png) ! important;
+}
+
+/* SI-Slovenia */
+.ux-flag-si {
+  background-image:url(../images/flags/si.png) ! important;
+}
+
+/* SJ-Svalbard and Jan Mayen - consisting of "Svalbard and Jan Mayen" */
+.ux-flag-sj {
+  background-image:url(../images/flags/sj.png) ! important;
+}
+
+/* SK-Slovakia - SK previously represented "Sikkim" */
+.ux-flag-sk {
+  background-image:url(../images/flags/sk.png) ! important;
+}
+
+/* SL-Sierra Leone */
+.ux-flag-sl {
+  background-image:url(../images/flags/sl.png) ! important;
+}
+
+/* SM-San Marino */
+.ux-flag-sm {
+  background-image:url(../images/flags/sm.png) ! important;
+}
+
+/* SN-Senegal */
+.ux-flag-sn {
+  background-image:url(../images/flags/sn.png) ! important;
+}
+
+/* SO-Somalia */
+.ux-flag-so {
+  background-image:url(../images/flags/so.png) ! important;
+}
+
+/* SR-Suriname */
+.ux-flag-sr {
+  background-image:url(../images/flags/sr.png) ! important;
+}
+
+/* ST-Sao Tome and Principe */
+.ux-flag-st {
+  background-image:url(../images/flags/st.png) ! important;
+}
+
+/* SV-El Salvador */
+.ux-flag-sv {
+  background-image:url(../images/flags/sv.png) ! important;
+}
+
+/* SY-Syrian Arab Republic */
+.ux-flag-sy {
+  background-image:url(../images/flags/sy.png) ! important;
+}
+
+/* SZ-Swaziland */
+.ux-flag-sz {
+  background-image:url(../images/flags/sz.png) ! important;
+}
+
+/* TC-Turks and Caicos Islands */
+.ux-flag-tc {
+  background-image:url(../images/flags/tc.png) ! important;
+}
+
+/* TD-Chad - from "Tchad" its French name */
+.ux-flag-td {
+  background-image:url(../images/flags/td.png) ! important;
+}
+
+/* TF-French Southern Territories - "covers the French Southern and Antarctic Lands except Adelie Land" */
+/* from "Terres australes francaises" its French name */
+.ux-flag-tf {
+  background-image:url(../images/flags/tf.png) ! important;
+}
+
+/* TG-Togo */
+.ux-flag-tg {
+  background-image:url(../images/flags/tg.png) ! important;
+}
+
+/* TH-Thailand */
+.ux-flag-th {
+  background-image:url(../images/flags/th.png) ! important;
+}
+
+/* TJ-Tajikistan */
+.ux-flag-tj {
+  background-image:url(../images/flags/tj.png) ! important;
+}
+
+/* TK-Tokelau */
+.ux-flag-tk {
+  background-image:url(../images/flags/tk.png) ! important;
+}
+
+/* TL-Timor-Leste - previously named "East Timor" - TP */
+.ux-flag-tl {
+  background-image:url(../images/flags/tl.png) ! important;
+}
+
+/* TM-Turkmenistan */
+.ux-flag-tm {
+  background-image:url(../images/flags/tm.png) ! important;
+}
+
+/* TN-Tunisia */
+.ux-flag-tn {
+  background-image:url(../images/flags/tn.png) ! important;
+}
+
+/* TO-Tonga */
+.ux-flag-to {
+  background-image:url(../images/flags/to.png) ! important;
+}
+
+/* TR-Turkey */
+.ux-flag-tr {
+  background-image:url(../images/flags/tr.png) ! important;
+}
+
+/* TT-Trinidad and Tobago */
+.ux-flag-tt {
+  background-image:url(../images/flags/tt.png) ! important;
+}
+
+/* TV-Tuvalu */
+.ux-flag-tv {
+  background-image:url(../images/flags/tv.png) ! important;
+}
+
+/* TW-Taiwan, Province of China - "covers the Republic of China except Kinmen and Lienchiang" */
+/* Designated as such due to its political status within the UN */
+.ux-flag-tw {
+  background-image:url(../images/flags/tw.png) ! important;
+}
+
+/* TZ-Tanzania, United Republic of */
+.ux-flag-tz {
+  background-image:url(../images/flags/tz.png) ! important;
+}
+
+/* UA-Ukraine - previously name "Ukrainian S.S.R." */
+.ux-flag-ua {
+  background-image:url(../images/flags/ua.png) ! important;
+}
+
+/* UG-Uganda */
+.ux-flag-ug {
+  background-image:url(../images/flags/ug.png) ! important;
+}
+
+/* UM-United States Minor Outlying Islands */
+/* consisting of Baker Island, Howland Island, Jarvis Island, Johnston Atoll, Kingman Reef */
+/* Midway Atoll, Navassa Island, Palmyra Atoll and Wake Island */
+.ux-flag-um {
+  background-image:url(../images/flags/um.png) ! important;
+}
+
+/* US-United States */
+.ux-flag-us {
+  background-image:url(../images/flags/us.png) ! important;
+}
+
+/* UY-Uruguay */
+.ux-flag-uy {
+  background-image:url(../images/flags/uy.png) ! important;
+}
+
+/* UZ-Uzbekistan */
+.ux-flag-uz {
+  background-image:url(../images/flags/uz.png) ! important;
+}
+
+/* VA-Holy See (Vatican City State) - previously named "Vatican City State (Holy See)" */
+.ux-flag-va {
+  background-image:url(../images/flags/va.png) ! important;
+}
+
+/* VC-Saint Vincent and the Grenadines */
+.ux-flag-vc {
+  background-image:url(../images/flags/vc.png) ! important;
+}
+
+/* VE-Venezuela */
+.ux-flag-ve {
+  background-image:url(../images/flags/ve.png) ! important;
+}
+
+/* VG-Virgin Islands, British */
+.ux-flag-vg {
+  background-image:url(../images/flags/vg.png) ! important;
+}
+
+/* VI-Virgin Islands, U.S. */
+.ux-flag-vi {
+  background-image:url(../images/flags/vi.png) ! important;
+}
+
+/* VN-Viet Nam */
+.ux-flag-vn {
+  background-image:url(../images/flags/vn.png) ! important;
+}
+
+/* VU-Vanuatu */
+.ux-flag-vu {
+  background-image:url(../images/flags/vu.png) ! important;
+}
+
+/* ADDED: Wales */
+.ux-flag-wales {
+  background-image:url(../images/flags/wales.png) ! important;
+}
+
+/* WF-Wallis and Futuna */
+.ux-flag-wf {
+  background-image:url(../images/flags/wf.png) ! important;
+}
+
+/* WS-Samoa - from "Western Samoa" its former name */
+.ux-flag-ws {
+  background-image:url(../images/flags/ws.png) ! important;
+}
+
+/* YE-Yemen - previously named "Yemen, Republic of" */
+.ux-flag-ye {
+  background-image:url(../images/flags/ye.png) ! important;
+}
+
+/* YT-Mayotte */
+.ux-flag-yt {
+  background-image:url(../images/flags/yt.png) ! important;
+}
+
+/* ZA-South Africa - from "Zuid-Afrika" its Dutch name */
+.ux-flag-za {
+  background-image:url(../images/flags/za.png) ! important;
+}
+
+/* ZM-Zambia */
+.ux-flag-zm {
+  background-image:url(../images/flags/zm.png) ! important;
+}
+
+/* ZW-Zimbabwe - previously named "Southern Rhodesia" - RH */
+.ux-flag-zw {
+  background-image:url(../images/flags/zw.png) ! important;
+}

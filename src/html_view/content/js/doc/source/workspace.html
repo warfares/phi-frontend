@@ -1,0 +1,93 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy.model");
+<div id="cls-Philosophy.model.Workspace"></div>/**
+ * @class Philosophy.model.Workspace 
+ * @extends Philosophy.model.Entity
+ * 
+ * Philosophy Workspace Proxy
+ * 
+ * @author rbarriga
+ * @version 1.2
+ * @copyright (c) 2010, by IKOM
+ * @date      15. July 2010
+ */
+Philosophy.model.Workspace = Ext.extend(Philosophy.model.Entity, {
+
+    createURL: Phi.UriTemplate.getUri('workspaceService', 'workspaceCreate'),
+    readURL: Phi.UriTemplate.getUri('workspaceService', 'workspace'),
+    updateURL: Phi.UriTemplate.getUri('workspaceService', 'workspaceUpdate'),
+    removeURL: Phi.UriTemplate.getUri('workspaceService', 'workspace'),
+
+    initComponent: function (config) {
+        this.addEvents(
+            'getusers',
+            'addusers',
+            'removeusers'
+		);
+        Philosophy.model.Workspace.superclass.initComponent.call(config);
+    }
+    ,
+    getUsers: function (id) {
+        var p = { id: id };
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('workspaceService', 'workspaceGetUsers', '?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var n = Ext.util.JSON.decode(response.responseText);
+                var users = [];
+                users.push(n);
+                this.fireEvent('getUsers', users);
+            }
+        });
+    }
+    ,
+    addUsers: function (id, userNames) {
+        var o = {
+            id:id,
+            userNames:userNames.join(',')
+        };
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('workspaceService', 'workspaceAddUsers'),
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, options) {
+                var total = response.responseText;
+                this.fireEvent('addusers', total);
+            }
+        });
+
+    }
+    ,
+    removeUsers: function (id, userNames) {
+        var o = {
+            id:id,
+            userNames:userNames.join(',')
+        };
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('workspaceService', 'workspaceRemoveUsers'),
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, options) {
+                var total = response.responseText;
+                this.fireEvent('removeusers', total);
+            }
+        });
+    }
+});</pre>    
+</body>
+</html>

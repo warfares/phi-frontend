@@ -1,0 +1,99 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.onReady(function () {
+
+    Ext.QuickTips.init();
+    Ext.Container.prototype.bufferResize = false;
+
+    Ext.get('loading-mask').remove();
+    Ext.get('loading').remove();
+
+    // adjusting the ajax singleton fail event...once !!
+    Ext.Ajax.on('requestexception', function (conn, response, options) {
+        Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Problem in call'));
+    }, this);
+
+    // initial mask 
+    var login = new Phi.view.window.Login();
+    login.show();
+
+    //main toolbar (north)
+    Phi.mainToolbar = new Phi.view.toolbar.MainToolbar({ region: 'north', height: 30 });
+
+    // main map Panel (center)
+    Phi.mapContainer = new Ext.Panel({
+        region: 'center',
+        html: '<div id="map" style="width:100%; height:100%;" />'
+    });
+
+    // dasboard and panels def. (west)
+    Phi.panelUser = new Phi.view.panel.User();
+    Phi.panelLayer = new Phi.view.panel.Layer();
+    Phi.panelGPS = new Phi.view.panel.GPS();
+    Phi.panelMap = new Phi.view.panel.Map();
+    Phi.panelWorkSpace = new Phi.view.panel.WorkSpace();
+    Phi.panelLocation = new Phi.view.panel.Location();
+    Phi.panelSearch = new Phi.view.panel.Search();
+
+    Phi.dashBoard = new Ext.Panel({
+        region: 'west',
+        title: Phi.Global.For('DashBoard'),
+        layout: 'accordion',
+        collapsible: true,
+        collapseMode: Phi.Theme.dashBoardCollapseMode,
+        collapsed: Phi.Theme.dashBoardCollapsed,
+        useSplitTips: true,
+        autoScroll: true,
+        animate: true,
+        width: 310,
+        items: [
+            Phi.panelUser,
+			Phi.panelLayer,
+            Phi.panelGPS,
+			Phi.panelMap,
+			Phi.panelWorkSpace,
+			Phi.panelLocation,
+			Phi.panelSearch]
+    });
+
+    //GLOBAL: main layout definition (border layout:north, west,center) 
+    Phi.viewport = new Ext.Viewport({
+        layout: 'border',
+        defaults: {
+            border: 0,
+            split: false,
+            margins: '0 0 0 0'
+        },
+        items: [Phi.mainToolbar, Phi.dashBoard, Phi.mapContainer]
+    });
+
+    // quick toolbar (this will show after login)
+    Phi.mapQuickToolBar = new Phi.view.window.QuickToolBar({
+        width: '52',
+        height: '400',
+        autoHeight: false
+    });
+
+    //viewport OK....->
+    Phi.Map.googleEnabled = false;
+    Phi.Map.umapEnabled = false;
+    Phi.Map.omsEnabled = true;
+    Phi.Map.Init();
+
+    Phi.mapContainer.on('resize', function () {
+        if(Phi.mapQuickToolBa.isVisible())
+            Phi.mapQuickToolBar.align();
+        
+        Phi.Map.map.updateSize();
+    });
+}); // eo function onReady
+// eof
+</pre>    
+</body>
+</html>

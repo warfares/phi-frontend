@@ -1,0 +1,113 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy.model");
+<div id="cls-Philosophy.model.Group"></div>/**
+ * @class Philosophy.model.Group 
+ * @extends Philosophy.model.Entity
+ * 
+ * Philosophy Group Proxy
+ * 
+ * @author rbarriga
+ * @version 1.2
+ * @copyright (c) 2010, by IKOM
+ * @date      15. July 2010
+ */
+Philosophy.model.Group = Ext.extend(Philosophy.model.Entity, {
+    initComponent: function (config) {
+        this.addEvents(
+            'getgroups',
+            'getnodes',
+            'getallnodescheckedbyuser',
+            'getrasters',
+            'getallrasterscheckedbyuser'
+	    );
+        Philosophy.model.Group.superclass.initComponent.call(config);
+    }
+    ,
+    getGroups: function () {
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('groupService', 'groups'),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var groups = Ext.util.JSON.decode(response.responseText);
+                this.fireEvent('getgroups', groups);
+            }
+        });
+    }
+    ,
+    getNodes: function (id) {
+        var p = {id: id};
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('groupService', 'groupGetNodes','?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var n = Ext.util.JSON.decode(response.responseText);
+                var nodes = [];
+                nodes.push(n);
+                this.fireEvent('getnodes', nodes);
+            }
+        });
+    }
+    ,
+    getAllNodesCheckedByUser: function (id, userName) {
+        var p = {
+            id: id,
+            userName: userName 
+        };
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('groupService', 'groupGetAllNodesCheckedByUser', '?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var n = Ext.util.JSON.decode(response.responseText);
+                var nodes = [];
+                nodes.push(n);
+                this.fireEvent('getallnodescheckedbyuser', nodes);
+            }
+        });
+    }
+    ,
+    getRasters: function (id) {
+        var p = { id: id };
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('groupService', 'groupGetRasters', '?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var rasters = Ext.util.JSON.decode(response.responseText);
+                this.fireEvent('getrasters', rasters);
+            }
+        });
+    }
+    ,
+    getAllRastersCheckedByUser: function (id, userName) {
+        var p = {
+            id: id,
+            userName: userName
+        };
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('groupService', 'groupGetAllRastersCheckedByUser', '?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var rasters = Ext.util.JSON.decode(response.responseText);
+                this.fireEvent('getallrasterscheckedbyuser', rasters);
+            }
+        });
+    }
+});</pre>    
+</body>
+</html>

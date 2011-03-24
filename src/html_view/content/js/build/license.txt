@@ -1,0 +1,12 @@
+/*
+  Philosophy.js -- Ultragestion S.A. 
+  Copyright 2005-2009 ULTRAGESTION, Inc., released under the Clear BSD license.
+
+  Please see http://svn.ultragestion.org/trunk/philosophy/license.txt
+  for the full text of the license.
+
+  Includes compressed code under the following licenses:
+
+  (For uncompressed versions of the code used please see the
+  Philosophy SVN repository: <http://phi.ultragestion.cl/>)
+*/

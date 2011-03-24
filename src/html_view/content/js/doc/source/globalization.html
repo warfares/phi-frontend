@@ -1,0 +1,50 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.geo.Group-ns"></div>/**
+ * Globalization utilities
+ *
+ * @author    Ultragestion (restrada)
+ * @copyright (c) 2008, by Ultragestion
+ * @date      3. October 2008
+ * @version   1.0
+ *
+ */
+
+Ext.ns('Philosophy.Globalization');
+
+Philosophy.Globalization.Languages = {
+    'English': Philosophy.Globalization.Dictionaries.English,
+    'Spanish': Philosophy.Globalization.Dictionaries.Spanish,
+    'Deutsch': Philosophy.Globalization.Dictionaries.Deutsch
+};
+
+var language = Philosophy.Util.readCookie('language') || 'Spanish';
+Philosophy.Globalization.Dictionary = Philosophy.Globalization.Languages[language];
+
+Philosophy.Globalization.For = function(phrase) {
+    //If phrase found, then return globalization for phrase
+    if (phrase in Philosophy.Globalization.Dictionary) {
+        return Philosophy.Globalization.Dictionary[phrase];
+    }
+
+    //If phrase not found, then return phrase without globalization
+    return phrase;
+};
+
+Philosophy.Globalization.ChangeTo = function(Language) {
+    if (Language in Philosophy.Globalization.Languages) {
+        Philosophy.Globalization.Dictionary = Philosophy.Globalization.Languages[Language];
+    }
+};
+
+//alias
+Phi.Global = Phi.Globalization;
+</pre>    
+</body>
+</html>

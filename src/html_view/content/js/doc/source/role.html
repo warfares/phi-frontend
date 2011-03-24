@@ -1,0 +1,61 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy.model");
+<div id="cls-Philosophy.model.Role"></div>/**
+ * @class Philosophy.model.Role 
+ * @extends Philosophy.model.Entity
+ * 
+ * Philosphy Role Proxy
+ * 
+ * @author rbarriga
+ * @version 1.2
+ * @copyright (c) 2010, by IKOM
+ * @date      15. July 2010
+ */
+Philosophy.model.Role = Ext.extend(Philosophy.model.Entity, {
+
+    initComponent: function (config) {
+        this.addEvents(
+            'getroles',
+            'getallrolescheckedbyuser'
+	    );
+        Philosophy.model.Role.superclass.initComponent.call(config);
+    }
+    ,
+    getRoles: function () {
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('utilService', 'roles'),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var roles = Ext.util.JSON.decode(response.responseText);
+                this.fireEvent('getroles', roles);
+            }
+        });
+    }
+    ,
+    getAllRolesCheckedByUser: function (userName) {
+        var p = {
+            userName: userName
+        };
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('utilService', 'rolesGetAllRolesCheckedByUser', '?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var roles = Ext.util.JSON.decode(response.responseText);
+                this.fireEvent('getallrolescheckedbyuser', roles);
+            }
+        });
+    }
+});</pre>    
+</body>
+</html>

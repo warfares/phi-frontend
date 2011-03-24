@@ -1,0 +1,112 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.window.Login-ns"></div>/**
+* Philosophy Metadata column distinct values  
+*
+* @author    Ultragestion (rbarriga)
+* @copyright (c) 2008, by Ultragestion
+* @date      08. November 2008
+* @version   1.0
+*
+*/
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.UniqueResult = Ext.extend(Ext.Window, {
+    width: 260,
+    height: 500,
+    closeAction: 'close',
+    maximizable: false,
+    modal: true,
+    plain: true,
+    layout:'border',
+
+    initComponent: function() {
+
+        var _this = this;
+
+        var params = {
+            layerName: this.layerName,
+            column: this.column
+        };
+
+        var proxy = new Ext.data.HttpProxy({ 
+            method: 'GET',
+            url: Philosophy.UriTemplate.getUri('geoService', 'geoGetUniqueValues')
+        });
+
+        var ds = new Ext.data.Store({
+            reader: new Ext.data.JsonReader({fields: ["Value"] }),
+            proxy: proxy, 
+            sortInfo: { field: 'Value', direction: "ASC" }
+        });
+
+        var cm = new Ext.grid.ColumnModel([
+			{ header: Philosophy.Globalization.For('Value'), width: 200, sortable: true, dataIndex: 'Value' }			
+		]);
+
+        var view = new Ext.grid.GridView({
+            forceFit:false,
+            enableRowBody:true,
+            ignoreAdd: true,
+            emptyText: 'No record found'
+        });
+
+        var grid = new Ext.grid.GridPanel({
+            region:'center',
+            loadMask: true,
+            frame: true,
+            header: false,
+            view: view,
+            cm: cm,
+            ds: ds,
+            listeners: {
+                rowdblclick: function(grid, row) {
+                    _this.setFormValue();
+                }
+            }
+        });
+        
+        this.grid = grid;
+
+        
+
+        this.items = [grid];
+        Phi.view.window.MetadataResult.superclass.initComponent.call(this);
+
+        this.addButton(Philosophy.Globalization.For('Close'), function () { _this.close(); });
+
+        this.load(params);
+    }
+    ,
+    load:function(query){
+        this.grid.store.load({params : query});
+    }
+    ,
+    reload:function(){
+        this.grid.store.reload();
+
+    }
+    ,
+    setFormValue: function(){
+        var s = this.getSelections();
+        var v = s[0].data.Value;
+        this.textValue.setValue(v);
+        this.close();
+    }
+    ,
+    getSelections: function() {
+        var grid = this.grid;
+        var sm = grid.getSelectionModel();
+        return sm.getSelections();
+    }
+}); // eo Phi.view.window.Legend
+// eof</pre>    
+</body>
+</html>

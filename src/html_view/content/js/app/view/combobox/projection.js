@@ -1,0 +1,111 @@
+﻿Ext.ns("Phi.view.comboBox");
+/**
+* @class Philosophy.view.comboBox.Projection
+* 
+* combobox with all projections 
+* 
+* @author #rbarriga
+* @version 1.3
+* @copyright (c) 2011, by LG
+* @date      22. March 2011
+*
+* */
+Phi.view.comboBox.Projection = Ext.extend(Ext.form.ComboBox, {
+    fieldLabel: Phi.Global.For('Projection'),
+    displayField: 'name',
+    valueField: 'value',
+    iconClsField: 'cls',
+    mode: 'local',
+    forceSelection: true,
+    triggerAction: 'all',
+    selectOnFocus: true,
+    allowBlank: false,
+    editable: false,
+    minListWidth: 200,
+    initProjValue: '4326',
+     
+    initComponent: function() {
+        var _this = this;
+
+        var tpl = new Ext.XTemplate(
+			'<tpl for="."><div class="search-item" style="font-family:Arial;padding:5px 5px 4px 1px;">',
+			'<img src="content/images/icons/shape_flip_horizontal.png" style="float:left;padding-left:5px;"/><div style="font-size:10px;color:#444">&nbsp;<b>{name}</b><br/>&nbsp;{desc}</div>',
+			'</div></tpl>'
+		);
+        
+        //<img src="content/images/icons/shape_flip_horizontal.png"/><div style="font-size:10px;color:#444;">
+
+        var store = new Ext.data.SimpleStore({
+            fields: ['value', 'desc', 'name', 'epsg', 'cls'],
+            data: [['WSM', 'Web Spherical Mercator', 'WSM', 'EPSG:900913', 'icon-projection'],
+                    ['4326', 'WGS 84', 'EPSG:4326','EPSG:4326', 'icon-projection'],
+				    ['32719', 'WGS 84 : UTM zone 19S', 'EPSG:32719', 'EPSG:32719', 'icon-projection'],
+				    ['24819', 'PSAD56 : UTM zone 19S', 'EPSG:24879', 'EPSG:24879','icon-projection'],
+                    ['31994', 'SIRGAS : UTM zone 19S', 'EPSG:31994', 'EPSG:31994','icon-projection'],
+				    ['29189', 'SAD69 : UTM zone 19S', 'EPSG:29189', 'EPSG:29189','icon-projection']]
+        });
+
+        Ext.apply(this, {
+            tpl:tpl,
+            store: store,
+            itemSelector: 'div.search-item'
+        });
+
+        Phi.view.comboBox.Projection.superclass.initComponent.call(this);
+
+        this.setValue(this.initProjValue);
+    }
+    ,
+    onRender: function() {
+        Phi.view.comboBox.Projection.superclass.onRender.apply(this, arguments);
+
+        var t = new Ext.ToolTip({
+            target: this.el,
+            title: Philosophy.Globalization.For('Projections'),
+            width: 200,
+            html: Philosophy.Globalization.For('List Of Available Proyections'),
+            trackMouse: true
+        });       
+        
+        // adjust styles
+		this.wrap.applyStyles({position:'relative'});
+		this.el.addClass('ux-icon-combo-input');
+
+		// add div for icon
+		this.icon = Ext.DomHelper.append(this.el.up('div.x-form-field-wrap'), {
+			tag: 'div', style:'position:absolute'
+		});  
+    }
+	,
+	getEPSG: function (){
+		var proj = this.getValue();
+		return proj === "WSM" ? "EPSG:900913" : "EPSG:" + proj;
+	}
+    ,afterRender:function() {
+		Ext.ux.IconCombo.superclass.afterRender.apply(this, arguments);
+		if(undefined !== this.value) {
+			this.setValue(this.value);
+		}
+	}
+	,
+    setIconCls:function() {
+        var rec = this.store.query(this.valueField, this.getValue()).itemAt(0);
+        if(rec && this.icon) {
+            this.icon.className = 'ux-icon-combo-icon ' + rec.get(this.iconClsField);
+        }
+	} 
+    ,
+    setValue: function(value) {
+        Ext.ux.IconCombo.superclass.setValue.call(this, value);
+        this.setIconCls();
+    }
+	,
+    clearValue:function() {
+		Ext.ux.IconCombo.superclass.clearValue.call(this);
+		if(this.icon) {
+			this.icon.className = '';
+		}
+	}
+    
+}); // eo Phi.view.comboBox.Projection
+// eof

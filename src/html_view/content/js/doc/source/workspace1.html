@@ -1,0 +1,286 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.panel");
+<div id="cls-Philosophy.view.panel.WorkSpace"></div>/**
+* @class Philosophy.view.panel.WorkSpace
+* 
+* Philosophy workspace panel (Dashboard)
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+* 
+*/
+Phi.view.panel.WorkSpace = Ext.extend(Ext.Panel, {
+    border: false,
+    layout: 'fit',
+    collapsible: true,
+    plugins: [Ext.ux.plugins.ToggleCollapsible],
+    title: Phi.Global.For('WorkSpace'),
+
+    initComponent: function () {
+        var _this = this;
+
+        var reader = new Ext.data.JsonReader({
+            root: 'List',
+            totalProperty: 'Total',
+            fields: ["Id", "Name", "BaseLayer", "Layers", "Overlays", "Public", "pointVO", "userVO.UserName"]
+        });
+
+        var proxy = new Ext.data.HttpProxy({
+            method: 'GET',
+            url: Philosophy.UriTemplate.getUri('workspaceService', 'workspaceGetByOwner', '')
+        });
+
+        var ds = new Ext.data.Store({
+            reader: reader,
+            proxy: proxy,
+            sortInfo: { field: 'Id', direction: "ASC" }
+        });
+
+        //TODO change this !!... 
+        var render = function (val, m, record) {
+            var p = record.get("Public");
+            return p ? '<img src="content/images/Icons/cup.png" />' : '<img src="content/images/Icons/cup_key.png" />';
+        };
+
+        var cm = new Ext.grid.ColumnModel([
+			{ header: '', width: 25, dataIndex: 'Id', renderer: render },
+			{ header: Phi.Global.For('Name'), width: 250, sortable: true, dataIndex: 'Name' }
+		]);
+
+        var tbar = new Ext.Toolbar({
+            items: [
+                {
+                    iconCls: 'icon-add',
+                    text: Phi.Global.For('Add'),
+                    tooltip: Phi.Global.For('Add'),
+                    handler: function () { _this.addEntity(); }
+                }
+                ,
+                {
+                    iconCls: 'icon-delete',
+                    text: Phi.Global.For('Delete'),
+                    tooltip: Phi.Global.For('Delete'),
+                    handler: function () {
+                        Ext.Msg.confirm(Phi.Global.For('Delete'), Phi.Global.For('Are you sure ?'), function (btn, text) {
+                            if (btn == 'yes') {
+                                _this.deleteEntity();
+                            }
+                        });
+                    }
+                }
+				,
+				{ xtype: 'tbfill' }
+				,
+				{
+				    text: Phi.Global.For('Search'),
+				    iconCls: 'icon-search-list',
+				    tooltip: Phi.Global.For('Search'),
+				    handler: function () {
+				        var win = new Phi.view.window.SearchWorkSpace();
+				        win.show();
+				        win.getEl().fadeIn({ duration: 1 });
+				    }
+				}
+				]
+        });
+
+        var bbar = new Ext.PagingToolbar({
+            store: ds,
+            pageSize: 8,
+            displayInfo: true,
+            displayMsg: '{0} - {1} of {2}',
+            emptyMsg: Phi.Global.For('Empty')
+        });
+
+        var view = new Ext.grid.GridView({
+            forceFit: false,
+            enableRowBody: true,
+            ignoreAdd: true,
+            emptyText: Phi.Global.For('Empty')
+        });
+
+        this.grid = new Ext.grid.GridPanel({
+            title: '',
+            width: 345,
+            autoHeight: true,
+            frame: true,
+            ds: ds,
+            cm: cm,
+            view: view,
+            tbar: tbar,
+            bbar: bbar
+        });
+
+        this.grid.on('rowdblclick', this.setWorkSpace, this);
+        this.grid.on('rowcontextmenu', onGridContextMenu, this);
+
+        //eo grid
+
+        //context menu 								
+        function onGridContextMenu(grid, rowIndex, e) {
+            e.stopEvent();
+            var coords = e.getXY();
+            grid.getSelectionModel().clearSelections();
+            grid.getSelectionModel().selectRow(rowIndex);
+            gridContextMenu.showAt([coords[0], coords[1]]);
+        }
+
+        var gridContextMenu = new Ext.menu.Menu({
+            items: [
+				{
+				    iconCls: 'icon-edit',
+				    text: Phi.Global.For('Edit'),
+				    handler: function () { _this.showFormWorkSpace(); }
+				}
+				,
+				{
+				    iconCls: 'icon-delete',
+				    text: Phi.Global.For('Delete'),
+				    handler: function () { _this.deleteEntity(); }
+				}
+                ,
+                {
+                    iconCls: 'icon-user-color',
+                    text: Phi.Global.For('Users'),
+                    handler: function () { _this.showUsers(); }
+                }
+                ]
+        });
+        //eo context menu
+
+        Phi.view.panel.WorkSpace.superclass.initComponent.call(this);
+        this.add(this.grid);
+    }
+	,
+    addEntity: function () {
+        var win = new Phi.view.window.FormWorkSpace({
+            create: true,
+            x: 100,
+            y: 100
+        });
+        win.show();
+    }
+	,
+    deleteEntity: function () {
+        var _this = this;
+        var s = this.getSelections();
+
+        if (s.length < 1) {
+            Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select One'));
+            return false;
+        }
+        var id = s[0].data.Id;
+
+        var ws = new Phi.model.Workspace();
+        ws.on('remove', this.load, this);
+        ws.remove(id);
+    }
+	,
+    showFormWorkSpace: function () {
+        var s = this.getSelections();
+        if (s.length < 1) {
+            Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select One'));
+            return false;
+        }
+
+        var id = s[0].data.Id;
+        var win = new Phi.view.window.FormWorkSpace({ create: false });
+        win.show();
+        win.readEntity(id);
+        win.getEl().fadeIn({ duration: 1 });
+    }
+    ,
+    showUsers: function () {
+        var s = this.getSelections();
+        if (s.length < 1) {
+            Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select One'));
+            return false;
+        }
+
+        var id = s[0].data.Id;
+        var owner = s[0].data['userVO.UserName'];
+        var win = new Phi.view.window.WSUsers({
+            id: id,
+            owner: owner
+        });
+        win.show();
+        win.getEl().fadeIn({ duration: 1 });
+    }
+    ,
+    setWorkSpace: function () {
+        var s = this.getSelections();
+        if (s.length < 1) {
+            Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select One'));
+            return false;
+        }
+
+        // Layers       
+        var treeWMSLayers = Philosophy.panelLayer.treeWMSLayers;
+        treeWMSLayers.uncheckAll();
+        var l = s[0].data.Layers.split(',');
+
+        // added layers
+        if (l.length > 0) {
+            for (x = 0; x < l.length; x++)
+                treeWMSLayers.checkNodeByLayerId(l[x]);
+            treeWMSLayers.applyChanges();
+        }
+
+        // added rasters
+        var treeRaster = Philosophy.panelLayer.treeRaster;
+        var r = s[0].data.Overlays.split(',');
+
+        treeRaster.uncheckAll();
+        if (r.length > 0) {
+            for (x = 0; x < r.length; x++)
+                treeRaster.checkNodesByLayerName(r[x]);
+        }
+
+        //baseLayer 
+        var baseLayer = s[0].data.BaseLayer;
+        if (baseLayer) {
+            Philosophy.mainToolbar.baseLayerCombo.setValue(baseLayer);
+            Philosophy.mainToolbar.baseLayerCombo.setBaseLayerByName(baseLayer);
+        };
+
+        //Center
+        var pointVO = s[0].data.pointVO;
+
+        var point = {
+            lon: pointVO.Lon,
+            lat: pointVO.Lat,
+            zoom: pointVO.Zoom
+        };
+
+        Philosophy.Map.setCenter(point);
+    }
+	,
+    load: function () {
+        var userName = Philosophy.Session.getUser();
+        this.grid.baseParams = { userName: userName };
+        this.grid.store.load({ params: { userName: userName, start: 0, limit: 8} });
+    }
+	,
+    reload: function () {
+        var userName = Philosophy.Session.getUser();
+        this.grid.baseParams = { userName: userName };
+        this.grid.store.reload();
+    }
+	,
+    getSelections: function () {
+        var sm = this.grid.getSelectionModel();
+        return sm.getSelections();
+    }
+});       // eo Phi.view.panel.Layer 
+// eof</pre>    
+</body>
+</html>

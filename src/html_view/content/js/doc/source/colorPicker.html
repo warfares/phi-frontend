@@ -1,0 +1,78 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.tree.WMSLayers-ns"></div>/**
+ * Philosophy Color Picker (Used on draw vectors)
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2008, by Ultragestion
+ * @date      04. October 2008
+ * @version   1.0
+ *
+ */
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.colorPicker = Ext.extend(Ext.Window, {
+    title: 'Color',
+    width: 370,
+    height: 300,
+    closeAction: 'close',
+    maximizable: false,
+    modal: true,
+    plain: true,
+    layout: 'border',
+    colorPicker: null,
+
+    initComponent: function() {
+        var _this = this;
+
+        var colorPicker = new Ext.ux.ColorPicker({
+            region: 'center',
+            title: 'ColorPanel',
+            collapsible: false
+        });
+
+        this.buttons = [
+                        {
+                            text: Philosophy.Globalization.For('Submit'),
+                            handler: function() {
+
+                                var hColor = '#' + colorPicker.getHex();
+                             
+                                var style ={ 
+                                    strokeColor: hColor,
+                                    fillColor:hColor,
+                                    fillOpacity: 0.5,
+                                    strokeOpacity: 1,
+                                    strokeWidth: 1,
+                                    pointRadius: 4
+                                };                                
+                                Philosophy.Map.setVectorColor(style);
+                                
+                                _this.close();
+                            }
+                        }
+                        ,
+                        {
+                            text: Philosophy.Globalization.For('Cancel'),
+                            handler: function() {
+                                _this.close();
+                            }
+                        }
+                        ];
+
+        this.items = colorPicker;
+        _this.colorPicker = colorPicker;
+
+        Phi.view.window.colorPicker.superclass.initComponent.call(this);
+    }
+});   // eo Phi.view.window.colorPicker 
+// eof</pre>    
+</body>
+</html>

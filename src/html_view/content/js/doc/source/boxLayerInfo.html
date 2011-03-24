@@ -1,0 +1,89 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">//custom OpenLayers controls
+OpenLayers.Control.BoxLayerInfo = OpenLayers.Class(OpenLayers.Control, {
+
+    initialize: function (options) {
+        this.handlerOptions = OpenLayers.Util.extend(
+            {}, this.defaultHandlerOptions
+        );
+        OpenLayers.Control.prototype.initialize.apply(
+            this, arguments
+        );
+        this.handler = new OpenLayers.Handler.Box(this,
+            { "done": this.notice },
+            { keyMask: this.keyMask, boxDivClassName: 'olHandlerBoxZoomBoxBlue' });
+    },
+
+    notice: function (bounds) {
+
+        var lt = Phi.Map.map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.top));
+        var rb = Phi.Map.map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.bottom));
+
+        lt.transform(Phi.Map.map.getProjectionObject(), new OpenLayers.Projection("EPSG:" + Phi.Config.SRID));
+        rb.transform(Phi.Map.map.getProjectionObject(), new OpenLayers.Projection("EPSG:" + Phi.Config.SRID));
+
+        var layersVO = [];
+        Ext.each(Phi.Layer.appliedLayers, function (l) {
+            var o = {
+                Name: l.name,
+                Title: l.title,
+                SRID: Phi.Config.SRID
+            }
+            layersVO.push(o);
+        }, this);
+
+        var bboxVO = {
+            minx: lt.lon,
+            miny: rb.lat,
+            maxx: rb.lon,
+            maxy: lt.lat
+        }
+        var vo = {
+            LayersVO: layersVO,
+            BBoxVO: bboxVO
+        };
+
+        var proxy = new Ext.data.HttpProxy({
+            url: Phi.UriTemplate.getUri('geoService', 'geoGetGroupWithInBbox'),
+            method: 'POST',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: vo
+        });
+
+        var ds = new Ext.data.Store({
+            proxy: proxy,
+            reader: new Ext.data.JsonReader({ fields: ["Name", "Title"] })
+        });
+
+        var renderLegend = function (val, m, record) {
+            var src = Philosophy.Config.wmsLegend + Philosophy.Config.wmsNameSpace + ':' + val.split('.')[1];
+            return '<img src="' + src + '" style="border:1px solid #ccc;" />';
+        };
+
+        var cm = new Ext.grid.ColumnModel([
+            { header: '', width: 30, sortable: false, renderer: renderLegend, dataIndex: 'Name' },
+            { header: Phi.Global.For('Layer'), dataIndex: 'Title', width: 140 },
+            { header: '', dataIndex: 'Name', hidden: true }
+        ]);
+
+        var win = new Phi.view.window.GenericLayersGrid({
+            title: '',
+            ds: ds,
+            cm: cm,
+            width: 300,
+            height: 300
+        });
+
+        win.show();
+        ds.load();
+    }
+});</pre>    
+</body>
+</html>

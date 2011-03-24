@@ -1,0 +1,97 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿Ext.ns("Phi.view.tree");
+
+Phi.view.tree.UserRole = Ext.extend(Phi.view.tree.Base, {
+    userNames: null,
+    initComponent: function () {
+
+        this.tbar = new Ext.Toolbar({
+            items: [
+             {
+                 text: Phi.Global.For('All'),
+                 iconCls: 'icon-check-all',
+                 scope: this,
+                 handler: this.checkAll
+             }
+			,
+			{
+			    text: Phi.Global.For('None'),
+			    iconCls: 'icon-uncheck-all',
+			    scope: this,
+			    handler: this.uncheckAll
+			}
+            ]
+        });
+        Phi.view.tree.UserRole.superclass.initComponent.apply(this, arguments);
+
+        this.on('beforeappend', this.format, this);
+        this.load(this.userNames);
+    }
+    ,
+    load: function (userNames) {
+        if (userNames.length === 1) {
+            var role = new Phi.model.Role();
+            role.on('getallrolescheckedbyuser', this.loadTree, this);
+            role.getAllRolesCheckedByUser(userNames[0]);
+        }
+        else {
+            var role = new Phi.model.Role();
+            role.on('getroles', this.loadTree, this);
+            role.getRoles();
+        }
+    }
+    ,
+    loadTree: function (roles) {
+        var nodes = this.buildNodes(roles);
+        var n = new Ext.tree.TreeNode({ children: nodes });
+        this.setRootNode(n);
+        this.loader.doPreload(n);
+    }
+    ,
+    format: function (tree, parent, node) {
+        if (node.isLeaf())
+            node.attributes.iconCls = "icon-role";
+        else {
+            node.attributes.checked = null;
+            node.attributes.text = '<b>' + node.attributes.text + '</b>';
+        }
+    }
+    ,
+    setLeafs: function (leafs) {
+        this.uncheckAll();
+        Ext.each(leafs, function (l) {
+            this.checkNodeById(l.id);
+        }, this);
+    }
+    ,
+    buildNodes: function (roles) {
+        var nodes = [];
+        Ext.each(roles, function (r) {
+            var n = {
+                id: r.Id,
+                text: r.Name,
+                leaf:true,
+                checked: r.Flag
+            }
+            nodes.push(n);
+        }, this);
+
+        var root = [{
+            id: 0,
+            text: 'Roles',
+            leaf: false,
+            expanded: true,
+            children: nodes
+        }];
+        return root;
+    }
+});</pre>    
+</body>
+</html>

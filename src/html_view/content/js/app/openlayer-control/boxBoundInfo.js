@@ -1,0 +1,105 @@
+//custom OpenLayers controls
+OpenLayers.Control.BoxBoundInfo = OpenLayers.Class(OpenLayers.Control, {
+    displayClass:'test_mm',
+	initialize: function (options) {
+		this.handlerOptions = OpenLayers.Util.extend(
+			{}, this.defaultHandlerOptions
+		);
+		OpenLayers.Control.prototype.initialize.apply(
+			this, arguments
+		);
+		this.handler = new OpenLayers.Handler.Box(this,
+			{ "done": this.notice,
+			"init": this.clear
+		},
+		{ keyMask: this.keyMask, boxDivClassName: 'olHandlerBoxZoomBoxBlue' });
+	}
+	,
+	clear: function () {
+		Philosophy.Map.clearAllVectors();
+	}
+	,
+	notice: function (bounds) {
+
+		Philosophy.Map.clearAllVectors();
+
+		var lt = Philosophy.Map.map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.top));
+		var rb = Philosophy.Map.map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.bottom));
+
+		this.buildFeature(lt, rb);
+
+		lt.transform(Philosophy.Map.map.getProjectionObject(), Philosophy.Map.mousePosition.displayProjection);
+		rb.transform(Philosophy.Map.map.getProjectionObject(), Philosophy.Map.mousePosition.displayProjection);
+
+		this.renderValues(lt, rb);
+	}
+	,
+	renderValues:function(lt, rb){
+		
+		var box = this.box(lt,rb);
+		html = "";
+		html += "<b>P1:</b> (" + box.p1.x.toFixed(3)  + "," + box.p1.y.toFixed(3)  + ") <br/>";
+		html += "<b>P2:</b> (" + box.p2.x.toFixed(3)  + "," + box.p2.y.toFixed(3)  + ") <br/>";
+		html += "<b>P3:</b> (" + box.p3.x.toFixed(3)  + "," + box.p3.y.toFixed(3)  + ") <br/>";
+		html += "<b>P4:</b> (" + box.p4.x.toFixed(3)  + "," + box.p4.y.toFixed(3)  + ") <br/>";
+
+		var e = document.getElementById('win_measure_output');
+		e.innerHTML = html;
+	}
+	,
+	buildFeature: function (lt, rb) {
+
+		var style = {
+			strokeWidth: 2,
+			strokeOpacity: 1,
+			strokeColor: '#6688cc',
+			fillColor: 'white',
+			fillOpacity: 0.3,
+			strokeDashstyle: 'dash'
+		};
+
+		var ps1 = {
+			strokeColor: '#6688cc',
+			fontColor: "#222",
+			fontSize: "12px",
+			fontFamily: "Courier New, monospace",
+			fontWeight: "bold"
+		};
+
+		var ps2 = Philosophy.Util.clone(ps1);
+		var ps3 = Philosophy.Util.clone(ps1);
+		var ps4 = Philosophy.Util.clone(ps1);
+
+		ps1.label = 'P1';
+		ps2.label = 'P2';
+		ps3.label = 'P3';
+		ps4.label = 'P4';
+
+		var box = this.box(lt,rb);
+
+		var p1 = new OpenLayers.Geometry.Point(box.p1.x, box.p1.y);
+		var p2 = new OpenLayers.Geometry.Point(box.p2.x, box.p2.y);
+		var p3 = new OpenLayers.Geometry.Point(box.p3.x, box.p3.y);
+		var p4 = new OpenLayers.Geometry.Point(box.p4.x, box.p4.y);
+
+		var linearRing = new OpenLayers.Geometry.LinearRing([p1, p2, p3, p4]);
+
+		var pf1 = new OpenLayers.Feature.Vector(p1, null, ps1);
+		var pf2 = new OpenLayers.Feature.Vector(p2, null, ps2);
+		var pf3 = new OpenLayers.Feature.Vector(p3, null, ps3);
+		var pf4 = new OpenLayers.Feature.Vector(p4, null, ps4);
+
+		var polygonFeature = new OpenLayers.Feature.Vector(linearRing, null, style);
+		Philosophy.Map.vectorLayer.addFeatures([pf1, pf2, pf3, pf4, polygonFeature]);
+
+	}
+	,
+	box: function(lt,rb){
+		return {
+			p1 	: {x:lt.lon,y:lt.lat},
+			p2	: {x:lt.lon,y:rb.lat},
+			p3 	: {x:rb.lon,y:rb.lat},
+			p4	: {x:rb.lon,y:lt.lat}
+		}		
+	}
+});

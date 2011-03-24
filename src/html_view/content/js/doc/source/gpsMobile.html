@@ -1,0 +1,325 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.panel");
+<div id="cls-Philosophy.view.panel.GPSMobile"></div>/**
+* @class Philosophy.view.panel.GPSMobile
+* 
+* Philosophy conceptual GPS Demo
+* Websocket (testing implementation pywebsocket)
+*
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date 	21. August 2010
+*
+* */
+Phi.view.panel.GPSMobile = Ext.extend(Ext.Panel, {
+    title: 'Mobiles',
+    layout: 'fit',
+    forceLayout: true,
+    wsurl: "ws://localhost:8080/echo",
+
+    initComponent: function () {
+
+        var _this = this;
+        var reader = new Ext.data.JsonReader({
+            fields: ['Id', 'Code', 'Fleet']
+        });
+
+        var renderCarrier = function (val) {
+            return '<img src="content/images/icons/lorry-2.png" />';
+        };
+
+        var sm = new Ext.grid.CheckboxSelectionModel();
+        var columnModel = new Ext.grid.ColumnModel([
+			sm,
+			{ header: '...', width: 25, sortable: true, renderer: renderCarrier, dataIndex: 'Id' },
+			{ id: 'Code', header: 'Code', width: 220, sortable: true, dataIndex: 'Code' },
+			{ header: 'Flota', width: 20, sortable: true, dataIndex: 'Fleet', hidden: true }
+		]);
+
+        var proxy = new Ext.data.HttpProxy({
+            url: 'List Vehicles',
+            method: 'GET'
+        });
+
+        var test_data = [
+			{ Id: '221902', Code: 'HE-1233', Fleet: 'Alpha' },
+			{ Id: '221902', Code: 'HE-1234', Fleet: 'Alpha' },
+			{ Id: '221902', Code: 'HE-1235', Fleet: 'Alpha' },
+			{ Id: '221902', Code: 'HE-1236', Fleet: 'Beta' },
+			{ Id: '221902', Code: 'HE-1237', Fleet: 'Beta' },
+			{ Id: '221902', Code: 'HE-1238', Fleet: 'Beta' }
+		]
+
+        var ds = new Ext.data.GroupingStore({
+            reader: reader,
+            sortInfo: { field: 'Code', direction: "ASC" },
+            groupField: 'Fleet',
+            data: test_data
+        });
+
+        this.itemText = 'Vehiculos';
+
+        var view = new Ext.grid.GroupingView({
+            startCollapsed: false,
+            groupTextTpl: '<img src="content/images/icons/folder.png" /> {text} <span style="font-weight:normal;">({[values.rs.length]} {[values.rs.length > 1 ? "' + this.itemText + '" : "' + this.itemText + '"]})</span>'
+        });
+
+        //top bar 
+        this.onlineButton = new Ext.Button({
+            text: 'online',
+            iconCls: 'icon-offline',
+            enableToggle: true
+        });
+        this.onlineButton.on('toggle', this.apply, this);
+
+        var tbar = new Ext.Toolbar({ items: [{ xtype: 'tbfill' }, this.onlineButton] });
+
+        //bottom bar..
+        this.lastPositionButton = new Ext.Button({
+            text: 'last position',
+            iconCls: 'icon-gps-trace',
+            tooltip: { title: Phi.Global.For('Last Trace'), text: Phi.Global.For('Last Trace Desc') }
+        });
+        this.lastPositionButton.on('click', this.lastPosition, this);
+
+        this.traceButton = new Ext.Button({
+            text: 'trace',
+            iconCls: 'icon-gps-trace',
+            tooltip: { title: Phi.Global.For('Trace'), text: Phi.Global.For('Trace Desc') }
+        });
+        this.traceButton.on('click', this.trace, this);
+
+        var bbar = new Ext.Toolbar({ items: [{ xtype: 'tbfill' }, this.lastPositionButton, this.traceButton] });
+
+        this.grid = new Ext.grid.GridPanel({
+            loadMask: true,
+            ds: ds,
+            cm: columnModel,
+            sm: sm,
+            view: view,
+            tbar: tbar,
+            bbar: bbar,
+            frame: true,
+            header: false
+        });
+
+        //context menu
+        function onGridContextMenu(grid, rowIndex, e) {
+            e.stopEvent();
+            var coords = e.getXY();
+            gridContextMenu.showAt([coords[0], coords[1]]);
+        }
+
+        this.grid.on('rowcontextmenu', onGridContextMenu);
+
+        var gridContextMenu = new Ext.menu.Menu({
+            items: [
+				{
+				    iconCls: 'icon-tick',
+				    text: 'Online Mode',
+				    handler: function () { }
+				}
+				,
+				{
+				    iconCls: 'icon-gps-trace',
+				    text: 'Last Position',
+				    scope: this,
+				    handler: this.lastPosition
+				}
+				,
+				{
+				    iconCls: 'icon-gps-trace',
+				    text: 'Trace',
+				    scope: this,
+				    handler: this.trace
+				}
+				]
+        });
+        //eo context menu
+
+        this.mapOnlineIco = Ext.DomHelper.insertFirst(document.body, { id: 'test-gps' }, true);
+        Ext.DomHelper.append(this.mapOnlineIco, { html: '<img src="images/gps-icons/gps_icon.png" width="25" height="20"><br><span class="main_container">GPS<span>' }, true);
+        this.mapOnlineIco.hide();
+
+        Phi.view.panel.GPSMobile.superclass.initComponent.call(this);
+        this.add(this.grid);
+
+    }
+	,
+    preferences: function () {
+        var win = new Phi.view.window.GPSPreference();
+        win.show();
+    }
+	,
+    apply: function (b) {
+
+        var s = this.getSelections();
+        if (this.validate(s))
+            var code = s[0].data.Code
+        else
+            return false;
+
+        if (b.pressed) {
+            this.connect();
+            this.uiConnected(true);
+
+        }
+        else {
+            this.disconnect();
+            this.uiConnected(false);
+        }
+    }
+	,
+    uiConnected: function (state) {
+        var sm = this.grid.getSelectionModel();
+        if (state) {
+            sm.lock();
+            this.onlineButton.setIconClass('icon-raster');
+            this.mapOnlineIco.show();
+        }
+        else {
+            sm.unlock();
+            this.onlineButton.setIconClass('icon-offline');
+            this.mapOnlineIco.hide();
+        }
+    }
+	,
+    validate: function (s) {
+        if (s.length != 1) {
+            Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select One'));
+            this.onlineButton.toggle(false, true);
+            return false;
+        }
+        else
+            return true;
+    }
+	,
+    getSelections: function () {
+        var sm = this.grid.getSelectionModel();
+        return sm.getSelections();
+    }
+	,
+    connect: function () {
+        var _this = this;
+        this.ws = new WebSocket(this.wsurl);
+        this.ws.onopen = function () { _this.wsopen(); };
+        this.ws.onmessage = function (e) { _this.wsmessage(e); };
+        this.ws.onclose = this.wsclose;
+    }
+	,
+    disconnect: function () {
+        this.ws.close();
+    }
+	,
+    wsmessage: function (e) {
+        var o = Ext.util.JSON.decode(e.data);
+
+        Philosophy.Map.clearAllMarkers();
+
+        var icon = Philosophy.panelGPS.GPSMobile.buildIcon(o);
+        Philosophy.Marker.drawMarker(o.x, o.y, icon);
+
+        var center = { lon: o.x, lat: o.y, zoom: 15 }
+        Philosophy.Map.setCenter(center);
+
+    }
+	,
+    buildIcon: function (o) {
+        var speed = 'go';
+        if (o.speed === 0) speed = 'stop';
+
+        var angle = 0;
+        var angles = [0, 45, 90, 135, 180, 225, 270, 315];
+        var found = false;
+
+        var fc = function (e, i) {
+            if (i == 7 && !found) {
+                angle = 315;
+                return true;
+            }
+
+            if (angles[i] <= o.course && o.course < angles[i + 1]) {
+                angle = angles[i];
+                found = true;
+            }
+        }
+        Ext.each(angles, fc, this)
+        var icon = 'gps_' + speed + '_' + angle;
+        return icon
+    }
+	,
+    wsopen: function () {
+        this.ws.send('');
+        Philosophy.Util.popupMessage('connected');
+    }
+	,
+    wsclose: function () {
+        Philosophy.panelGPS.GPSMobile.onlineButton.toggle(false);
+        Philosophy.Util.popupMessage('disconnected');
+    }
+	,
+    lastPosition: function () {
+        var s = this.getSelections();
+        var id = s[0].data.Id;
+        var t = new Phi.model.Trace();
+        t.on('lastposition', function (o) {
+            this.clear();
+            this.draw(o);
+            this.zoomPoint(o);
+        }, this);
+        t.on('notfound', function () {
+            alert('not found!!'); // more extjs control 
+        }, this);
+        t.getLastPosition(id);
+    }
+    ,
+    trace: function () {
+        var s = this.getSelections();
+        var p = {
+            id: s[0].data.Id,
+            from: this.preferences.trace.from,
+            to: this.preferences.trace.to
+        }
+        var t = new Phi.model.Trace();
+        t.on('trace', function (list, bound) {
+            this.clear();
+            Ext.each(list, this.draw, this);
+            this.zoomTrace(bound);
+        }, this);
+        t.on('notfound', function () {
+            alert('not found!!'); // more extjs control 
+        }, this);
+
+        t.getByRange(p.id, p.from, p.to);
+    }
+    ,
+    draw: function (o) {
+        var icon = this.buildIcon(o);
+        Phi.Marker.drawMarker(o.x, o.y, icon);
+    }
+    ,
+    zoomPoint: function (o) {
+        var center = { lon: o.x, lat: o.y, zoom: 15 }
+        Phi.Map.setCenter(center);
+    }
+    ,
+    zoomTrace: function (bbox) {
+        var bound = new OpenLayers.Bounds(bbox.minx, bbox.miny, bbox.maxx, bbox.maxy);
+        Philosophy.Map.zoomToExtent(bound, true);
+    }
+    ,
+    clear: function () {
+        Phi.Map.clearAllMarkers();
+    }
+}); // eo Phi.view.panel.GPS 
+// eof</pre>    
+</body>
+</html>

@@ -1,0 +1,80 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js"><div id="prop-Philosophy.view.tree.WMSLayers-ns"></div>/**
+ * Philosophy Layer Datails ...    
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2009, by Ultragestion
+ * @date      15. December 2008
+ * @version   1.1
+ *
+ */
+
+Ext.ns("Phi.view.window");
+
+Phi.view.window.LayerDetail = Ext.extend(Ext.Window, {
+    title: Phi.Global.For('Layer Detail'),
+    width: 330,
+    height: 195,
+    closeAction: 'close',
+    maximizable: false,
+    modal: false,
+    plain: true,
+    layout: 'fit',
+    layer: null,
+
+    initComponent: function () {
+
+        this.panel = new Ext.Panel({
+            title: '',
+            margins: '5 5 5 5',
+            layout: 'fit',
+            items: '',
+            autoScroll: true
+        });
+
+        this.items = [this.panel];
+        Phi.view.window.LayerDetail.superclass.initComponent.call(this);
+        this.addButton(Phi.Global.For('Close'), this.close, this);
+        this.readLayer();
+    }
+    ,
+    readLayer: function () { 
+        var layer = new Phi.model.Layer();
+        layer.on('read', this.buildHTML, this);
+        layer.read(this.layer);
+    }
+    ,
+    buildHTML: function (l) {
+
+        var legend = Phi.Config.wmsBigLegend + Phi.Config.wmsNameSpace + ':' + this.layer.split('.')[1];
+        var fixDate = Phi.Util.fixWCFJsonDate(l.Date);
+        var date = Ext.util.Format.date(fixDate, 'd/m/Y');
+
+        var html = [];
+
+        html.push('<div id="layer-detail-container" style="float:left;margin-right:3px;">');
+        html.push('<img src="' + legend + '" style="border:1px solid #ccc; padding-left:5px;float:left;" />');
+        html.push('</div>');
+
+        html.push('<div style="padding-top:10px;">');
+        html.push('<table cellpadding="0" cellspacing="0">');
+        html.push('<tr><td width="80"><b>name </b>:</td><td class="main_font">' + l.Title + '</td></tr>');
+        html.push('<tr><td><b>type</b>:</td><td class="main_font">' + l.Type + '</td></tr>');
+        html.push('<tr><td><b>date</b>:</td><td class="main_font">' + date + '</td></tr>');
+        html.push('</table>');
+        html.push('</div>');
+
+        this.panel.body.update(html.join(''));
+    }
+
+});      // eo Phi.view.window.LayerDetail
+// eof</pre>    
+</body>
+</html>

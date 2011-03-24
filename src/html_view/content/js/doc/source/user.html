@@ -1,0 +1,283 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Philosophy.model");
+<div id="cls-Philosophy.model.User"></div>/**
+ * @class Philosophy.model.User
+ * @extends Philosophy.model.Entity
+ * 
+ * Philosophy User Proxy
+ * <br/>
+ * Example:
+<pre><code>
+var user = new Philosophy.model.User();
+// or with Philosophy alias Phi
+var user = new Phi.model.User()
+
+user.on('read', somefunction, this) // somefunction  on the XHR async success 
+user.Read('someUser'); //  The async call 
+</code></pre>
+ * 
+ * @author rbarriga
+ * @version 1.2
+ * @copyright (c) 2010, by IKOM
+ * @date      15. July 2010
+ */
+Philosophy.model.User = Ext.extend(Philosophy.model.Entity, {
+
+    createURL: Phi.UriTemplate.getUri('userService', 'userCreate'),
+    readURL: Phi.UriTemplate.getUri('userService', 'user'),
+    updateURL: Phi.UriTemplate.getUri('userService', 'userUpdate'),
+    removeURL: Phi.UriTemplate.getUri('userService', 'user'),
+
+    initComponent: function (config) {
+        this.addEvents(
+        <div id="event-Philosophy.model.User-login"></div>/**
+        * @event login Event declaration
+        */
+            'login',
+            'enabled',
+            'enabledcollection',
+            'deletecollection',
+            'getfavoriteslocations',
+            'getnodes',
+            'getrasters',
+            'getgroups',
+            'updatenodescollection',
+            'updaterasterscollection',
+            'updaterolescollection'
+		);
+        Philosophy.model.User.superclass.initComponent.call(config);
+    }
+	,
+    <div id="method-Philosophy.model.User-login"></div>/**
+    * User login access
+    * @param {String} userName user name (key)
+    * @param {String} password user password
+    * */
+    login: function (userName, password) {
+
+        var credentials = {
+            UserName: userName,
+            Password: password
+        }
+
+        var valid = false;
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userLogin'),
+            method: 'POST',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: credentials,
+            scope: this,
+            success: function (response, options) {
+
+                var o = Ext.util.JSON.decode(response.responseText);
+                var status = o.Status;
+                var user = o.UserVO;
+
+                this.fireEvent('login', status, credentials, user);
+            }
+        });
+    }
+    ,
+    <div id="method-Philosophy.model.User-enabled"></div>/**
+    * Toggle user "enable" status
+    * @param {String} userName User name (key)
+    * @param {Boolean} status Status
+    * */
+    enabled: function (userName, status) {
+        var o = ({ UserName: userName, Enabled: status });
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userEnabled'),
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, options) {
+                this.fireEvent('enabled', response);
+            }
+        });
+    }
+    ,
+    enabledCollection: function (userNames, enabled) {
+        var o = [];
+        Ext.each(userNames, function (u) {
+            o.push({ UserName: u, Enabled: enabled });
+        }, this);
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userEnabledCollection'),
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, options) {
+                this.fireEvent('enabledcollection', response);
+            }
+        });
+    }
+    ,
+    deleteCollection: function (userNames) {
+        var o = [];
+        Ext.each(userNames, function (u) {
+            o.push({ UserName: u });
+        }, this);
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userDeleteCollection'),
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, options) {
+                this.fireEvent('deletecollection', response);
+            }
+        });
+    }
+    ,
+    getFavoritesLocations: function(userName){
+        var p = { userName: userName };
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'locationsFavoritesByUser', '?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var locations = Ext.util.JSON.decode(response.responseText);
+                this.fireEvent('getfavoriteslocations', locations);
+            }
+        });
+    }
+    ,
+    getGroups: function (userName) {
+        var p = { userName: userName };
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userGetGroups', '?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var groups = Ext.util.JSON.decode(response.responseText);
+                this.fireEvent('getgroups', groups);
+            }
+        });
+    }
+    ,
+    getRasters: function (userName) {
+        var p = { userName: userName };
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userGetRastersByUser', '?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var rasters = Ext.util.JSON.decode(response.responseText);
+                this.fireEvent('getrasters', rasters);
+            }
+
+        });
+
+    }
+    ,
+    getNodes: function (userName) {
+        var p = { userName: userName };
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userGetNodesByUser', '?' + Ext.urlEncode(p)),
+            method: 'GET',
+            headers: { 'Content-Type': 'text/json' },
+            scope: this,
+            success: function (response, options) {
+                var n = Ext.util.JSON.decode(response.responseText);
+                var nodes = [];
+                nodes.push(n);
+                this.fireEvent('getnodes', nodes);
+            }
+        });
+    }
+    ,
+    updateNodesCollection: function (userNames, ids, groupId, requestUser) {
+        var users = [];
+        Ext.each(userNames, function (u) {
+            users.push({ UserName: u });
+        }, this);
+
+        var o = {
+            Users: users,
+            Ids: ids,
+            RequestUser: requestUser,
+            GroupId: groupId
+        };
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userUpdateNodesCollection'),
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, options) {
+                this.fireEvent('updatenodescollection', response);
+            }
+        });
+    }
+    ,
+    updateRasterCollection: function (userNames, ids, requestUser) {
+        var users = [];
+        Ext.each(userNames, function (u) {
+            users.push({ UserName: u });
+        }, this);
+
+        var o = {
+            Users: users,
+            Ids: ids,
+            RequestUser: requestUser
+        };
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userUpdateRastersCollection'),
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, optiones) {
+                this.fireEvent('updaterasterscollection', response);
+            }
+        })
+    }
+    ,
+    updateRolesCollection: function (userNames, ids, requestUser) {
+        var users = [];
+        Ext.each(userNames, function (u) {
+            users.push({ UserName: u });
+        }, this);
+
+        var o = {
+            Users: users,
+            Ids: ids,
+            RequestUser: requestUser
+        };
+
+        Ext.Ajax.request({
+            url: Phi.UriTemplate.getUri('userService', 'userUpdateRolesCollection'),
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/json' },
+            jsonData: o,
+            scope: this,
+            success: function (response, optiones) {
+                this.fireEvent('updaterolescollection', response);
+            }
+        })
+    }
+});</pre>    
+</body>
+</html>

@@ -1,0 +1,103 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.form");
+<div id="cls-Philosophy.view.form.SearchLayer"></div>/**
+* @class Philosophy.view.form.SearchLayer
+* 
+* Form for search layers  
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+*
+*/
+Phi.view.form.SearchLayer = Ext.extend(Ext.form.FormPanel, {
+    labelWidth: 75,
+    frame: true,
+    title: '',
+    bodyStyle: 'padding:5px 5px 5px 5px',
+    labelAlign: 'top',
+    width: 250,
+
+    initComponent: function () {
+        var _this = this;
+
+        this.patternField = new Ext.form.TextField({
+            fieldLabel: Philosophy.Globalization.For('Description'),
+            name: 'pattern',
+            width: 120
+        });
+
+        this.comboPosition = new Phi.view.comboBox.Pattern();
+
+        var fs = new Ext.form.FieldSet({
+            title: Philosophy.Globalization.For('Search params'),
+            labelAlign: 'top',
+            autoHeight: true,
+            layout: 'column',
+            items: [this.patternField, this.comboPosition]
+        });
+
+        //Other Parameteres
+        var storeType = new Ext.data.SimpleStore({
+            fields: ['value', 'name', 'cls'],
+            data: [['%', 'all', 'icon-all'],
+                   ['multilinestring', 'multilinestring', 'icon-g-line'],
+                   ['multipolygon', 'multipolygon','icon-g-poly'],
+			       ['point', 'point', 'icon-g-point' ]]
+        });
+        
+        this.comboType = new Ext.ux.IconCombo({
+            store: storeType,
+            fieldLabel: Philosophy.Globalization.For('Type'),
+            displayField: 'name',
+            valueField: 'value',
+            iconClsField: 'cls',
+            value: '%',
+            mode: 'local',
+            anchor: '95%',
+            forceSelection: true,
+            triggerAction: 'all',
+            emptyText: Philosophy.Globalization.For('Select Operator'),
+            selectOnFocus: true,
+            editable: false            
+        });
+
+        var fsOthers = new Ext.form.FieldSet({
+            title: Philosophy.Globalization.For('Others parameters'),
+            collapsible: true,
+            collapsed: true,
+            autoHeight: true,
+            //defaults: { anchor: '95%', allowBlank: true },
+            items: [this.comboType]
+        });
+
+        this.items = [fs, fsOthers];
+
+        Phi.view.form.SearchLayer.superclass.initComponent.call(this);
+    }
+    ,
+    getParams: function () {
+        var pattern = this.patternField.getValue();
+        var position = this.comboPosition.getValue();
+        var type = this.comboType.getValue();
+        
+        var params = {
+            pattern: pattern,
+            position: position,
+            type: type
+        };
+
+        return params;
+    }
+});    // eo Phi.view.form.SearchLayer
+// eof</pre>    
+</body>
+</html>

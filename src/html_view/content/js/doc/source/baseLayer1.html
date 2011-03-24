@@ -1,0 +1,63 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿Ext.ns("Phi.view.slider");
+<div id="cls-Philosophy.view.slider.BaseLayer"></div>/**
+* @class Philosophy.view.slider.BaseLayer
+* 
+* Philososphy OpenLayer current selected based layer alpha widget 
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+*/
+Phi.view.slider.BaseLayer = Ext.extend(Ext.slider.SingleSlider, {
+    title: Philosophy.Globalization.For('Alpha'),
+    width: 70,
+    value: 100,
+    increment: 1,
+    minValue: 0,
+    maxValue: 100,
+    initComponent: function () {
+
+        var tip = new Ext.slider.Tip({
+            getText: function (thumb) {
+                return String.format('<b>{0}% ' + Phi.Global.For('visible') + '</b>', thumb.getValue());
+            }
+        });
+
+        //this.plugins = tip;
+
+        this.on('change', function (slider, v) {
+            var opacity = v !== 0 ? opacity = v / 100 : 0;
+
+            Philosophy.Map.baseLayer.setOpacity(opacity);
+            Philosophy.Map.setRasterLayersOpacity(opacity);
+        });
+        Phi.view.slider.BaseLayer.superclass.initComponent.call(this);
+
+        this.setValue(100);
+
+    }
+	,
+    onRender: function () {
+        Phi.view.slider.BaseLayer.superclass.onRender.apply(this, arguments);
+
+        var t = new Ext.ToolTip({
+            target: this.el,
+            title: Philosophy.Globalization.For('Transparency'),
+            width: 200,
+            html: Philosophy.Globalization.For('Hide selected base layer together with the flights, allowing you to see only the geometries'),
+            trackMouse: true
+        });
+    }
+});// eo Phi.view.slider.BaseLayer
+// eof</pre>    
+</body>
+</html>

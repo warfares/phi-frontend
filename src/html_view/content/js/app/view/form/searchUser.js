@@ -1,0 +1,173 @@
+Ext.ns("Phi.view.form");
+/**
+* @class Philosophy.view.form.SearchUsers
+* 
+* Form for search users. 
+* 
+* @author #rbarriga
+* @version 1.3
+* @copyright (c) 2011, by LG
+* @date      22. March 2011
+*
+*/
+Phi.view.form.SearchUser = Ext.extend(Ext.form.FormPanel, {
+	labelWidth: 75,
+	frame: true,
+	title: '',
+	bodyStyle: 'padding:5px 5px 5px 5px',
+	labelAlign: 'top',
+	layout: 'form',
+	width: 250,
+
+	initComponent: function () {
+		var _this = this;
+
+		this.addEvents(
+			'enter',
+			'ready'
+		);
+
+		this.userNamePattern = new Ext.form.TextField({
+			fieldLabel: Phi.Global.For('UserName'),
+			name: 'pattern',
+			width: 110
+		});
+
+		this.userNamePosition = new Phi.view.comboBox.Pattern();
+
+		var cLayO1 = {
+			layout: 'column',
+			border: false,
+			items: [{
+				columnWidth: 0.55,
+				layout: 'form',
+				border: false,
+				items: [this.userNamePattern]
+			}
+			,
+			{
+				columnWidth: 0.45,
+				layout: 'form',
+				border: false,
+				items: [this.userNamePosition]
+			}]
+		}
+
+		var fs = new Ext.form.FieldSet({
+			title: Phi.Global.For('Search params'),
+			autoHeight: true,
+			layout: 'form',
+			labelAlign: 'top',
+			region: 'center',
+			items: [cLayO1]
+		});
+
+		//Other Parameteres
+		this.namePattern = new Ext.form.TextField({
+			fieldLabel: Phi.Global.For('Name'),
+			name: 'pattern',
+			width: 110
+		});
+
+		this.namePosition = new Phi.view.comboBox.Pattern();
+
+		this.lastNamePattern = new Ext.form.TextField({
+			fieldLabel: Phi.Global.For('LastName'),
+			name: 'pattern',
+			width: 110
+		});
+
+		this.lastNamePosition = new Phi.view.comboBox.Pattern();
+
+		// combo roles
+		this.roles = new Phi.view.comboBox.Role({
+			fieldLabel: Phi.Global.For('Roles'),
+			width: 200,
+			includeAll: true
+		});
+
+		this.roles.on('ready', function () {
+			var params = this.getParams();
+			this.fireEvent('ready', params);
+		}, this);
+
+
+		// combo groups
+		this.groups = new Phi.view.comboBox.Group({
+			fieldLabel: Phi.Global.For('Group'),
+			width: 200,
+			includeAll: true
+		});
+
+		var cLayO2 = {
+			layout: 'column',
+			border: false,
+			items: [{
+				columnWidth: 0.55,
+				layout: 'form',
+				border: false,
+				items: [this.namePattern, this.lastNamePattern]
+			}
+			,
+			{
+				columnWidth: 0.45,
+				layout: 'form',
+				border: false,
+				items: [this.namePosition, this.lastNamePosition]
+			}
+			]
+		}
+		var fsOthers = new Ext.form.FieldSet({
+			title: Phi.Global.For('Others parameters'),
+			collapsible: true,
+			collapsed: true,
+			autoHeight: true,
+			layout: 'form',
+			labelAlign: 'top',
+			region: 'center',
+			items: [cLayO2, this.roles, this.groups]
+		});
+
+		this.items = [fs, fsOthers];
+
+		Phi.view.form.SearchUser.superclass.initComponent.call(this);
+
+		this.userNamePattern.on('specialkey', function (f, e) { if (e.getKey() == e.ENTER) this.search(); }, this);
+		this.namePattern.on('specialkey', function (f, e) { if (e.getKey() == e.ENTER) this.search(); }, this);
+		this.lastNamePattern.on('specialkey', function (f, e) { if (e.getKey() == e.ENTER) this.search(); }, this);
+	}
+	,
+	getParams: function () {
+		var userNamePattern = this.userNamePattern.getValue();
+		var userNamePosition = this.userNamePosition.getValue();
+
+		var namePattern = this.namePattern.getValue();
+		var namePosition = this.namePosition.getValue();
+
+		var lastNamePattern = this.lastNamePattern.getValue();
+		var lastNamePosition = this.lastNamePosition.getValue();
+
+		var roleId = this.roles.getValue() || 0;
+		var groupId = this.groups.getValue() || 0;
+
+
+		var params = {
+			userNamePattern: userNamePattern,
+			userNamePosition: userNamePosition,
+			namePattern: namePattern,
+			namePosition: namePosition,
+			lastNamePattern: lastNamePattern,
+			lastNamePosition: lastNamePosition,
+			roleId: roleId,
+			groupId: groupId
+		};
+
+		return params;
+	}
+	,
+	search: function () {
+		var params = this.getParams();
+		this.fireEvent('enter', params);
+	}
+});  // eo Phi.view.form.SearchUser
+// eof

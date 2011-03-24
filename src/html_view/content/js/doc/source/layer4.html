@@ -1,0 +1,60 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.panel");
+<div id="cls-Philosophy.view.panel.Layer"></div>/**
+* @class Philosophy.view.panel.Layer
+* 
+* Philosophy layers panel (Dashboard)
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+*  
+*/
+Phi.view.panel.Layer = Ext.extend(Ext.Panel, {
+    border: false,
+    layout: 'fit',
+    collapsible: true,
+    plugins: [Ext.ux.plugins.ToggleCollapsible],
+	title: Philosophy.Globalization.For('Layers'),
+
+    initComponent: function () {
+        var _this = this;
+
+        this.treeWMSLayers = new Phi.view.tree.WMSLayers();
+        this.treeRaster = new Phi.view.tree.Raster();
+        this.treeOverlay = new Phi.view.tree.Overlay();
+        this.panelResume = new Phi.view.panel.ResumeLayer();
+
+        this.tabPanel = new Ext.TabPanel({
+            activeTab: 0,
+            deferredRender: false,
+            width: 600,
+            height: 250,
+            plain: true,
+            defaults: { autoScroll: true },
+            items: [this.treeWMSLayers, this.treeRaster, this.treeOverlay, this.panelResume]
+        });
+
+        this.items = [this.tabPanel];
+        Phi.view.panel.Layer.superclass.initComponent.call(this);
+    }
+	,
+    showResume: function () {
+        this.tabPanel.activate(this.panelResume);
+    }
+    ,
+    load: function () {
+        this.treeWMSLayers.load();
+    }
+});  // eo Phi.view.panel.Layer 
+// eof</pre>    
+</body>
+</html>

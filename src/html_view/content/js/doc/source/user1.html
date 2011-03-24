@@ -1,0 +1,140 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.panel");
+<div id="cls-Philosophy.view.panel.User"></div>/**
+* @class Philosophy.view.panel.User
+* 
+* Philosophy user detail panel (Dashboard)
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+* 
+*/
+Phi.view.panel.User = Ext.extend(Ext.Panel, {
+    border: false,
+    layout: 'fit',
+    collapsible: true,
+    collapsed: true,
+    plugins: [Ext.ux.plugins.ToggleCollapsible],
+    title: Phi.Global.For('My Profile'),
+    bodyStyle: 'padding:25px',
+
+    initComponent: function () {
+        Phi.view.panel.User.superclass.initComponent.call(this);
+    }
+	,
+    load: function () {
+        this.lblUserName = Phi.Global.For('UserName');
+        this.lblName = Phi.Global.For('Name');
+        this.lblEmail = Phi.Global.For('Email');
+
+        var user = new Philosophy.model.User();
+        user.on('read', this.renderUser, this);
+        user.read(Phi.Session.getUser());
+    }
+    ,
+    renderUser: function (o) {
+    
+        var role_collId = Ext.id();
+        var role_h2Id = Ext.id();
+        var group_collId = Ext.id();
+        var group_h2Id = Ext.id();
+
+        var userId = Ext.id();
+
+        var tpl = new Ext.XTemplate(
+            '<div class="main_container">',
+            	'<table cellpadding="0" cellspacing="0">',
+            		'<tr><td width="80"><b>' + this.lblUserName + '</b>:</td><td id="' + userId + '" class="main_font_link">{UserName}</td></tr>',
+            		'<tr><td><b>' + this.lblName + '</b>:</td><td class="main_font">{Name}&nbsp;{LastName}</td></tr>',
+            		'<tr><td><b>' + this.lblEmail + '</b>:</td><td class="main_font">{Email}</td></tr>',
+            	'</table>',
+			'<br/>',
+
+            //roles
+            '<div id="menu_map-ct">',
+                '<div id="' + role_collId + '" class="collapsed">',
+                    '<h2 id="' + role_h2Id + '"><div>Roles</div></h2>',
+                    '<dl>',
+                    '<div style="padding:4px;">',
+                        '<tpl for="RolesVO">',
+                            '<img src="content/images/icons/role.png" style="float:left;padding-left:5px;"/>&nbsp;<b>{Name}</b><br/><span class="main_font">&nbsp;{Description}</span><br/><br/>',
+                        '</tpl>',
+                    '</div>',
+                    '<div style="clear:left"></div>',
+                    '</dl>',
+                '</div>',
+			'</div>',
+
+            '<br/>',
+
+            //groups
+            '<div id="menu_map-ct">',
+                '<div id="' + group_collId + '" class="collapsed">',
+                    '<h2 id="' + group_h2Id + '"><div>Groups</div></h2>',
+                    '<dl>',
+                    '<div style="padding:4px;">',
+                        '<tpl for="GroupsVO">',
+                            '<img src="content/images/icons/group.gif" style="float:left;padding-left:5px;"/>&nbsp;<b>{Name}</b><br/><span class="main_font">&nbsp;{Description}</span><br/><br/>',
+                        '</tpl>',
+                    '</div>',
+                    '<div style="clear:left"></div>',
+                    '</dl>',
+                '</div>',
+			'</div>',
+            '</div>'
+        );
+
+        tpl.overwrite(this.body, o);
+        this.body.highlight('#f6e8b0', { block: true });
+
+        // collapse behavior 
+        var role_h2 = Ext.get(role_h2Id);
+        var role_div = Ext.get(role_collId);
+        role_h2.on('click', function () {
+            role_div.toggleClass('collapsed');
+        }, this);
+
+
+        var group_h2 = Ext.get(group_h2Id);
+        var group_div = Ext.get(group_collId);
+        group_h2.on('click', function () {
+            group_div.toggleClass('collapsed');
+        }, this);
+
+
+        // user detail 
+        var td = Ext.get(userId);
+        td.on('click', function () {
+            this.showFormUser();
+        }, this);
+
+    }
+	,
+    showFormUser: function () {
+        var userName = Philosophy.Session.getUser();
+        var win = new Phi.view.window.FormUser({
+            height: 300,
+            create: false,
+            opener: this,
+            x: 100,
+            y: 100
+        });
+
+        win.show(this);
+        win.readEntity(userName);
+        win.getEl().fadeIn({ duration: 1 });
+    }
+});// eo Phi.view.panel.User 
+// eof
+</pre>    
+</body>
+</html>

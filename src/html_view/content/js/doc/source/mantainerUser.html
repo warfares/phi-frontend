@@ -1,0 +1,182 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿<div id="prop-Philosophy.view.window.Login-ns"></div>/**
+ * Philosophy Mantainer User 
+ *
+ * @author    Ultragestion (rbarriga)
+ * @copyright (c) 2008, by Ultragestion
+ * @date      13. September 2008
+ * @version   1.0
+ *
+ */
+Ext.ns("Phi.view.window");
+
+Phi.view.window.MantainerUser = Ext.extend(Phi.view.window.Mantainer, {
+    title: Phi.Global.For('User Administration'),
+    panelTitle: '',
+    width: 900,
+    height: 480,
+    entityText: 'User',
+    createIconCls: 'icon-add',
+    deleteIconCls: 'icon-delete',
+    editIconCls: 'icon-edit',
+    readUrl: Phi.UriTemplate.getUri('userService', 'usersSearch'),
+    deleteUrl: Phi.UriTemplate.getUri('userService', 'user'),
+    initComponent: function () {
+        var _this = this;
+
+        this.listReader = new Ext.data.JsonReader({
+            root: 'List',
+            totalProperty: 'Total',
+            fields: ["UserName", "Name", "LastName", "Email", "Enabled"]
+        });
+
+        this.tbarItems = [
+            {
+                text: Phi.Global.For('Roles'),
+                iconCls: 'icon-tree',
+                handler: function () { _this.showTree('roles'); }
+            }
+            ,
+            {
+                text: Phi.Global.For('Raster'),
+                iconCls: 'icon-tree',
+                handler: function () { _this.showTree('rasters'); }
+            }
+            ,
+            {
+                text: Phi.Global.For('Nodes'),
+                iconCls: 'icon-tree',
+                handler: function () { _this.showTree('nodes'); }
+            }
+			,
+			{
+			    text: Phi.Global.For('Password'),
+			    iconCls: 'icon-key',
+			    handler: function () { _this.setPassword(); }
+			}
+			,
+			{
+			    text: Phi.Global.For('Enabled'),
+			    iconCls: 'icon-user-enabled',
+			    handler: function () { _this.enabledUser(true); }
+			}
+			,
+			{
+			    text: Phi.Global.For('Disable'),
+			    iconCls: 'icon-user-disabled',
+			    handler: function () { _this.enabledUser(false); }
+			}
+		];
+
+        this.cmItems = Phi.Util.clone(this.tbarItems);
+        this.detailForm = Phi.view.window.FormUser;
+
+        this.sm = new Ext.grid.CheckboxSelectionModel();
+
+        this.cm = new Ext.grid.ColumnModel([
+            this.sm,
+            { header: '', width: 30, sortable: false, renderer: _this.renderImage, dataIndex: 'UserName' },
+		    { header: Phi.Global.For('UserName'), width: 100, sortable: true, align: 'left', dataIndex: 'UserName', renderer: _this.renderUserName },
+		    { header: Phi.Global.For('Name'), width: 120, sortable: true, align: 'left', dataIndex: 'Name' },
+		    { header: Phi.Global.For('LastName'), width: 120, sortable: true, align: 'left', dataIndex: 'LastName' },
+		    { header: Phi.Global.For('Email'), width: 200, sortable: true, align: 'left', dataIndex: 'Email' }
+		]);
+
+        this.panelItems = new Phi.view.form.SearchUser({ region: 'west', collapsible: true });
+        this.panelItems.on('enter', this.load, this);
+        this.panelItems.on('ready', this.load, this);
+
+        this.panelItems.addButton(Phi.Global.For('Search'), this.load, this);
+
+        Phi.view.window.MantainerUser.superclass.initComponent.call(this);
+    }
+	,
+    renderImage: function (val, m, record) {
+        var enabled = record.get("Enabled");
+        var img = enabled ? '<img src="content/images/icons/user_n.png" />' : '<img src="content/images/icons/user_n_dis.png" />';
+        return img;
+    }
+    ,
+    renderUserName: function (val, m, record) {
+        var userName = record.get("UserName");
+        var enabled = record.get("Enabled");
+        var text = enabled ? '<b>' + userName + '</b>' : '<b class="main_font">' + userName + '</b>';
+
+        return text;
+    }
+	,
+    enabledUser: function (enabled) {
+
+        if (this.validMultipleSelection())
+            var sels = this.getSelections()
+        else
+            return null;
+
+        var userNames = [];
+        Ext.each(sels, function (s) { userNames.push(s.data.UserName); });
+
+        var user = new Phi.model.User();
+        user.on('enabledcollection', this.load, this);
+        user.enabledCollection(userNames, enabled);
+
+    }
+	,
+    setPassword: function () {
+        if (this.validSelection())
+            var s = this.getSelections()
+        else
+            return null;
+
+        var userName = s[0].data.UserName;
+        var win = new Phi.view.window.FormPassword({
+            title: this.entityText + " [" + userName + "]",
+            userName: userName
+        });
+        win.show(this);
+    }
+    ,
+    showTree: function (tree) {
+
+        if (this.validMultipleSelection())
+            var sels = this.getSelections()
+        else
+            return null;
+
+        var userNames = [];
+        Ext.each(sels, function (s) { userNames.push(s.data.UserName); });
+
+        var title = (userNames.length == 1) ? this.entityText + " [" + userNames[0] + "]" : Phi.Global.For('Multiple Users') + " [" + userNames.length + "]";
+
+        switch (tree) {
+            case "nodes":
+                var win = new Phi.view.window.UserNodeMaintainer({
+                    title: title,
+                    userNames: userNames
+                });
+                break;
+            case "rasters":
+                var win = new Phi.view.window.UserRasterMaintainer({
+                    title: title,
+                    userNames: userNames
+                });
+                break;
+            case "roles":
+                var win = new Phi.view.window.UserRoleMaintainer({
+                    title: title,
+                    userNames: userNames
+                });
+                break;
+        }
+        win.show(this);
+    }
+});// eo Phi.view.window.MantainerUser
+// eof</pre>    
+</body>
+</html>

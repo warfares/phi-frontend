@@ -1,0 +1,105 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">﻿Ext.ns("Philosophy");
+<div id="cls-Philosophy.Config"></div>/**
+* @class Philosophy.Config
+*
+* Philosophy Aplication main configuration 
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+* @singleton
+*/
+
+//servers
+SERVER = 'http://127.0.0.1:1270';
+GEOSERVER = 'http://127.0.0.1:8080';
+PROXYSERVER = 'http://127.0.0.1:1171';
+GPSSERVER = 'http://localhost:7038';
+
+//thirdparty conf
+Proj4js.libPath = SERVER + '/JSFrontEnd/Content/js/libs/proj4js/lib/';
+Ext.BLANK_IMAGE_URL = '/JSFrontEnd/Content/js/libs/ext-3.2.1/resources/images/default/s.gif';
+
+// const roles !!
+ROLEADMIN = 1;
+ROLEWRITER = 2;
+ROLEREADER = 3;
+
+Philosophy.Config = {
+    <div id="prop-Philosophy.Config-version"></div>/**
+    * The version of the framework
+    * @type String
+    */
+    version: '1.2-Alpha',
+    <div id="prop-Philosophy.Config-SRID"></div>/**
+    * geometries SRID.
+    * @type String
+    */
+    SRID: 31994,
+    <div id="prop-Philosophy.Config-debug"></div>/**
+    * mode (default:false)
+    * @type Boolean
+    */
+	debug: false,
+
+	<div id="prop-Philosophy.Config-wmsNameSpace"></div>/**
+	* WMS namespace definition 
+	* @type String
+	*/
+	wmsNameSpace: 'pelambres',
+	<div id="prop-Philosophy.Config-wmsUrl"></div>/**
+	* WMS URL definition 
+	* @type String
+	*/
+    wmsUrl: GEOSERVER + '/geoserver/wms?',
+    <div id="prop-Philosophy.Config-wmsProxyCache"></div>/**
+    * WMS Proxy(cache) URL definition 
+    * @type String
+    */
+    wmsProxyCache: PROXYSERVER + '/ProxyService.svc/rest/getMergedTiles?',
+    <div id="prop-Philosophy.Config-wfsUrl"></div>/**
+    * wfs URL definition 
+    * @type String
+    */
+    wfsUrl: GEOSERVER + '/geoserver/wfs?',
+	wmsLegend : GEOSERVER + '/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=17&HEIGHT=17&LAYER=',
+	wmsBigLegend: GEOSERVER + '/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=100&HEIGHT=100&LAYER=',
+	<div id="prop-Philosophy.Config-initWMSLayer"></div>/**
+	* Init WMS layer  
+	* @type String
+	*/
+	initWMSLayer: [{ 'name': 'pelambres.infraestructura', 'title': 'infraestructura'}],
+
+	<div id="prop-Philosophy.Config-kmlFileUrl"></div>/**
+	* KML storage URL 
+	* @type String
+	*/
+	kmlFileUrl: 'Content/upload-files/kml/',
+	<div id="prop-Philosophy.Config-linkFileUrl"></div>/**
+	* Files storage URL 
+	* @type String
+	*/
+	linkFileUrl: 'Content/upload-files/link/',
+	<div id="prop-Philosophy.Config-geocodingApiKey"></div>/**
+	* UMAP Geocoding access KEY  
+	* @type String
+	*/
+	geocodingApiKey: 'AibKpZl_cZCN_AYsBnsGFRwq0niw0wQvOG3woDP8GzTn67xHTOpcYxWtd3m1pqpN6iFWS-cFpC4IXL6KwDCTIw',
+	<div id="prop-Philosophy.Config-geocodingUrlBase"></div>/**
+	* UMAP Geocoding Service URL  
+	* @type String
+	*/
+    geocodingUrlBase: 'http://ultramap.cl/api/rest/v2.0/geocode'
+}
+Phi = Philosophy;</pre>    
+</body>
+</html>

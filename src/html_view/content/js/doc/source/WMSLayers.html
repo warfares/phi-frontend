@@ -1,0 +1,102 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+  <title>The source code</title>
+    <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+</head>
+<body  onload="prettyPrint();">
+    <pre class="prettyprint lang-js">Ext.ns("Phi.view.tree");
+<div id="cls-Philosophy.view.tree.WMSLayers"></div>/**
+* @class Philosophy.view.tree.WMSLayers
+* @extends Philosophy.view.tree.Base
+* 
+* Philosophy Nodes(layers) by User selection widget !!
+* 
+* @author rbarriga
+* @version 1.2
+* @copyright (c) 2010, by IKOM
+* @date      21. August 2010
+*/
+Phi.view.tree.WMSLayers = Ext.extend(Phi.view.tree.Base, {
+    title: Phi.Global.For('Layers'),
+    initComponent: function () {
+
+        var _this = this;
+
+        this.tbar = new Ext.Toolbar({
+            items: [
+			{
+			    text: Phi.Global.For('Search'),
+			    iconCls: 'icon-search-list',
+			    tooltip: { title: Phi.Global.For('Search'), text: Phi.Global.For('Search Desc') },
+			    handler: function () { _this.showSearch() }
+			}
+			,
+			{ xtype: 'tbfill' }
+			,
+			{
+			    text: Phi.Global.For('Apply'),
+			    tooltip: { title: Phi.Global.For('Apply'), text: Phi.Global.For('Apply Desc') },
+			    iconCls: 'icon-accept',
+			    handler: function () { _this.applyChanges(); }
+			}
+			]
+        });
+
+        this.contextMenu = new Phi.view.menu.Layer({ enableCheckLayer: true });
+        this.contextMenu.on('checkLayer', function (layerName, node) {
+            this.uncheckAll();
+            node.attributes.checked = true;
+            node.ui.toggleCheck(true);
+        }, this);
+
+        this.on('contextmenu', function (node, e) {
+            if (node.isLeaf()) {
+                node.select();
+                var c = node.getOwnerTree().contextMenu;
+                c.layerName = node.attributes.layerId;
+                c.node = node;
+                c.showAt(e.getXY());
+            }
+        });
+
+        Phi.view.tree.WMSLayers.superclass.initComponent.apply(this, arguments);
+    }
+    ,
+    load: function () {
+        var user = new Philosophy.model.User();
+        user.on('getnodes', function (nodes) {
+            var nodes = new Ext.tree.TreeNode({ children: nodes });
+            this.setRootNode(nodes);
+            this.loader.doPreload(nodes);
+
+        }, this);
+        user.getNodes(Philosophy.Session.getUser());
+    }
+	,
+    applyChanges: function () {
+        var layers = this.getChecked('layerId', 'text');
+
+        if (layers.length < 1) {
+            Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select at least one layer'));
+            return;
+        }
+
+        var container = Ext.get('map');
+        Philosophy.Util.popupMessage(Phi.Global.For('Apply msg'), '', container);
+
+        Philosophy.Layer.appliedLayers = layers;
+        Philosophy.Map.redrawMainLayer(Philosophy.Layer.getWMSLayers(Philosophy.Config.wmsNameSpace));
+
+        Philosophy.panelLayer.panelResume.update();
+        Philosophy.panelLayer.showResume()
+    }
+    ,
+    showSearch: function () {
+        var win = new Phi.view.window.SearchLayer();
+        win.show();
+    }
+});</pre>    
+</body>
+</html>
