@@ -24,7 +24,7 @@ Phi.view.panel.WorkSpace = Ext.extend(Ext.Panel, {
 		var reader = new Ext.data.JsonReader({
 			root: 'entities',
 			totalProperty: 'total',
-			fields: ['id', 'name', 'baseLayer', 'layers', 'overlays', 'public', 'point', 'userName']
+			fields: ['id', 'name', 'baseLayer', 'layers', 'overlays', 'public', 'point', 'userName', 'date']
 		});
 
 		var proxy = new Ext.data.HttpProxy({
@@ -34,8 +34,7 @@ Phi.view.panel.WorkSpace = Ext.extend(Ext.Panel, {
 
 		var ds = new Ext.data.Store({
 			reader: reader,
-			proxy: proxy,
-			sortInfo: { field: 'id', direction: "ASC" }
+			proxy: proxy
 		});
 		
 		//url change by logged user
@@ -52,9 +51,20 @@ Phi.view.panel.WorkSpace = Ext.extend(Ext.Panel, {
 			return p ? '<img src="'+ url + 'cup.png" />' : '<img src="' + url +'cup_key.png" />';
 		};
 
+		var renderText = function (val, m, record) {
+			var strDate = record.get('date');
+			var date = new Date(strDate);
+			var relDate = Phi.Util.relativeTime(date);
+			
+			var name = record.get('name');
+			out = '<span style="float:left">' + name + '</span>';
+			out += '<sup class="main_font" style="float:right;font-size:9px;">' + relDate + '</sup>';
+			return out;
+		};
+
 		var cm = new Ext.grid.ColumnModel([
 			{ header: '', width: 25, dataIndex: 'id', renderer: render },
-			{ header: Phi.Global.For('name'), width: 250, sortable: true, dataIndex: 'name' }
+			{ header: Phi.Global.For('name'), width: 250, sortable: true, dataIndex: 'name', renderer: renderText }
 		]);
 
 		var tbar = new Ext.Toolbar({
