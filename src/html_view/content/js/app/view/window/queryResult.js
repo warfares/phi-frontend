@@ -34,16 +34,16 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 		items: [
 				{
 					iconCls: 'icon-select_all',
-					text: Phi.Globalization.For('Select All'),
-					tooltip: Phi.Globalization.For('Select All'),
+					text: Phi.Global.For('Select All'),
+					tooltip: Phi.Global.For('Select All'),
 					scope: this,
 					handler: this.selectAll 
 				}
 				,
 				{
 					iconCls: 'icon-pencil',
-					text: Phi.Globalization.For('Draw'),
-					tooltip: Phi.Globalization.For('Draw'),
+					text: Phi.Global.For('Draw'),
+					tooltip: Phi.Global.For('Draw'),
 					scope:this,
 					handler: this.validateDraw
 				}
@@ -64,7 +64,7 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 			forceFit:false,
 			enableRowBody:true,
 			ignoreAdd: true,
-			emptyText: Phi.Globalization.For('No record found')
+			emptyText: Phi.Global.For('No record found')
 		});
 
 		//paging property 
@@ -132,14 +132,14 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 			items: [
 			{
 				iconCls: 'icon-pencil',
-				text: Phi.Globalization.For('Draw'),
+				text: Phi.Global.For('Draw'),
 				scope : this,
 				handler: this.validateDraw
 			}
 			,
 			{
 				iconCls: 'icon-pencil',
-				text: Phi.Globalization.For('WKT'),
+				text: Phi.Global.For('WKT'),
 				scope:this,
 				handler:this.showWKT
 			}
@@ -149,7 +149,7 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 
 		this.items = [this.grid];
 		Phi.view.window.QueryResult.superclass.initComponent.call(this);
-		this.addButton(Phi.Globalization.For('Close'), this.close, this);
+		this.addButton(Phi.Global.For('Close'), this.close, this);
 	}
 	,            
 	load:function(start){
@@ -172,13 +172,13 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 		
 		
 		if (wkt.length < 1) {
-			Ext.MessageBox.alert(Phi.Globalization.For('Warning'), Phi.Globalization.For('Select at least one row'));
+			Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select at least one row'));
 			return null;
 		}
 
 		Ext.MessageBox.show({
 			title: '',
-			msg: Phi.Globalization.For('Clear already draw geometries ?'),
+			msg: Phi.Global.For('Clear already draw geometries ?'),
 			buttons: Ext.MessageBox.YESNO,
 			scope:this,
 			fn: function(btn, text) {
