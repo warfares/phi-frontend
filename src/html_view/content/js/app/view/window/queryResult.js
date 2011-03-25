@@ -182,11 +182,11 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 			buttons: Ext.MessageBox.YESNO,
 			scope:this,
 			fn: function(btn, text) {
-				if (btn === 'yes'){
+				if (btn == 'yes'){
 					Phi.Map.vectorLayer.destroyFeatures();
 					this.drawGeometries();
 				}
-				else(btn === 'no')
+				if (btn == 'no')
 					this.drawGeometries();
 			}
 		});
@@ -227,9 +227,12 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 			var wkt = [];
 			Ext.each(result.entities,function(e){
 				wkt.push(e.wkt);
-		 	}, this);
-			
+			}, this);
 			Ext.each(wkt, Phi.Map.parseWKT, this);
+			
+			var extent = Phi.Map.vectorLayer.getDataExtent();
+			Phi.Map.zoomToExtent(extent);
+			
 		},this);
 		
 		layer.query(query.layerName,query.fields, query.criteria, true, 0, this.pageSize, true);
