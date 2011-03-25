@@ -629,7 +629,7 @@ Philosophy.Map = {
 					bounds.extend(features[i].geometry.getBounds());
 				}
 			}
-			Philosophy.Map.vectorLayer.addFeatures(features);
+			Phi.Map.vectorLayer.addFeatures(features);
 		}
 		else {
 			alert('Not valid WKT');
