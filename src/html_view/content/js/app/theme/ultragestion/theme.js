@@ -24,8 +24,8 @@ Philosophy.Theme = {
 	}
 	,
 	defaultStyleVector: {
-		strokeColor: "#a2754e",
-		fillColor: "#80531c",
+		strokeColor: "#000",
+		fillColor: "#777",
 		fillOpacity: 0.5,
 		strokeOpacity: 1,
 		strokeWidth: 1,
