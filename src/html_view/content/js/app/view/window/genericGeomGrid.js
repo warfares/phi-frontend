@@ -19,6 +19,17 @@ Phi.view.window.GenericGeomGrid = Ext.extend(Ext.Window, {
 	layout: 'border',
 	data: null,
 	initComponent: function () {
+		
+		this.tbar = new Ext.Toolbar({
+			items: [{
+				iconCls: 'icon-search-list',
+				text: Phi.Global.For('Detail'),
+				tooltip: Phi.Global.For('Detail'),
+				scope:this,
+				handler: this.showDetails
+			}
+			]
+		});
 
 		var ds = new Ext.data.Store({
 			data: this.data,
@@ -36,14 +47,14 @@ Phi.view.window.GenericGeomGrid = Ext.extend(Ext.Window, {
 		var cm = new Ext.grid.ColumnModel([
 			{ header: '', width: 25, renderer: render },
 			{ header: 'Id', width: 50, dataIndex: 'id' },
-			{ header: Phi.Global.For('Layer'), dataIndex: 'layerName', width: 140, renderer: renderLayer}
+			{ header: Phi.Global.For('Layer'), dataIndex: 'layerName', width: 160, renderer: renderLayer}
 		]);
 
 		var view = new Ext.grid.GridView({
 			forceFit: false,
 			enableRowBody: true,
 			ignoreAdd: true,
-			emptyText: Phi.Globalization.For('No record found')
+			emptyText: Phi.Global.For('No record found')
 		});
 
 		this.grid = new Ext.grid.GridPanel({
@@ -57,15 +68,45 @@ Phi.view.window.GenericGeomGrid = Ext.extend(Ext.Window, {
 		});
 		
 		this.grid.on('rowdblclick',this.showDetails, this);
+		
+		function onGridContextMenu(grid, rowIndex, e) {
+			e.stopEvent();
+			var coords = e.getXY();
+			
+			grid.getSelectionModel().clearSelections();
+			grid.getSelectionModel().selectRow(rowIndex);
+			gridContextMenu.showAt([coords[0], coords[1]]);
+		}
 
+		this.grid.on('rowcontextmenu', onGridContextMenu);
+		
+		var gridContextMenu = new Ext.menu.Menu({
+			items: [
+			{
+				iconCls: 'icon-search-list',
+				text: Phi.Global.For('Detail'),
+				scope : this,
+				handler: this.showDetails
+			}
+			]
+		});
+		//eo context menu
+		
 		this.items = [this.grid];
 		
 		Phi.view.window.GenericGeomGrid.superclass.initComponent.call(this);
-		this.addButton(Phi.Globalization.For('Close'), this.close, this);
+		this.addButton(Phi.Global.For('Close'), this.close, this);
 	}
 	,
 	showDetails: function(){
-		var s = this.getSelections()[0];
+		var s = this.getSelections()
+		
+		if (s.length < 1) {
+			Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select at least one row'));
+			return null;
+		}
+		
+		s = s[0];
 		
 		var layerName =  s.data.layerName;
 		var gid = s.data.id;
