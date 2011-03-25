@@ -29,7 +29,41 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 	initComponent: function() {
 
 		var _this = this;
-
+		
+		this.zoomOnDraw = true;
+		var drawOnZoom = function(v){
+			_this.zoomOnDraw = v.checked;
+		};
+		
+		this.clearOnDraw = false;
+		var clearOnDraw = function(v){
+			_this.clearOnDraw = v.checked;
+		};
+		
+		var drawItem = new Ext.Toolbar.SplitButton({
+			iconCls: 'icon-pencil',
+			text: Phi.Global.For('Draw'),
+			tooltip: Phi.Global.For('Draw'),
+			scope: this,
+			handler: this.validateDraw,
+			menu : { 
+				items: [
+				{
+					text: Phi.Global.For('Zoom'),
+					checked: true,
+					checkHandler: drawOnZoom 
+				}
+				,
+				{
+					text: Phi.Global.For('Clear'),
+					checked: false,
+					checkHandler: clearOnDraw 
+				}
+				] 
+			}
+		});
+		
+		
 		tbar = new Ext.Toolbar({
 		items: [
 				{
@@ -40,13 +74,7 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 					handler: this.selectAll 
 				}
 				,
-				{
-					iconCls: 'icon-pencil',
-					text: Phi.Global.For('Draw'),
-					tooltip: Phi.Global.For('Draw'),
-					scope:this,
-					handler: this.validateDraw
-				}
+				drawItem
 				,
 				{ xtype: 'tbfill' }
 				,
@@ -168,28 +196,13 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 		win.show();
 	}
 	,
-	validateDraw: function(wkt){
-		
-		
-		if (wkt.length < 1) {
+	validateDraw: function(){
+		var s = this.getSelections();
+		if (s.length < 1) {
 			Ext.MessageBox.alert(Phi.Global.For('Warning'), Phi.Global.For('Select at least one row'));
 			return null;
 		}
-
-		Ext.MessageBox.show({
-			title: '',
-			msg: Phi.Global.For('Clear already draw geometries ?'),
-			buttons: Ext.MessageBox.YESNO,
-			scope:this,
-			fn: function(btn, text) {
-				if (btn == 'yes'){
-					Phi.Map.vectorLayer.destroyFeatures();
-					this.drawGeometries();
-				}
-				if (btn == 'no')
-					this.drawGeometries();
-			}
-		});
+		this.drawGeometries();
 	}
 	,
 	buildWKTQuery: function(){
@@ -220,6 +233,10 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 	}
 	,
 	drawGeometries:function(){
+	
+		//condition 
+		if (this.clearOnDraw)
+			Phi.Map.vectorLayer.destroyFeatures();
 		
 		var query = this.buildWKTQuery();
 		var layer = new Geo.core.Layer();
@@ -230,9 +247,11 @@ Phi.view.window.QueryResult = Ext.extend(Ext.Window, {
 			}, this);
 			Ext.each(wkt, Phi.Map.parseWKT, this);
 			
-			var extent = Phi.Map.vectorLayer.getDataExtent();
-			Phi.Map.zoomToExtent(extent);
-			
+			//condition
+			if(this.zoomOnDraw){
+				var extent = Phi.Map.vectorLayer.getDataExtent();
+				Phi.Map.zoomToExtent(extent);
+			};
 		},this);
 		
 		layer.query(query.layerName,query.fields, query.criteria, true, 0, this.pageSize, true);
