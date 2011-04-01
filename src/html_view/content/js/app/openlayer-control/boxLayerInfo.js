@@ -25,10 +25,10 @@ OpenLayers.Control.BoxLayerInfo = OpenLayers.Class(OpenLayers.Control, {
 
 		// this go with map proyeccion (WSM)
 		var bboxVO = {
-			minx: lt.lon,
-			miny: rb.lat,
-			maxx: rb.lon,
-			maxy: lt.lat
+			xmin: lt.lon,
+			ymin: rb.lat,
+			xmax: rb.lon,
+			ymax: lt.lat
 		};
 
 		var showResults = function(result){
