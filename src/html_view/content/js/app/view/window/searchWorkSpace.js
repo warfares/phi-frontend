@@ -26,7 +26,7 @@ Phi.view.window.SearchWorkSpace = Ext.extend(Ext.Window, {
 		var reader = new Ext.data.JsonReader({
 			root: 'entities',
 			totalProperty: 'total',
-			fields: ['id', 'name', 'layers', 'overlays', 'baseLayer', 'public', 'date', 'point', 'userName']
+			fields: ['id', 'name', 'layers', 'overlays', 'baseLayer', 'date', 'point', 'userName']
 		});
 
 		var proxy = new Ext.data.HttpProxy({
