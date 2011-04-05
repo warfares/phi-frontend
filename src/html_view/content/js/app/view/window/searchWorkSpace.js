@@ -221,7 +221,7 @@ Phi.view.window.SearchWorkSpace = Ext.extend(Ext.Window, {
 		var point = {
 			lon: p.x,
 			lat: p.y,
-			zoom:10 // TODO 
+			zoom: p.z
 		};
 
 		Phi.Map.setCenter(point);

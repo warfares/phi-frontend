@@ -100,14 +100,16 @@ Phi.view.window.Location = Ext.extend(Ext.Window, {
 		var vo = this.form.form.getValues(false);
 		vo.favorite = false;
 		vo.userName = Phi.Session.getUser();
-
+		var zoom = Phi.Map.getZoom();
+		
 		var location = new Phi.model.Location();
 
 		if (this.form.form.isValid()) {
 			if (this.create) {
 				vo.point = {
 					x:this.point.Lon,
-					y:this.point.Lat
+					y:this.point.Lat,
+					z:zoom
 				};
 				location.on('create', function () {
 					Phi.Map.markerLayer.removeMarker(this.marker);
