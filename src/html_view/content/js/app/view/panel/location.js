@@ -264,7 +264,7 @@ Phi.view.panel.Location = Ext.extend(Ext.Panel, {
 		var point = {
 			lon: p.x,
 			lat: p.y,
-			zoom: 10//pointVO.Zoom
+			zoom: p.z
 		};
 
 		var color = favorite ? 'yellow' : 'white';

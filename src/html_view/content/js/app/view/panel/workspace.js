@@ -24,7 +24,7 @@ Phi.view.panel.WorkSpace = Ext.extend(Ext.Panel, {
 		var reader = new Ext.data.JsonReader({
 			root: 'entities',
 			totalProperty: 'total',
-			fields: ['id', 'name', 'baseLayer', 'layers', 'overlays', 'public', 'point', 'userName', 'date']
+			fields: ['id', 'name', 'baseLayer', 'layers', 'overlays', 'point', 'userName', 'date']
 		});
 
 		var proxy = new Ext.data.HttpProxy({
@@ -46,9 +46,8 @@ Phi.view.panel.WorkSpace = Ext.extend(Ext.Panel, {
 
 		//TODO change this !!... 
 		var render = function (val, m, record) {
-			var p = record.get("public");
 			var url = 'content/images/icons/'
-			return p ? '<img src="'+ url + 'cup.png" />' : '<img src="' + url +'cup_key.png" />';
+			return '<img src="'+ url + 'cup.png" />';
 		};
 
 		var renderText = function (val, m, record) {
@@ -307,7 +306,7 @@ Phi.view.panel.WorkSpace = Ext.extend(Ext.Panel, {
 		var point = {
 			lon: p.x,
 			lat: p.y,
-			zoom: 10 //TODO
+			zoom: p.z
 		};
 
 		Phi.Map.setCenter(point);
