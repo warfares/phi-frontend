@@ -24,40 +24,40 @@ Phi.view.window.Link = Ext.extend(Ext.Window, {
 	y: 100,
 	modal: true,
 	pageSize: 25,
-	layer: null, // selected layer 
+	layerName: null, // selected layer
 	initComponent: function () {
-		var _this = this;
 
 		// results grid
 		var reader = new Ext.data.JsonReader({
-			root: 'List',
-			totalProperty: 'Total',
-			fields: ["FileName", "FilePhisycalName", "Description"]
+			root: 'entities',
+			totalProperty: 'total',
+			fields: ["fileName", "filePhysicalName", "description"]
 		});
-
+		
+		
 		var proxy = new Ext.data.HttpProxy({
 			method: 'GET',
-			url: Philosophy.UriTemplate.getUri('layerService', 'linksByLayer')
+			url: Phi.UriTemplate.getUri('layerGetFiles')
 		});
 
 		var params = {
-			layerName: 'cerrocolorado.b_botadero'
+			layerName:this.layerName
 		};
 
 		var ds = new Ext.data.Store({
 			baseParams: params,
 			reader: reader,
 			proxy: proxy,
-			sortInfo: { field: 'FileName', direction: "ASC" }
+			sortInfo: { field: 'fileName', direction: "ASC" }
 		});
 
 		var cm = new Ext.grid.ColumnModel([
-			{ header: '', width: 25, dataIndex: 'FileName', renderer: _this.renderAttach },
-			{ header: Phi.Global.For('File'), width: 150, sortable: true, dataIndex: 'FilePhisycalName' },
-			{ header: Phi.Global.For('Description'), width: 350, sortable: true, dataIndex: 'Description' }
+			{ header: '', width: 25, dataIndex: 'fileName', renderer: this.renderAttach },
+			{ header: Phi.Global.For('File'), width: 150, sortable: true, dataIndex: 'filePhysicalName' },
+			{ header: Phi.Global.For('Description'), width: 350, sortable: true, dataIndex: 'description' }
 		]);
 
-		var ptbar = new Ext.PagingToolbar({
+		var bbar = new Ext.PagingToolbar({
 			store: ds,
 			pageSize: this.pageSize,
 			displayInfo: true,
@@ -79,28 +79,22 @@ Phi.view.window.Link = Ext.extend(Ext.Window, {
 			ds: ds,
 			cm: cm,
 			view: view,
-			bbar: ptbar,
-			listeners: {
-				rowdblclick: function (grid, rowIndex) {
-
-				}
-			}
+			bbar: bbar
 		});
 
-		this.grid.on('rowdblclick', this.downloadFile);
+		this.grid.on('rowdblclick', this.downloadFile, this);
 		//eo result grid 
 
 		this.items = [this.grid];
 		Phi.view.window.Link.superclass.initComponent.call(this);
-		this.addButton(Phi.Global.For('Close'), function () { _this.close(); });
-
+		this.addButton(Phi.Global.For('Close'), this.close, this);
 		this.load();
 	}
 	,
 	renderAttach: function (val, m, record) {
 
-		fileName = record.get("FileName");
-		var link = Philosophy.Config.linkFileUrl + fileName;
+		fileName = record.get("fileName");
+		var link = Phi.Config.linkFileUrl + fileName;
 
 		var t = '<a href="' + link + '" target="_blank">';
 		t = t + '<img src="content/images/icons/attach.png" />';
@@ -110,13 +104,13 @@ Phi.view.window.Link = Ext.extend(Ext.Window, {
 	}
 	,
 	load: function () {
-		var params = { layerName: this.layer };
+		var params = { layerName: this.layerName };
 		this.grid.store.baseParams = params;
 		this.grid.store.load({ params: { start: 0, limit: this.pageSize} });
 	}
 	,
 	downloadFile: function () {
-		alert('tezt');
+		alert('OK I');
 	}
 });// eo Phi.view.window.Link
 // eof

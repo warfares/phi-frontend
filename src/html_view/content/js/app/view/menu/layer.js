@@ -149,7 +149,7 @@ Phi.view.menu.Layer = Ext.extend(Ext.menu.Menu, {
 	}
 	,
 	showLinks: function () {
-		var win = new Phi.view.window.Link({ layer: this.parentMenu.layerName });
+		var win = new Phi.view.window.Link({ layerName: this.parentMenu.layerName });
 		win.show();
 	}
 	,
