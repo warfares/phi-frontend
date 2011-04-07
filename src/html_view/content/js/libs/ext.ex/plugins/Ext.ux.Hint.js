@@ -121,8 +121,10 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 	}
 	,
 	show:function(){
-		this.container.fadeIn({ endOpacity: 0.8, duration: 2 });
-		this.fireEvent('show', this);
+		if(!this.container.isVisible()){
+			this.container.fadeIn({ endOpacity: 0.8, duration: 2 });
+			this.fireEvent('show', this);
+		}
 	}
 	,
 	getValues:function(){
