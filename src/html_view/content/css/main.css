@@ -32,7 +32,7 @@
 	font-size:14px;
 }
 #msg-div {
-	position:absolute;       
+	position:absolute;
 	width:400px;    
 	z-index:10000;
 	text-align: center;        
@@ -85,9 +85,6 @@
 	width:16px;
 	background-image:url(../content/images/loading_blue.gif) !important;
 }
-
-
-
 
 .icon-key {
 	background-image:url(../images/icons/key.png) !important;
@@ -583,7 +580,7 @@
 
 .main_font_color
 {
-	color:#ff4444;    
+	color:#88CDFF;    
 }
 
 .title
@@ -607,7 +604,6 @@
 	font-family:@Arial Unicode MS; 
 	font-size:30px;    
 }
-
 
 .text_footer
 {
