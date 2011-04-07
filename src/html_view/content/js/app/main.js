@@ -72,6 +72,12 @@ Ext.onReady(function () {
 		},
 		items: [Phi.mainToolbar, Phi.dashBoard, Phi.mapContainer]
 	});
+	
+	//global hint def.
+	Phi.hint = new Ext.ux.Hint();
+	Phi.hint.setFooter(Phi.Global.For('hint_footer'));
+	Phi.hint.on('check', function(v){alert(v.chk);}, this)
+
 
 	// quick toolbar (this will show after login)
 	Phi.mapQuickToolBar = new Phi.view.window.QuickToolBar({
@@ -79,7 +85,6 @@ Ext.onReady(function () {
 		height: '400',
 		autoHeight: false
 	});
-	
 	//viewport OK...
 	
 	// authentication
@@ -93,6 +98,7 @@ Ext.onReady(function () {
 	}, this);
 	user.isauth();
 	
+
 	
 	Phi.Map.googleEnabled = false;
 	Phi.Map.umapEnabled = false;
