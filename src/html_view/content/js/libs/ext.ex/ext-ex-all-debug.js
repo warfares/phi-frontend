@@ -15,7 +15,8 @@
 		'MultiselectItemSelector-3.0/Multiselect.js',
 		'MultiselectItemSelector-3.0/DDView.js',
 		'Ext.ux.JsonP.js',
-		'Ext.ux.Query.js'
+		'Ext.ux.Query.js',
+		'Ext.ux.Hint.js'
 	); // etc.
 
 	var agent = navigator.userAgent;
