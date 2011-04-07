@@ -98,9 +98,6 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 		style.push('background: #444;');
 		style.push('border:solid 1px #111;');
 		style.push('padding:20px;');
-		style.push('-moz-opacity:.90;');
-		style.push('opacity: 0.90;');
-		style.push('filter: alpha(opacity=90);');
 		style.push('-moz-box-shadow: 3px 3px -7px #444;');
 		style.push('-webkit-box-shadow: 3px 3px 7px #444;');
 		style.push('-moz-border-radius: 5px;');
@@ -124,7 +121,7 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 	}
 	,
 	show:function(){
-		this.container.fadeIn({ endOpacity: 1, duration: 2 });
+		this.container.fadeIn({ endOpacity: 0.8, duration: 2 });
 		this.fireEvent('show', this);
 	}
 	,
