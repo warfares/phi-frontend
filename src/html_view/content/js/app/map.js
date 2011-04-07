@@ -403,7 +403,7 @@ Philosophy.Map = {
 	}
 	,
 	zoomToExtent: function (bound) {
-		this.map.zoomToExtent(bound)
+		this.map.zoomToExtent(bound);
 	}
 	,
 	setCenter: function (center) {
