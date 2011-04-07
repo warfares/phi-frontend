@@ -15,9 +15,15 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Zoom Box In'), text: Phi.Global.For('Zoom Box In Desc') },
 			handler: function(b) {
-				Philosophy.Map.deactivateAllControls();
-				if (b.pressed)
-					Philosophy.Map.activateCustomControl('zoom_box');
+				if (b.pressed){
+					Phi.Map.activateCustomControl('zoom_box');
+					Phi.hint.setBody(Phi.Global.For('hint_zoom_box_in'));
+					Phi.hint.show();
+				}
+				else{
+					Phi.hint.hide();
+					Phi.Map.deactivateAllControls();
+				}
 			}
 		});
 
@@ -29,9 +35,15 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			tooltip: { title: Phi.Global.For('Zoom Box Out'), text: Phi.Global.For('Zoom Box Out Desc') },
 
 			handler: function(b) {
-				Philosophy.Map.deactivateAllControls();
-				if (b.pressed)
-					Philosophy.Map.activateCustomControl('zoom_box_out');
+				if (b.pressed){
+					Phi.Map.activateCustomControl('zoom_box_out');
+					Phi.hint.setBody(Phi.Global.For('hint_zoom_box_out'));
+					Phi.hint.show();
+				}
+				else{
+					Phi.hint.hide();
+					Phi.Map.deactivateAllControls();
+				}
 			}
 		});
 		this.zoomIn = new Ext.Button({
@@ -65,8 +77,15 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Pan'), text: Phi.Global.For('Pan Desc') },
 
-			handler: function() {
-				Philosophy.Map.deactivateAllControls();
+			handler: function(b) {
+				Phi.Map.deactivateAllControls();
+				if (b.pressed){
+					Phi.hint.setBody(Phi.Global.For('hint_pan'));
+					Phi.hint.show();
+				}
+				else{
+					Phi.hint.hide();
+				}
 			}
 		});
 		this.undo = new Ext.Button({
@@ -191,9 +210,14 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Measure'), text: Phi.Global.For('Measeure Desc') },
 			handler: function(b) {
-				Philosophy.Map.deactivateAllControls();
-				if (b.pressed) {
-					Philosophy.Map.activateMeasureControl('line');
+				if (b.pressed){
+					Phi.Map.activateMeasureControl('line');
+					Phi.hint.setBody(Phi.Global.For('hint_measure_line'));
+					Phi.hint.show();
+				}
+				else{
+					Phi.hint.hide();
+					Phi.Map.deactivateAllControls();
 				}
 			}
 		});
@@ -217,22 +241,27 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Area'), text: Phi.Global.For('Area Desc') },
 			handler: function(b) {
-				Philosophy.Map.deactivateAllControls();
-				if (b.pressed) {
-					Philosophy.Map.activateMeasureControl('polygon');
+				if (b.pressed){
+					Phi.Map.activateMeasureControl('polygon');
+					Phi.hint.setBody(Phi.Global.For('hint_measure_area'));
+					Phi.hint.show();
+				}
+				else{
+					Phi.hint.hide();
+					Phi.Map.deactivateAllControls();
 				}
 			}
 		});
-
+		
 		this.area.on('toggle', function(b, pressed) {
 			if (pressed) {
-				Philosophy.val = null;
-				Philosophy.Map.setMeasureGlobals(0,'km',2);
-				Philosophy.areaOutput = new Phi.view.window.LineMeasureOutput({ order: 2 }) || Philosophy.areaOutput;
-				Philosophy.areaOutput.show();
+				Phi.val = null;
+				Phi.Map.setMeasureGlobals(0,'km',2);
+				Phi.areaOutput = new Phi.view.window.LineMeasureOutput({ order: 2 }) || Philosophy.areaOutput;
+				Phi.areaOutput.show();
 			}
 			else {
-				Philosophy.areaOutput.close();
+				Phi.areaOutput.close();
 			}
 		});
 
