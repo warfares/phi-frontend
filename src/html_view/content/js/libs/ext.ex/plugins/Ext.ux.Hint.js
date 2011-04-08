@@ -30,7 +30,6 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 			'<span id="{idClose}" style="position:absolute;top:-10px;left:-10px;cursor:pointer;">',
 				'<img src="content/images/close_button.png" style="vertical-align:middle;" />',
 			'</span>',
-			
 			'<div>',
 				'<span style="position:absolute;top:10px;left:10px;">',
 					'<img src="content/images/lightbulb.png" style="vertical-align:middle;" />',
@@ -44,7 +43,7 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 				'</span>',
 				
 				'<span style="position:absolute;bottom:10px;left:10px;font-size:10px;width:250px;">',
-					'<input id="{idCheck}" type="checkbox" checked=true style="vertical-align:middle;position:relative;margin-right:5px;"></input>',
+					'<input id="{idCheck}" type="checkbox" style="vertical-align:middle;position:relative;margin-right:5px;"></input>',
 					'Show hint',
 				'</span>',
 			'</div>',
@@ -85,7 +84,6 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 		);
 		
 		Ext.ux.Hint.superclass.constructor.call(config);
-		
 	}
 	, 
 	buildEmbeddedStyle: function () {
@@ -117,7 +115,7 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 	, 
 	hide:function(){
 		this.container.setVisible(false, {});
-        this.fireEvent('hide', this);
+		this.fireEvent('hide', this);
 	}
 	,
 	show:function(){
