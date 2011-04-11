@@ -24,8 +24,22 @@ Phi.view.toolbar.MainToolbar = Ext.extend(Ext.Toolbar, {
 
 		this.baseLayerCombo = new Phi.view.comboBox.BaseLayer();
 		this.alphaSlider = new Phi.view.slider.BaseLayer();
-
+		
 		Phi.view.toolbar.MainToolbar.superclass.initComponent.call(this);
+		
+		this.hint = new Ext.Button({
+			iconCls: 'icon-lamp',
+			enableToggle: true,
+			pressed:true,
+			tooltip: { 
+				title: Phi.Global.For('Hints'), 
+				text: Phi.Global.For('Show/Hide hints <br/> over the map') 
+			}
+		});
+
+		this.hint.on('toggle', function(b, pressed) {
+			pressed ? Phi.hint.enable() : Phi.hint.disable();
+		});
 
 		this.add(this.searchField);
 		this.add(this.markerMenu);
@@ -49,6 +63,26 @@ Phi.view.toolbar.MainToolbar = Ext.extend(Ext.Toolbar, {
 				Phi.Map.graticule.gratLayer.setVisibility(v);
 			}
 		});
+		this.add('-');
+		this.add({
+			iconCls: 'icon-expand',
+			enableToggle: true,
+			tooltip: { 
+				title: Phi.Global.For('Expand'), 
+				text: Phi.Global.For('Display only the map area') 
+			},
+			handler: function (b) {
+				if (b.pressed){
+					Phi.dashBoard.collapse(true);
+					Phi.mapQuickToolBar.hide();
+				}
+				else{
+					Phi.dashBoard.expand(true);
+					Phi.mapQuickToolBar.show();
+				}
+			}
+		});
+		this.add(this.hint);
 		this.add({ xtype: 'tbfill' });
 
 		this.add([
@@ -139,6 +173,10 @@ Phi.view.toolbar.MainToolbar = Ext.extend(Ext.Toolbar, {
 			menu: this.menu
 		};
 		return markerMenu;
+	}
+	,
+	toggleHint: function(v){
+		this.hint.toggle(v);
 	}
 	,
 	loadFavorites: function () {
