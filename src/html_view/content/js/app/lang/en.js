@@ -200,14 +200,32 @@ Philosophy.Globalization.Dictionaries.English = {
 	'Location Detail' : 'Location Detail',
 	'Only 200 characters': 'Only 200 characters',
 
-	//ovlerlay.js
+	//overlay.js
 	'Overlay'   : 'Overlay',
 	'Web Map Service': 'Web Map Service',
 	'Markers': 'Markers',
 	'Vectors': 'Vectors',
-	'Delete': 'Delete'
+	'Delete': 'Delete',
 
-
-	//default value. 
-
+	//hint
+	//hint
+	'hint_footer': 'For more hints, and to learn about other features, please read through the <b class="main_font_color">Help Pages.</b>',
+	
+	'hint_zoom_box_in' : '<b>Click and hold</b> the left mouse button down on the map at one corner of the rectangle to zoom in to. Drag the mouse to the other corner of the rectangle, and release the mouse button. The map will zoom in to the area of the rectangle.',
+	
+	'hint_zoom_box_out' : '<b>Click and hold</b> the left mouse button down on the map at one corner of the rectangle, Drag the mouse to the other corner of the rectangle, and release the mouse button, the map will zoom out so that the current map area will fit into the rectangle drawn. The smaller the rectangle you draw, the more the map will zoom out',
+	
+	'hint_pan' : '<b>Click and hold the left mouse button</b> on the map, and drag the map. The map will be recentered, with the location dragged at the location you dropped it.',
+	
+	'hint_measure_line':' Move the cursor to the first point of the line you want to measure, and <b>Click</b> the left mouse button. As you move the mouse from this location, you will see the line stretching to the current position. The measure dialog will also begin to display distance, <b>Double click</b> ends line',
+	
+	'hint_measure_area':'Move the cursor to the first point of the shape you want to measure, <b>Click</b> the left mouse button, As you move the mouse from this location, you will see the line stretching to the current position,The measure dialog will also begin to display area, <b>Double click</b> ends polygon',
+	
+	'hint_geom_info': '<b>Click</b> the left mouse button over the geometries you will see a popup with geometries details.',
+	
+	'hint_layer_info': '<b>Click and hold</b> the left mouse button down on the map at one corner of the rectangle, Drag the mouse to the other corner of the rectangle, and release the mouse button, you will see a popup with the layers intersected with the rectangle',
+	
+	'hint_box_bound_info': '<b>Click and hold</b> the left mouse button down on the map at one corner of the rectangle, Drag the mouse to the other corner of the rectangle, and release the mouse button, the info dialog show the bound coordinates in the current selected proyection',
+	
+	'hint_click_point_info': '<b>Click</b> the left mouse button over the map, you will see a popup with the coordinates point in the current selected proyection'
 };

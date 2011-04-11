@@ -334,8 +334,28 @@ Philosophy.Globalization.Dictionaries.Spanish = {
 	'A file with the same name is already uploaded': 'Un archivo con el mismo nombre ya esta cargado',
 	'Share': 'Compartir',
 	'Share Workspace': 'Compartir Espacio de Trabajo',
-	'WorkSpace': 'Espacio de Trabajo'
+	'WorkSpace': 'Espacio de Trabajo',
 
 	//end of file
-
+	
+	//hint
+	'hint_footer': 'Para mas consejos, o aprender acerca de otras caracteristicas, porfavor lea las <b class="main_font_color">Paginas de Ayuda</b>',
+	
+	'hint_zoom_box_in' : '<b>Click presionado</b> Mantenga presionado el boton izquierdo del mouse sobre el mapa, arrastre y dibuje el area (rectangulo) a la cual desea acercarce, suelte el boton del mouse. El mapa ara zoom en el area del rectangulo',
+	
+	'hint_zoom_box_out' : '<b>Click presionado</b> Mantenga presionado el boton izquierdo del mouse sobre el mapa, arrastre y dibuje el area (rectangulo) desde donde desea alejarse. Entre mas pequeño sea el rectangulo dibujado, mas se alejara el mapa',
+	
+	'hint_pan' : '<b>Click presionado</b> Mantenga presionado el boton izquierdo del mouse, luego arrastre el mapa, este quedara centrado en el lugar que usted suelte el boton del mouse',
+	
+	'hint_measure_line':'<b>Click</b> Mueva el cursor del mouse al primer punto de la linea que desea medir, haga <b>Click</b> con el boton izquierdo del mouse. Mientras se mueve de esa locacion, usted vera la linea cambiar de posicion y tamaño. En el dialogo de medidas comenzara a desplegar la distancia, con <b>Double click</b> se termina la linea',
+	
+	'hint_measure_area': '<b>Click</b> Mueva el cursor del mouse al primer punto del area que desea medir, presione el boton izquierdo del mouse, Mientras se mueve de esa locacion, usted vera el poligono cambiar de posicion y tamaño. En el dialogo de medidas comenzara a desplegar el area, con <b>Double click</b> se termina el poligono',
+	
+	'hint_geom_info': '<b>Click</b> presione el boton izquierdo del mouse sobre las geometrias, Usted vera una ventana emergente con el detalle de las geometrias en ese lugar',
+	
+	'hint_layer_info': '<b>Click presionado</b> Mantenga presionado el boton izquierdo del mouse sobre el mapa, arrastre y dibuje el area (rectangulo) a la cual desea consultar, suelte el boton del mouse. Usted vera una ventana emergente con las capas que intersecan al rectagulo dibujado',
+	
+	'hint_box_bound_info': '<b>Click presionado</b> Mantenga presionado el boton izquierdo del mouse sobre el mapa, arrastre y dibuje el area (rectangulo) a la cual desea consultar, suelte el boton del mouse, En el dialogo de informacion se desplegaran las coordenadas del rectangulo en la proyeccion seleccionada',
+	
+	'hint_click_point_info': '<b>Click</b>presione el boton izquierdo del mouse sobre el mapa, usted vera una ventana emergente con las coordenada en la proyeccion seleccionada'
 };
