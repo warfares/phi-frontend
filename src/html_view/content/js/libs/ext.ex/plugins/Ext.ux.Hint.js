@@ -137,8 +137,21 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 	,
 	change: function () {
 		var v = this.getValues();
-		this.enabled = v.chk;
 		this.fireEvent('check', v);
-	}	
+		
+		if(!this.enabled)
+			this.disable();
+	}
+	,
+	enable:function(){
+		this.enabled = true;
+		this.chk.dom.checked = true;
+	}
+	,
+	disable:function(){
+		this.enabled = false;
+		this.chk.dom.checked = false;
+		this.hide();
+	}
 });// eof Ext.ux.Hint
 
