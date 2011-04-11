@@ -15,6 +15,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Zoom Box In'), text: Phi.Global.For('Zoom Box In Desc') },
 			handler: function(b) {
+				Phi.Map.deactivateAllControls();
 				if (b.pressed){
 					Phi.Map.activateCustomControl('zoom_box');
 					Phi.hint.setBody(Phi.Global.For('hint_zoom_box_in'));
@@ -22,7 +23,6 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 				}
 				else{
 					Phi.hint.hide();
-					Phi.Map.deactivateAllControls();
 				}
 			}
 		});
@@ -35,6 +35,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			tooltip: { title: Phi.Global.For('Zoom Box Out'), text: Phi.Global.For('Zoom Box Out Desc') },
 
 			handler: function(b) {
+				Phi.Map.deactivateAllControls();
 				if (b.pressed){
 					Phi.Map.activateCustomControl('zoom_box_out');
 					Phi.hint.setBody(Phi.Global.For('hint_zoom_box_out'));
@@ -42,7 +43,6 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 				}
 				else{
 					Phi.hint.hide();
-					Phi.Map.deactivateAllControls();
 				}
 			}
 		});
@@ -51,7 +51,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Zoom In'), text: Phi.Global.For('Zoom In Desc') },
 			handler: function() {
-				Philosophy.Map.zoomIn();
+				Phi.Map.zoomIn();
 			}
 		});
 		this.zoomOut = new Ext.Button({
@@ -59,7 +59,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Zoom Out'), text: Phi.Global.For('Zoom Out Desc') },
 			handler: function() {
-				Philosophy.Map.zoomOut();
+				Phi.Map.zoomOut();
 			}
 		});
 		this.zoomInit = new Ext.Button({
@@ -67,7 +67,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Zoom Init'), text: Phi.Global.For('Zoom Init Desc') },
 			handler: function() {
-				Philosophy.Map.zoomInit();
+				Phi.Map.zoomInit();
 			}
 		});
 		this.pan = new Ext.Button({
@@ -94,7 +94,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			disabled: true,
 			tooltip: { title: Phi.Global.For('Previous Position and Zoom'), text: Phi.Global.For('Previous Position and Zoom Desc') },
 			handler: function() {
-				Philosophy.Map.navHistory.previousTrigger();
+				Phi.Map.navHistory.previousTrigger();
 			}
 		});
 		this.redo = new Ext.Button({
@@ -103,7 +103,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			disabled: true,
 			tooltip: { title: Phi.Global.For('Later Position and Zoom'), text: Phi.Global.For('Later Position and Zoom Desc') },
 			handler: function() {
-				Philosophy.Map.navHistory.nextTrigger();
+				Phi.Map.navHistory.nextTrigger();
 			}
 		});
 
@@ -114,9 +114,15 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Layers in Selected Area'), text: Phi.Global.For('Layers in Selected Area Desc') },
 			handler: function(b) {
-				Philosophy.Map.deactivateAllControls();
-				if (b.pressed)
-					Philosophy.Map.activateCustomControl('box_layer_info');
+				Phi.Map.deactivateAllControls();
+				if (b.pressed){
+					Phi.Map.activateCustomControl('box_layer_info');
+					Phi.hint.setBody(Phi.Global.For('hint_layer_info'));
+					Phi.hint.show();
+				}
+				else{
+					Phi.hint.hide();
+				}
 			}
 		});
 
@@ -127,9 +133,15 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Element Info'), text: Phi.Global.For('Element Info Desc') },
 			handler: function(b) {
-				Philosophy.Map.deactivateAllControls();
-				if (b.pressed)
-					Philosophy.Map.activateCustomControl('click_layer_info');
+				Phi.Map.deactivateAllControls();
+				if (b.pressed){
+					Phi.Map.activateCustomControl('click_layer_info');
+					Phi.hint.setBody(Phi.Global.For('hint_geom_info'));
+					Phi.hint.show();
+				}
+				else{
+					Phi.hint.hide();
+				}
 			}
 		});
 
@@ -141,9 +153,15 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			disabled: false,
 			tooltip: { title: Phi.Global.For('Coordinates Box'), text: Phi.Global.For('Coordinates Box Desc') },
 			handler: function(b) {
-				Philosophy.Map.deactivateAllControls();
-				if (b.pressed)
-					Philosophy.Map.activateCustomControl('box_bound_info');
+				Phi.Map.deactivateAllControls();
+				if (b.pressed){
+					Phi.Map.activateCustomControl('box_bound_info');
+					Phi.hint.setBody(Phi.Global.For('hint_box_bound_info'));
+					Phi.hint.show();
+				}
+				else{
+					Phi.hint.hide();
+				}
 			}
 		});
 
@@ -154,20 +172,26 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Position Coordinate'), text: Phi.Global.For('Position Coordinate Desc') },
 			handler: function(b) {
-				Philosophy.Map.deactivateAllControls();
-				if (b.pressed)
-					Philosophy.Map.activateCustomControl('click_point_info');
+				Phi.Map.deactivateAllControls();
+				if (b.pressed){
+					Phi.Map.activateCustomControl('click_point_info');
+					Phi.hint.setBody(Phi.Global.For('hint_click_point_info'));
+					Phi.hint.show();
+				}
+				else{
+					Phi.hint.hide();
+				}
 			}
 		});
 
 		this.bbox.on('toggle', function(b, pressed) {
 			if (pressed) {
-				Philosophy.bboxOutput = new Phi.view.window.MeasureOutPut({ width: 300, height: 100 }) || Philosophy.bboxOutput;
-				Philosophy.bboxOutput.show();
+				Phi.bboxOutput = new Phi.view.window.MeasureOutPut({ width: 300, height: 100 }) || Philosophy.bboxOutput;
+				Phi.bboxOutput.show();
 			}
 			else {
-				Philosophy.bboxOutput.close();
-				Philosophy.Map.clearAllVectors();
+				Phi.bboxOutput.close();
+				Phi.Map.clearAllVectors();
 			}
 		});
 
@@ -177,7 +201,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			disabled: false,
 			tooltip: { title: Phi.Global.For('Layer Search'), text: Phi.Global.For('Layer Search Desc') },
 			handler: function() {
-				Philosophy.panelLayer.treeWMSLayers.showSearch();
+				Phi.panelLayer.treeWMSLayers.showSearch();
 			}
 		});
 
@@ -189,17 +213,17 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			disabled: false,
 			tooltip: { title: Phi.Global.For('Draw Coordinates'), text: Phi.Global.For('Draw Coordinate Desc') },
 			handler: function() {
-				Philosophy.Map.deactivateAllControls();
+				Phi.Map.deactivateAllControls();
 			}
 		});
 
 		this.coordinate.on('toggle', function(b, pressed) {
 			if (pressed) {
-				Philosophy.drawXY = new Phi.view.window.drawXY() || Philosophy.draXY;
-				Philosophy.drawXY.show();
+				Phi.drawXY = new Phi.view.window.drawXY() || Philosophy.draXY;
+				Phi.drawXY.show();
 			}
 			else {
-				Philosophy.drawXY.close();
+				Phi.drawXY.close();
 			}
 		});
 
@@ -210,6 +234,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Measure'), text: Phi.Global.For('Measeure Desc') },
 			handler: function(b) {
+				Phi.Map.deactivateAllControls();
 				if (b.pressed){
 					Phi.Map.activateMeasureControl('line');
 					Phi.hint.setBody(Phi.Global.For('hint_measure_line'));
@@ -217,20 +242,19 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 				}
 				else{
 					Phi.hint.hide();
-					Phi.Map.deactivateAllControls();
 				}
 			}
 		});
 
 		this.measure.on('toggle', function(b, pressed) {
 			if (pressed) {
-				Philosophy.val = null;
-				Philosophy.Map.setMeasureGlobals(0,'km',1);
-				Philosophy.measureOutput = new Phi.view.window.LineMeasureOutput({ order:1}) || Philosophy.measureOutput;
-				Philosophy.measureOutput.show();
+				Phi.val = null;
+				Phi.Map.setMeasureGlobals(0,'km',1);
+				Phi.measureOutput = new Phi.view.window.LineMeasureOutput({ order:1}) || Philosophy.measureOutput;
+				Phi.measureOutput.show();
 			}
 			else {
-				Philosophy.measureOutput.close();
+				Phi.measureOutput.close();
 			}
 		});
 
@@ -241,6 +265,7 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 			scale: 'medium',
 			tooltip: { title: Phi.Global.For('Area'), text: Phi.Global.For('Area Desc') },
 			handler: function(b) {
+				Phi.Map.deactivateAllControls();
 				if (b.pressed){
 					Phi.Map.activateMeasureControl('polygon');
 					Phi.hint.setBody(Phi.Global.For('hint_measure_area'));
@@ -248,7 +273,6 @@ ButtonPanel = Ext.extend(Ext.Panel, {
 				}
 				else{
 					Phi.hint.hide();
-					Phi.Map.deactivateAllControls();
 				}
 			}
 		});
