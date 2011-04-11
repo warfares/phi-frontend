@@ -1,9 +1,9 @@
 ﻿Ext.ns('Phi.view.window');
 /**
-* @class Philosophy.view.window.formAppSettings 
+* @class Philosophy.view.window.FormExport 
 * @extends Ext.Window
 * 
-* Philosophy app settings, widget
+* Philosophy App settings
 * 
 * @author #rbarriga
 * @version 1.3
@@ -13,7 +13,7 @@
 */
 Phi.view.window.formAppSettings = Ext.extend(Ext.Window, {
 	layout: 'border',
-	title: Philosophy.Globalization.For('Application settings'),
+	title: Phi.Global.For('Application settings'),
 	maximizable: false,
 	closable: true,
 	resizable: false,
@@ -26,14 +26,16 @@ Phi.view.window.formAppSettings = Ext.extend(Ext.Window, {
 
 		var _this = this;
 
+		/*
 		var themeCombo = new Ext.ux.ThemeCombo({
 			name:'Theme', 
-			selectThemeText:Philosophy.Globalization.For('Theme')
+			selectThemeText:Phi.Global.For('Theme')
 		});
+		*/
 
 		var languageCombo = new Ext.ux.LangSelectCombo({
 			name:'Language',
-			selectLangText:Philosophy.Globalization.For('Language')
+			selectLangText:Phi.Global.For('Language')
 		});
 
 		var settingsForm = new Ext.FormPanel({            
@@ -44,7 +46,7 @@ Phi.view.window.formAppSettings = Ext.extend(Ext.Window, {
 			labelWidth: 100,
 			defaults: { width: 130 },
 			defaultType: 'textfield',
-			items: [themeCombo, languageCombo]
+			items: [languageCombo]
 		});
 
 		this.items = settingsForm;
@@ -52,16 +54,15 @@ Phi.view.window.formAppSettings = Ext.extend(Ext.Window, {
 
 		this.buttons = [                       
 		{                        
-			text: Philosophy.Globalization.For('Submit'),
+			text: Phi.Global.For('Submit'),
 			handler: function() {
-
 				//validate
 				var cfg = _this.getValues()
-				Philosophy.Util.setAppCfg(cfg); 
+				Phi.Util.setAppCfg(cfg); 
 
 				Ext.MessageBox.show({
 					title: '',
-					msg: Philosophy.Globalization.For('Restart app now ?'),
+					msg: Phi.Global.For('Restart app now ?'),
 
 					buttons: Ext.MessageBox.YESNO,
 					fn: function(btn, text) {
@@ -70,16 +71,13 @@ Phi.view.window.formAppSettings = Ext.extend(Ext.Window, {
 						}
 					}
 				});
-
 				_this.close(); 
 			}
-		}   
+		}
 		,                                             
 		{
-			text: Philosophy.Globalization.For('Cancel'),
-			handler: function() {
-				_this.cancel();
-			}
+			text: Phi.Global.For('Cancel'),
+			handler:_this.cancel
 		}                           
 		];
 
@@ -87,14 +85,14 @@ Phi.view.window.formAppSettings = Ext.extend(Ext.Window, {
 	}
 	,
 	setValues: function(cfg){
-		this.settingsForm.getForm().findField("Theme").setValue(cfg.theme),
+		//this.settingsForm.getForm().findField("Theme").setValue(cfg.theme),
 		this.settingsForm.getForm().findField("Language").setValue(cfg.language)
 	}
 	,
 	getValues: function(){
 		var _this = this;
 		var cfg = {
-			theme: _this.settingsForm.getForm().findField("Theme").getValue(),
+			//theme: _this.settingsForm.getForm().findField("Theme").getValue(),
 			language: _this.settingsForm.getForm().findField("Language").getValue()
 		};
 		return cfg;

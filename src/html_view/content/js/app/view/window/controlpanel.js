@@ -122,7 +122,18 @@ Phi.view.window.ControlPanel = Ext.extend(Ext.Window, {
 				icon: 'content/images/temp_img_b.gif',
 				desc: Phi.Global.For('Passworddesc')
 			}]
-	    }
+		}
+		,
+		{
+			id:2,
+			title: Phi.Global.For('Administration') ,
+			app: [{
+				text: Phi.Global.For('Application Settings'),
+				action: 'application',
+				icon: 'content/images/temp_img_b.gif',
+				desc: Philosophy.Global.For('AppAdmindesc')
+			}]
+		}
 		,
 		{
 			id:3,
@@ -147,7 +158,7 @@ Phi.view.window.ControlPanel = Ext.extend(Ext.Window, {
 				icon: 'content/images/convert_file.png',
 				desc: Phi.Global.For('TransformFiledesc')
 			}]
-			}];
+		}];
 
 		var store = new Ext.data.JsonStore({
 			idProperty: 'id',
