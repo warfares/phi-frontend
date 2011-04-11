@@ -76,7 +76,9 @@ Ext.onReady(function () {
 	//global hint def.
 	Phi.hint = new Ext.ux.Hint();
 	Phi.hint.setFooter(Phi.Global.For('hint_footer'));
-	Phi.hint.on('check', function(v){alert(v.chk);}, this)
+	Phi.hint.on('check', function(v){
+		Phi.mainToolbar.toggleHint(v.chk);
+	}, this)
 
 
 	// quick toolbar (this will show after login)
