@@ -24,7 +24,9 @@ hint.show();
  */
 
 Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
+	enabled: true,
 	constructor: function (config) {
+		
 		var t = new Ext.Template(
 			'<div id="{idContainer}" style="{style}">',
 			'<span id="{idClose}" style="position:absolute;top:-10px;left:-10px;cursor:pointer;">',
@@ -65,7 +67,6 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 			idCheck:idCheck, 
 			idFooter:idFooter,
 			style:style
-			
 		});
 
 		this.container = Ext.get(idContainer);
@@ -73,6 +74,8 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 		this.result = Ext.get(idResults);
 		this.chk = Ext.get(idCheck);
 		this.footer = Ext.get(idFooter);
+		
+		this.chk.dom.checked = this.enabled;
 		
 		this.close.on('click', this.hide, this);
 		Ext.isIE ? this.chk.on('click', this.change, this) : this.chk.on('change', this.change, this);
@@ -114,12 +117,12 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 	}
 	, 
 	hide:function(){
-		this.container.setVisible(false, {});
-		this.fireEvent('hide', this);
+			this.container.setVisible(false, {});
+			this.fireEvent('hide', this);
 	}
 	,
 	show:function(){
-		if(!this.container.isVisible()){
+		if(!this.container.isVisible() & this.enabled){
 			this.container.fadeIn({ endOpacity: 0.8, duration: 2 });
 			this.fireEvent('show', this);
 		}
@@ -134,6 +137,7 @@ Ext.ux.Hint = Ext.extend(Ext.util.Observable, {
 	,
 	change: function () {
 		var v = this.getValues();
+		this.enabled = v.chk;
 		this.fireEvent('check', v);
 	}	
 });// eof Ext.ux.Hint
