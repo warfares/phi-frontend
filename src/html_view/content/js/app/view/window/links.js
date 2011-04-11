@@ -111,6 +111,8 @@ Phi.view.window.Link = Ext.extend(Ext.Window, {
 	,
 	downloadFile: function () {
 		alert('OK I');
+		
+		//var load = window.open('./content/layer_metadata/' + layerName + '.htm', '_blank');
 	}
 });// eo Phi.view.window.Link
 // eof
